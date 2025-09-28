@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: mobile-patient-backend
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install --no-cache-dir -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app_simple:app
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MONGO_URI
+        fromDatabase:
+          name: mongodb
+          property: connectionString
+      - key: DB_NAME
+        value: patients_db
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: DEFAULT_WEBHOOK_URL
+        value: https://n8n.srv795087.hstgr.cloud/webhook/bf25c478-c4a9-44c5-8f43-08c3fcae51f9
+      - key: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
+        value: python

@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "complete-appointment-api",
+		"name": "Complete Appointment API",
+		"description": "Comprehensive appointment management API with detailed success/failure responses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login (Patient)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Login successful\"\n}"
+						},
+						{
+							"name": "Failure Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login_identifier\": \"wrong@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Invalid credentials\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Doctor Appointments",
+			"item": [
+				{
+					"name": "Get All Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments?patient_id={{patient_id}}&date=2025-09-28&status=active",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments"],
+							"query": [
+								{"key": "patient_id", "value": "{{patient_id}}", "description": "Filter by patient ID"},
+								{"key": "date", "value": "2025-09-28", "description": "Filter by date (YYYY-MM-DD)"},
+								{"key": "status", "value": "active", "description": "Filter by status"}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {
+									"raw": "{{base_url}}/doctor/appointments?patient_id={{patient_id}}&date=2025-09-28&status=active",
+									"host": ["{{base_url}}"],
+									"path": ["doctor", "appointments"],
+									"query": [
+										{"key": "patient_id", "value": "{{patient_id}}"},
+										{"key": "date", "value": "2025-09-28"},
+										{"key": "status", "value": "active"}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointments\": [\n    {\n      \"appointment_id\": \"APT987654321\",\n      \"appointment_date\": \"2025-09-28\",\n      \"appointment_time\": \"2:00 PM\",\n      \"appointment_type\": \"Follow-up\",\n      \"appointment_status\": \"scheduled\",\n      \"notes\": \"Follow-up appointment\",\n      \"doctor_id\": \"DOC123\",\n      \"created_at\": \"2025-01-27T10:30:00.000Z\",\n      \"updated_at\": \"2025-01-27T10:30:00.000Z\",\n      \"status\": \"active\",\n      \"patient_id\": \"PAT123\",\n      \"patient_name\": \"John Doe\"\n    }\n  ],\n  \"total_count\": 1,\n  \"message\": \"Appointments retrieved successfully\"\n}"
+						},
+						{
+							"name": "No Appointments Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {
+									"raw": "{{base_url}}/doctor/appointments?patient_id=NONEXISTENT&date=2025-09-28&status=active",
+									"host": ["{{base_url}}"],
+									"path": ["doctor", "appointments"],
+									"query": [
+										{"key": "patient_id", "value": "NONEXISTENT"},
+										{"key": "date", "value": "2025-09-28"},
+										{"key": "status", "value": "active"}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointments\": [],\n  \"total_count\": 0,\n  \"message\": \"Appointments retrieved successfully\"\n}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer invalid_token"}],
+								"url": {
+									"raw": "{{base_url}}/doctor/appointments",
+									"host": ["{{base_url}}"],
+									"path": ["doctor", "appointments"]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Token is missing or invalid\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/doctor/appointments", "host": ["{{base_url}}"], "path": ["doctor", "appointments"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/doctor/appointments", "host": ["{{base_url}}"], "path": ["doctor", "appointments"]}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointment_id\": \"APT987654321\",\n  \"message\": \"Appointment created successfully\"\n}"
+						},
+						{
+							"name": "Missing Required Fields",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"appointment_date\": \"2025-09-28\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/doctor/appointments", "host": ["{{base_url}}"], "path": ["doctor", "appointments"]}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"appointment_time is required\"\n}"
+						},
+						{
+							"name": "Patient Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"patient_id\": \"NONEXISTENT\",\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/doctor/appointments", "host": ["{{base_url}}"], "path": ["doctor", "appointments"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Patient not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"appointment_status\": \"confirmed\",\n  \"notes\": \"Updated appointment details\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"appointment_status\": \"confirmed\",\n  \"notes\": \"Updated appointment details\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Appointment updated successfully\"\n}"
+						},
+						{
+							"name": "Appointment Not Found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/doctor/appointments/NONEXISTENT", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "NONEXISTENT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Appointment not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Appointment deleted successfully\"\n}"
+						},
+						{
+							"name": "Appointment Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/doctor/appointments/NONEXISTENT", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "NONEXISTENT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Appointment not found\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Patient Appointments",
+			"item": [
+				{
+					"name": "Get My Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/patient/appointments?date=2025-09-28&status=active&appointment_type=Follow-up",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments"],
+							"query": [
+								{"key": "date", "value": "2025-09-28", "description": "Filter by date (YYYY-MM-DD)"},
+								{"key": "status", "value": "active", "description": "Filter by status"},
+								{"key": "appointment_type", "value": "Follow-up", "description": "Filter by appointment type"}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {
+									"raw": "{{base_url}}/patient/appointments?date=2025-09-28&status=active&appointment_type=Follow-up",
+									"host": ["{{base_url}}"],
+									"path": ["patient", "appointments"],
+									"query": [
+										{"key": "date", "value": "2025-09-28"},
+										{"key": "status", "value": "active"},
+										{"key": "appointment_type", "value": "Follow-up"}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointments\": [\n    {\n      \"appointment_id\": \"APT987654321\",\n      \"appointment_date\": \"2025-09-28\",\n      \"appointment_time\": \"2:00 PM\",\n      \"appointment_type\": \"Follow-up\",\n      \"appointment_status\": \"scheduled\",\n      \"notes\": \"Follow-up appointment\",\n      \"patient_notes\": \"I have some concerns about my medication\",\n      \"doctor_id\": \"DOC123\",\n      \"created_at\": \"2025-01-27T10:30:00.000Z\",\n      \"updated_at\": \"2025-01-27T10:30:00.000Z\",\n      \"status\": \"active\",\n      \"requested_by\": \"patient\",\n      \"patient_id\": \"PAT123\",\n      \"patient_name\": \"John Doe\"\n    }\n  ],\n  \"total_count\": 1,\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Appointments retrieved successfully\"\n}"
+						},
+						{
+							"name": "No Appointments Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {
+									"raw": "{{base_url}}/patient/appointments?date=2025-12-31&status=active",
+									"host": ["{{base_url}}"],
+									"path": ["patient", "appointments"],
+									"query": [
+										{"key": "date", "value": "2025-12-31"},
+										{"key": "status", "value": "active"}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointments\": [],\n  \"total_count\": 0,\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Appointments retrieved successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Appointment Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"patient_notes\": \"I have some concerns about my medication\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/patient/appointments", "host": ["{{base_url}}"], "path": ["patient", "appointments"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"patient_notes\": \"I have some concerns about my medication\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/patient/appointments", "host": ["{{base_url}}"], "path": ["patient", "appointments"]}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointment_id\": \"APT987654321\",\n  \"message\": \"Appointment request created successfully\",\n  \"status\": \"pending\"\n}"
+						},
+						{
+							"name": "Missing Required Fields",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-28\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/patient/appointments", "host": ["{{base_url}}"], "path": ["patient", "appointments"]}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"appointment_time is required\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Specific Appointment",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointment\": {\n    \"appointment_id\": \"APT987654321\",\n    \"appointment_date\": \"2025-09-28\",\n    \"appointment_time\": \"2:00 PM\",\n    \"appointment_type\": \"Follow-up\",\n    \"appointment_status\": \"scheduled\",\n    \"notes\": \"Follow-up appointment\",\n    \"patient_notes\": \"I have some concerns about my medication\",\n    \"doctor_id\": \"DOC123\",\n    \"created_at\": \"2025-01-27T10:30:00.000Z\",\n    \"updated_at\": \"2025-01-27T10:30:00.000Z\",\n    \"status\": \"active\",\n    \"requested_by\": \"patient\",\n    \"patient_id\": \"PAT123\",\n    \"patient_name\": \"John Doe\"\n  },\n  \"message\": \"Appointment retrieved successfully\"\n}"
+						},
+						{
+							"name": "Appointment Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/NONEXISTENT", "host": ["{{base_url}}"], "path": ["patient", "appointments", "NONEXISTENT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Appointment not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update My Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"patient_notes\": \"Updated my concerns about medication\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"patient_notes\": \"Updated my concerns about medication\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Appointment updated successfully\"\n}"
+						},
+						{
+							"name": "Access Denied",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"appointment_date\": \"2025-09-29\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/patient/appointments/OTHER_PATIENT_APT", "host": ["{{base_url}}"], "path": ["patient", "appointments", "OTHER_PATIENT_APT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Appointment not found or access denied\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Cancel My Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Appointment cancelled successfully\"\n}"
+						},
+						{
+							"name": "Appointment Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/NONEXISTENT", "host": ["{{base_url}}"], "path": ["patient", "appointments", "NONEXISTENT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Appointment not found or access denied\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Upcoming Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/upcoming", "host": ["{{base_url}}"], "path": ["patient", "appointments", "upcoming"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/upcoming", "host": ["{{base_url}}"], "path": ["patient", "appointments", "upcoming"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"upcoming_appointments\": [\n    {\n      \"appointment_id\": \"APT987654321\",\n      \"appointment_date\": \"2025-09-28\",\n      \"appointment_time\": \"2:00 PM\",\n      \"appointment_type\": \"Follow-up\",\n      \"appointment_status\": \"scheduled\",\n      \"notes\": \"Follow-up appointment\",\n      \"patient_notes\": \"I have some concerns about my medication\",\n      \"doctor_id\": \"DOC123\",\n      \"created_at\": \"2025-01-27T10:30:00.000Z\",\n      \"updated_at\": \"2025-01-27T10:30:00.000Z\",\n      \"status\": \"active\",\n      \"requested_by\": \"patient\",\n      \"patient_id\": \"PAT123\",\n      \"patient_name\": \"John Doe\"\n    }\n  ],\n  \"total_count\": 1,\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Upcoming appointments retrieved successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Appointment History",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/history", "host": ["{{base_url}}"], "path": ["patient", "appointments", "history"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/patient/appointments/history", "host": ["{{base_url}}"], "path": ["patient", "appointments", "history"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"appointment_history\": [\n    {\n      \"appointment_id\": \"APT123456789\",\n      \"appointment_date\": \"2025-01-15\",\n      \"appointment_time\": \"10:00 AM\",\n      \"appointment_type\": \"Initial Consultation\",\n      \"appointment_status\": \"completed\",\n      \"notes\": \"Initial consultation completed\",\n      \"patient_notes\": \"First visit\",\n      \"doctor_id\": \"DOC123\",\n      \"created_at\": \"2025-01-10T09:00:00.000Z\",\n      \"updated_at\": \"2025-01-15T10:30:00.000Z\",\n      \"status\": \"active\",\n      \"requested_by\": \"doctor\",\n      \"patient_id\": \"PAT123\",\n      \"patient_name\": \"John Doe\"\n    }\n  ],\n  \"total_count\": 1,\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Appointment history retrieved successfully\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "http://localhost:8000", "type": "string"},
+		{"key": "jwt_token", "value": "", "type": "string", "description": "JWT token obtained from login"},
+		{"key": "patient_id", "value": "PAT123", "type": "string", "description": "Patient ID for testing"},
+		{"key": "doctor_id", "value": "DOC123", "type": "string", "description": "Doctor ID for testing"},
+		{"key": "appointment_id", "value": "APT987654321", "type": "string", "description": "Appointment ID for testing"}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-login before making requests",
+					"if (!pm.environment.get('jwt_token')) {",
+					"    pm.sendRequest({",
+					"        url: pm.environment.get('base_url') + '/login',",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Content-Type': 'application/json'",
+					"        },",
+					"        body: {",
+					"            mode: 'raw',",
+					"            raw: JSON.stringify({",
+					"                login_identifier: 'patient@example.com',",
+					"                password: 'password123'",
+					"            })",
+					"        }",
+					"    }, function (err, response) {",
+					"        if (response.json() && response.json().access_token) {",
+					"            pm.environment.set('jwt_token', response.json().access_token);",
+					"        }",
+					"    });",
+					"}"
+				]
+			}
+		}
+	]
+}

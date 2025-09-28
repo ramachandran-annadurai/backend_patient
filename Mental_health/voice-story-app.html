@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Story Mental Health Assessment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .story-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .story-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .story-content {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .slider-container {
+            margin: 10px 0;
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .slider {
+            width: 150px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .questions-container {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #2196f3;
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .option {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #2196f3;
+        }
+        
+        .option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+        }
+        
+        .results-container {
+            background: #f0f8ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔊 AI Voice Story Mental Health Assessment</h1>
+        
+        <div class="controls">
+            <button id="generateBtn" class="btn">Generate New Story</button>
+            <button id="playBtn" class="btn">🔊 Play Story (Browser TTS)</button>
+            <button id="pauseBtn" class="btn" disabled>⏸️ Pause</button>
+            <button id="stopBtn" class="btn" disabled>⏹️ Stop</button>
+            <button id="elevenlabsBtn" class="btn btn-secondary">🎵 ElevenLabs AI</button>
+        </div>
+        
+        <div class="slider-container">
+            <label for="volumeSlider">Volume:</label>
+            <input type="range" id="volumeSlider" class="slider" min="0" max="1" step="0.1" value="0.8">
+            <span id="volumeValue">0.8</span>
+        </div>
+        
+        <div class="slider-container">
+            <label for="speedSlider">Speed:</label>
+            <input type="range" id="speedSlider" class="slider" min="0.5" max="2" step="0.1" value="1">
+            <span id="speedValue">1.0</span>
+        </div>
+        
+        <div id="storyContainer" class="story-container" style="display: none;">
+            <div id="storyTitle" class="story-title"></div>
+            <div id="storyContent" class="story-content"></div>
+        </div>
+        
+        <div id="questionsContainer" class="questions-container" style="display: none;">
+            <h3>Assessment Questions</h3>
+            <div id="questionsList"></div>
+            <button id="submitBtn" class="btn btn-success">Submit Assessment</button>
+        </div>
+        
+        <div id="resultsContainer" class="results-container" style="display: none;">
+            <h3>Assessment Results</h3>
+            <div id="resultsContent"></div>
+        </div>
+        
+        <div id="messageContainer"></div>
+    </div>
+
+    <script>
+        class VoiceStoryApp {
+            constructor() {
+                this.currentStory = null;
+                this.currentQuestions = [];
+                this.answers = {};
+                this.isPlaying = false;
+                this.utterance = null;
+                this.audioElement = null;
+                
+                this.generateBtn = document.getElementById('generateBtn');
+                this.playBtn = document.getElementById('playBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.elevenlabsBtn = document.getElementById('elevenlabsBtn');
+                this.storyContainer = document.getElementById('storyContainer');
+                this.storyTitle = document.getElementById('storyTitle');
+                this.storyContent = document.getElementById('storyContent');
+                this.questionsContainer = document.getElementById('questionsContainer');
+                this.questionsList = document.getElementById('questionsList');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.resultsContainer = document.getElementById('resultsContainer');
+                this.resultsContent = document.getElementById('resultsContent');
+                this.messageContainer = document.getElementById('messageContainer');
+                this.volumeSlider = document.getElementById('volumeSlider');
+                this.speedSlider = document.getElementById('speedSlider');
+                this.volumeValue = document.getElementById('volumeValue');
+                this.speedValue = document.getElementById('speedValue');
+                
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                this.generateBtn.addEventListener('click', () => this.generateStory());
+                this.playBtn.addEventListener('click', () => this.playStory());
+                this.pauseBtn.addEventListener('click', () => this.pauseStory());
+                this.stopBtn.addEventListener('click', () => this.stopStory());
+                this.elevenlabsBtn.addEventListener('click', () => this.useElevenLabs());
+                this.submitBtn.addEventListener('click', () => this.submitAssessment());
+                
+                this.volumeSlider.addEventListener('input', (e) => {
+                    this.volumeValue.textContent = e.target.value;
+                    if (this.utterance) {
+                        this.utterance.volume = parseFloat(e.target.value);
+                    }
+                    if (this.audioElement) {
+                        this.audioElement.volume = parseFloat(e.target.value);
+                    }
+                });
+                
+                this.speedSlider.addEventListener('input', (e) => {
+                    this.speedValue.textContent = e.target.value;
+                    if (this.utterance) {
+                        this.utterance.rate = parseFloat(e.target.value);
+                    }
+                    if (this.audioElement) {
+                        this.audioElement.playbackRate = parseFloat(e.target.value);
+                    }
+                });
+            }
+            
+            async generateStory() {
+                this.generateBtn.disabled = true;
+                this.generateBtn.textContent = 'Generating...';
+                this.showMessage('Generating new story...', 'loading');
+                
+                try {
+                    console.log('Starting story generation...');
+                    const response = await fetch('/generate-story', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            difficulty: 'medium',
+                            scenario: 'pregnancy_anxiety'
+                        })
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('HTTP error response:', errorText);
+                        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                    }
+                    
+                    const storyData = await response.json();
+                    console.log('Story data received:', storyData);
+                    
+                    this.currentStory = storyData;
+                    this.currentQuestions = storyData.questions || [];
+                    this.answers = {};
+                    
+                    console.log('Displaying story...');
+                    this.displayStory(storyData);
+                    this.showMessage('Story generated successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error generating story:', error);
+                    this.showMessage('Failed to generate story. Please try again.', 'error');
+                } finally {
+                    this.generateBtn.disabled = false;
+                    this.generateBtn.textContent = 'Generate New Story';
+                }
+            }
+            
+            displayStory(storyData) {
+                console.log('displayStory called with:', storyData);
+                console.log('Story title:', storyData.title);
+                console.log('Story content:', storyData.content || storyData.story);
+                
+                this.storyTitle.textContent = storyData.title;
+                this.storyContent.textContent = storyData.content || storyData.story;
+                this.storyContainer.style.display = 'block';
+                
+                console.log('Story container visible:', this.storyContainer.style.display);
+                
+                if (this.currentQuestions.length > 0) {
+                    console.log('Displaying questions...');
+                    this.displayQuestions();
+                } else {
+                    console.log('No questions to display');
+                }
+            }
+            
+            displayQuestions() {
+                this.questionsList.innerHTML = '';
+                this.questionsContainer.style.display = 'block';
+                this.currentQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.innerHTML = `
+                        <div class="question-text">${question.question}</div>
+                        <div class="options">
+                            ${question.options.map((option, optionIndex) => `
+                                <div class="option" data-question="${index}" data-option="${optionIndex}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    this.questionsList.appendChild(questionDiv);
+                });
+                
+                // Add click listeners to options
+                this.questionsList.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        const questionIndex = parseInt(e.target.dataset.question);
+                        const optionIndex = parseInt(e.target.dataset.option);
+                        
+                        // Remove previous selection for this question
+                        e.target.parentElement.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Select current option
+                        e.target.classList.add('selected');
+                        
+                        // Store answer
+                        this.answers[questionIndex] = optionIndex;
+                    });
+                });
+                
+                this.questionsContainer.classList.remove('hidden');
+            }
+            
+            playStory() {
+                if (!this.currentStory) {
+                    this.showMessage('Please generate a story first.', 'error');
+                    return;
+                }
+                
+                if (this.isPlaying) {
+                    this.pauseStory();
+                    return;
+                }
+                
+                this.useBrowserTTS();
+            }
+            
+            useBrowserTTS() {
+                if (!('speechSynthesis' in window)) {
+                    this.showMessage('Speech synthesis not supported in this browser.', 'error');
+                    return;
+                }
+                
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                // Create utterance
+                this.utterance = new SpeechSynthesisUtterance(this.currentStory.content || this.currentStory.story);
+                this.utterance.lang = 'ta-IN'; // Tamil
+                this.utterance.rate = parseFloat(this.speedSlider.value);
+                this.utterance.volume = parseFloat(this.volumeSlider.value);
+                
+                // Set up events
+                this.utterance.onstart = () => {
+                    console.log('Browser TTS started');
+                    this.isPlaying = true;
+                    this.playBtn.textContent = '⏸️ Pause';
+                    this.pauseBtn.disabled = false;
+                    this.stopBtn.disabled = false;
+                };
+                
+                this.utterance.onend = () => {
+                    console.log('Browser TTS ended');
+                    this.isPlaying = false;
+                    this.playBtn.textContent = '🔊 Play Story (Browser TTS)';
+                    this.pauseBtn.disabled = true;
+                    this.stopBtn.disabled = true;
+                };
+                
+                this.utterance.onerror = (event) => {
+                    console.error('Browser TTS error:', event.error);
+                    this.isPlaying = false;
+                    this.playBtn.textContent = '🔊 Play Story (Browser TTS)';
+                    this.pauseBtn.disabled = true;
+                    this.stopBtn.disabled = true;
+                    this.showMessage('Speech synthesis failed. Please try again.', 'error');
+                };
+                
+                // Speak
+                speechSynthesis.speak(this.utterance);
+            }
+            
+            async useElevenLabs() {
+                if (!this.currentStory) {
+                    this.showMessage('Please generate a story first.', 'error');
+                    return;
+                }
+                
+                this.elevenlabsBtn.disabled = true;
+                this.elevenlabsBtn.textContent = '⏳ Generating AI Audio...';
+                this.showMessage('Generating high-quality AI audio...', 'loading');
+                
+                try {
+                    const response = await fetch('/generate-audio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: this.currentStory.content || this.currentStory.story })
+                    });
+                    
+                    const contentType = response.headers.get('content-type') || '';
+                    
+                    if (contentType.includes('application/json')) {
+                        const jsonData = await response.json();
+                        if (jsonData.fallback) {
+                            this.showMessage(`ElevenLabs unavailable: ${jsonData.message}. Please use Browser TTS instead.`, 'warning');
+                            this.elevenlabsBtn.disabled = false;
+                            this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                            return;
+                        }
+                    }
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const audioBlob = await response.blob();
+                    
+                    if (audioBlob.size < 1000) {
+                        this.showMessage('Audio response too small. Please use Browser TTS instead.', 'warning');
+                        this.elevenlabsBtn.disabled = false;
+                        this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                        return;
+                    }
+                    
+                    // Create and play audio
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    this.audioElement = new Audio(audioUrl);
+                    
+                    this.audioElement.onloadstart = () => {
+                        this.elevenlabsBtn.textContent = '⏳ Loading Audio...';
+                    };
+                    
+                    this.audioElement.oncanplay = () => {
+                        this.elevenlabsBtn.textContent = '⏸️ Pause AI Audio';
+                        this.elevenlabsBtn.disabled = false;
+                        this.pauseBtn.disabled = false;
+                        this.stopBtn.disabled = false;
+                    };
+                    
+                    this.audioElement.onplay = () => {
+                        this.isPlaying = true;
+                        this.elevenlabsBtn.textContent = '⏸️ Pause AI Audio';
+                    };
+                    
+                    this.audioElement.onended = () => {
+                        this.isPlaying = false;
+                        this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                        this.elevenlabsBtn.disabled = false;
+                        this.pauseBtn.disabled = true;
+                        this.stopBtn.disabled = true;
+                        URL.revokeObjectURL(audioUrl);
+                    };
+                    
+                    this.audioElement.onerror = (error) => {
+                        console.error('Audio playback error:', error);
+                        this.showMessage('Audio playback failed. Please use Browser TTS instead.', 'error');
+                        this.isPlaying = false;
+                        this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                        this.elevenlabsBtn.disabled = false;
+                        this.pauseBtn.disabled = true;
+                        this.stopBtn.disabled = true;
+                        URL.revokeObjectURL(audioUrl);
+                    };
+                    
+                    this.audioElement.volume = parseFloat(this.volumeSlider.value);
+                    this.audioElement.playbackRate = parseFloat(this.speedSlider.value);
+                    
+                    await this.audioElement.play();
+                    this.showMessage('Playing high-quality AI audio!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error with ElevenLabs:', error);
+                    this.showMessage(`ElevenLabs error: ${error.message}. Please use Browser TTS instead.`, 'error');
+                    this.elevenlabsBtn.disabled = false;
+                    this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                }
+            }
+            
+            pauseStory() {
+                if (this.isPlaying) {
+                    if (this.audioElement) {
+                        this.audioElement.pause();
+                    } else {
+                        speechSynthesis.pause();
+                    }
+                    this.isPlaying = false;
+                    this.playBtn.textContent = '🔊 Resume';
+                    this.elevenlabsBtn.textContent = '🎵 Resume AI Audio';
+                }
+            }
+            
+            stopStory() {
+                if (this.audioElement) {
+                    this.audioElement.pause();
+                    this.audioElement.currentTime = 0;
+                } else {
+                    speechSynthesis.cancel();
+                }
+                this.isPlaying = false;
+                this.playBtn.textContent = '🔊 Play Story (Browser TTS)';
+                this.elevenlabsBtn.textContent = '🎵 ElevenLabs AI';
+                this.pauseBtn.disabled = true;
+                this.stopBtn.disabled = true;
+            }
+            
+            async submitAssessment() {
+                if (Object.keys(this.answers).length !== this.currentQuestions.length) {
+                    this.showMessage('Please answer all questions before submitting.', 'error');
+                    return;
+                }
+                
+                this.submitBtn.disabled = true;
+                this.submitBtn.textContent = 'Submitting...';
+                this.showMessage('Submitting assessment...', 'loading');
+                
+                try {
+                    const response = await fetch('/assess-mental-health', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            story_id: this.currentStory.id,
+                            answers: this.answers
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const results = await response.json();
+                    this.displayResults(results);
+                    this.showMessage('Assessment submitted successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error submitting assessment:', error);
+                    this.showMessage('Failed to submit assessment. Please try again.', 'error');
+                } finally {
+                    this.submitBtn.disabled = false;
+                    this.submitBtn.textContent = 'Submit Assessment';
+                }
+            }
+            
+            displayResults(results) {
+                this.resultsContent.innerHTML = `
+                    <div class="result-item">
+                        <strong>Risk Level:</strong> <span style="color: ${results.risk_level === 'Low' ? 'green' : results.risk_level === 'Medium' ? 'orange' : 'red'}">${results.risk_level}</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Score:</strong> ${results.score}/100
+                    </div>
+                    <div class="result-item">
+                        <strong>Recommendations:</strong>
+                        <ul>
+                            ${results.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                this.resultsContainer.style.display = 'block';
+            }
+            
+            showMessage(text, type) {
+                this.messageContainer.innerHTML = `<div class="message ${type}">${text}</div>`;
+                if (type !== 'loading') {
+                    setTimeout(() => {
+                        this.messageContainer.innerHTML = '';
+                    }, 5000);
+                }
+            }
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            new VoiceStoryApp();
+        });
+    </script>
+</body>
+</html>

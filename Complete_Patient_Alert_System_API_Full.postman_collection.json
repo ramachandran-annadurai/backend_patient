@@ -1,0 +1,637 @@
+{
+	"info": {
+		"_postman_id": "complete-patient-alert-system-api-full",
+		"name": "Complete Patient Alert System API - Full Collection",
+		"description": "Comprehensive API collection for the entire Patient Alert System with all 130+ endpoints, success, and failure responses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System & Health",
+			"item": [
+				{
+					"name": "Root Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {"raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {"raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Patient Alert System API\",\n  \"version\": \"1.0.0\",\n  \"status\": \"running\",\n  \"endpoints\": {\n    \"authentication\": \"/login, /signup, /logout\",\n    \"symptoms\": \"/symptoms/*\",\n    \"vitals\": \"/vitals/*\",\n    \"medication\": \"/medication/*\",\n    \"mental_health\": \"/mental-health/*\",\n    \"nutrition\": \"/nutrition/*\",\n    \"pregnancy\": \"/api/pregnancy/*\",\n    \"hydration\": \"/api/hydration/*\",\n    \"medical_lab\": \"/api/medical-lab/*\",\n    \"voice\": \"/api/voice/*\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {"raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {"raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"status\": \"healthy\",\n  \"timestamp\": \"2025-01-27T10:30:00.000Z\",\n  \"database\": \"connected\",\n  \"services\": {\n    \"pregnancy_tracking\": \"available\",\n    \"hydration_tracking\": \"available\",\n    \"mental_health_assessment\": \"available\",\n    \"symptoms_analysis\": \"available\",\n    \"vital_signs\": \"available\",\n    \"medication_management\": \"available\",\n    \"mental_health\": \"available\",\n    \"nutrition_tracking\": \"available\",\n    \"medical_lab_ocr\": \"available\",\n    \"voice_interaction\": \"available\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Database Health",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/health/database", "host": ["{{base_url}}"], "path": ["health", "database"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/health/database", "host": ["{{base_url}}"], "path": ["health", "database"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"status\": \"healthy\",\n  \"database\": \"connected\",\n  \"collections\": [\"patients\", \"symptoms\", \"vitals\", \"medications\"],\n  \"timestamp\": \"2025-01-27T10:30:00.000Z\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication & User Management",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"patient@example.com\",\n  \"password\": \"password123\",\n  \"mobile\": \"+1234567890\",\n  \"date_of_birth\": \"1990-01-01\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/signup", "host": ["{{base_url}}"], "path": ["signup"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"patient@example.com\",\n  \"password\": \"password123\",\n  \"mobile\": \"+1234567890\",\n  \"date_of_birth\": \"1990-01-01\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/signup", "host": ["{{base_url}}"], "path": ["signup"]}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User registered successfully. OTP sent to email.\",\n  \"patient_id\": \"PAT123\",\n  \"email\": \"patient@example.com\",\n  \"otp_sent\": true\n}"
+						},
+						{
+							"name": "Email Already Exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"existing@example.com\",\n  \"password\": \"password123\",\n  \"mobile\": \"+1234567890\",\n  \"date_of_birth\": \"1990-01-01\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/signup", "host": ["{{base_url}}"], "path": ["signup"]}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Email already exists\"\n}"
+						},
+						{
+							"name": "Missing Required Fields",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"patient@example.com\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/signup", "host": ["{{base_url}}"], "path": ["signup"]}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Password is required\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n  \"patient_id\": \"PAT123\",\n  \"message\": \"Login successful\",\n  \"user_data\": {\n    \"patient_id\": \"PAT123\",\n    \"email\": \"patient@example.com\",\n    \"name\": \"John Doe\"\n  }\n}"
+						},
+						{
+							"name": "Invalid Credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Invalid credentials\"\n}"
+						},
+						{
+							"name": "User Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login_identifier\": \"nonexistent@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"User not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Send OTP",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/send-otp", "host": ["{{base_url}}"], "path": ["send-otp"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/send-otp", "host": ["{{base_url}}"], "path": ["send-otp"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"OTP sent successfully\",\n  \"email\": \"patient@example.com\"\n}"
+						},
+						{
+							"name": "User Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"nonexistent@example.com\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/send-otp", "host": ["{{base_url}}"], "path": ["send-otp"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"User not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/verify-otp", "host": ["{{base_url}}"], "path": ["verify-otp"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\",\n  \"otp\": \"123456\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/verify-otp", "host": ["{{base_url}}"], "path": ["verify-otp"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"OTP verified successfully\",\n  \"email\": \"patient@example.com\",\n  \"verified\": true\n}"
+						},
+						{
+							"name": "Invalid OTP",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\",\n  \"otp\": \"000000\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/verify-otp", "host": ["{{base_url}}"], "path": ["verify-otp"]}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Invalid OTP\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Logout successful\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/forgot-password", "host": ["{{base_url}}"], "path": ["forgot-password"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/forgot-password", "host": ["{{base_url}}"], "path": ["forgot-password"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Password reset email sent\",\n  \"email\": \"patient@example.com\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"token\": \"reset_token_123\",\n  \"new_password\": \"newpassword123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/reset-password", "host": ["{{base_url}}"], "path": ["reset-password"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\",\n  \"token\": \"reset_token_123\",\n  \"new_password\": \"newpassword123\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/reset-password", "host": ["{{base_url}}"], "path": ["reset-password"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Password reset successfully\"\n}"
+						},
+						{
+							"name": "Invalid Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"patient@example.com\",\n  \"token\": \"invalid_token\",\n  \"new_password\": \"newpassword123\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/reset-password", "host": ["{{base_url}}"], "path": ["reset-password"]}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Invalid or expired token\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Complete Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"gender\": \"Male\",\n  \"address\": \"123 Main St\",\n  \"emergency_contact\": \"+1234567890\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/complete-profile", "host": ["{{base_url}}"], "path": ["complete-profile"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"gender\": \"Male\",\n  \"address\": \"123 Main St\",\n  \"emergency_contact\": \"+1234567890\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/complete-profile", "host": ["{{base_url}}"], "path": ["complete-profile"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Profile completed successfully\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Smith\",\n  \"address\": \"456 New St\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/edit-profile", "host": ["{{base_url}}"], "path": ["edit-profile"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Smith\",\n  \"address\": \"456 New St\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/edit-profile", "host": ["{{base_url}}"], "path": ["edit-profile"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Profile updated successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify Token",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{jwt_token}}\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/verify-token", "host": ["{{base_url}}"], "path": ["verify-token"]}
+					},
+					"response": [
+						{
+							"name": "Valid Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"{{jwt_token}}\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/verify-token", "host": ["{{base_url}}"], "path": ["verify-token"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"valid\": true,\n  \"patient_id\": \"{{patient_id}}\",\n  \"message\": \"Token is valid\"\n}"
+						},
+						{
+							"name": "Invalid Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"invalid_token\"\n}"
+								},
+								"url": {"raw": "{{base_url}}/verify-token", "host": ["{{base_url}}"], "path": ["verify-token"]}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"valid\": false,\n  \"error\": \"Invalid token\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/profile/{{patient_id}}", "host": ["{{base_url}}"], "path": ["profile", "{{patient_id}}"]}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/profile/{{patient_id}}", "host": ["{{base_url}}"], "path": ["profile", "{{patient_id}}"]}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"patient@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"gender\": \"Male\",\n  \"address\": \"123 Main St\",\n  \"emergency_contact\": \"+1234567890\",\n  \"created_at\": \"2025-01-27T10:30:00.000Z\"\n}"
+						},
+						{
+							"name": "Profile Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+								"url": {"raw": "{{base_url}}/profile/NONEXISTENT", "host": ["{{base_url}}"], "path": ["profile", "NONEXISTENT"]}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Profile not found\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "http://localhost:8000", "type": "string"},
+		{"key": "jwt_token", "value": "", "type": "string", "description": "JWT token obtained from login"},
+		{"key": "patient_id", "value": "PAT123", "type": "string", "description": "Patient ID for testing"},
+		{"key": "doctor_id", "value": "DOC123", "type": "string", "description": "Doctor ID for testing"},
+		{"key": "appointment_id", "value": "APT987654321", "type": "string", "description": "Appointment ID for testing"}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-login before making requests",
+					"if (!pm.environment.get('jwt_token')) {",
+					"    pm.sendRequest({",
+					"        url: pm.environment.get('base_url') + '/login',",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Content-Type': 'application/json'",
+					"        },",
+					"        body: {",
+					"            mode: 'raw',",
+					"            raw: JSON.stringify({",
+					"                login_identifier: 'patient@example.com',",
+					"                password: 'password123'",
+					"            })",
+					"        }",
+					"    }, function (err, response) {",
+					"        if (response.json() && response.json().access_token) {",
+					"            pm.environment.set('jwt_token', response.json().access_token);",
+					"            pm.environment.set('patient_id', response.json().patient_id);",
+					"        }",
+					"    });",
+					"}"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,178 @@
+{
+	"info": {
+		"_postman_id": "appointment-api",
+		"name": "Appointment API",
+		"description": "Complete appointment management API for both doctor and patient sides",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Doctor Appointments",
+			"item": [
+				{
+					"name": "Get All Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments?patient_id={{patient_id}}&date=2025-09-28&status=active",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments"],
+							"query": [
+								{"key": "patient_id", "value": "{{patient_id}}"},
+								{"key": "date", "value": "2025-09-28"},
+								{"key": "status", "value": "active"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/doctor/appointments", "host": ["{{base_url}}"], "path": ["doctor", "appointments"]}
+					}
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"appointment_status\": \"confirmed\",\n  \"notes\": \"Updated appointment details\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+					}
+				},
+				{
+					"name": "Delete Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["doctor", "appointments", "{{appointment_id}}"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Patient Appointments",
+			"item": [
+				{
+					"name": "Get My Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/patient/appointments?date=2025-09-28&status=active&appointment_type=Follow-up",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments"],
+							"query": [
+								{"key": "date", "value": "2025-09-28"},
+								{"key": "status", "value": "active"},
+								{"key": "appointment_type", "value": "Follow-up"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Appointment Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-28\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Follow-up appointment\",\n  \"patient_notes\": \"I have some concerns about my medication\",\n  \"doctor_id\": \"{{doctor_id}}\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/patient/appointments", "host": ["{{base_url}}"], "path": ["patient", "appointments"]}
+					}
+				},
+				{
+					"name": "Get Specific Appointment",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					}
+				},
+				{
+					"name": "Update My Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2025-09-29\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"patient_notes\": \"Updated my concerns about medication\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					}
+				},
+				{
+					"name": "Cancel My Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/{{appointment_id}}", "host": ["{{base_url}}"], "path": ["patient", "appointments", "{{appointment_id}}"]}
+					}
+				},
+				{
+					"name": "Get Upcoming Appointments",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/upcoming", "host": ["{{base_url}}"], "path": ["patient", "appointments", "upcoming"]}
+					}
+				},
+				{
+					"name": "Get Appointment History",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/patient/appointments/history", "host": ["{{base_url}}"], "path": ["patient", "appointments", "history"]}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "http://localhost:8000", "type": "string"},
+		{"key": "jwt_token", "value": "", "type": "string"},
+		{"key": "patient_id", "value": "PAT123", "type": "string"},
+		{"key": "doctor_id", "value": "DOC123", "type": "string"},
+		{"key": "appointment_id", "value": "APT987654321", "type": "string"}
+	]
+}

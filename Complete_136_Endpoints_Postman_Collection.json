@@ -1,0 +1,3796 @@
+{
+  "info": {
+    "name": "Patient Alert System - Complete 136 Endpoints",
+    "description": "Comprehensive Postman collection for all 136 endpoints in the Patient Alert System API",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "PAT123",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. System & Health (4 endpoints)",
+      "item": [
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Database Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health/database",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health",
+                "database"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Database Reconnect",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health/database/reconnect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health",
+                "database",
+                "reconnect"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication & User Management (9 endpoints)",
+      "item": [
+        {
+          "name": "User Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/signup",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "signup"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/send-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "send-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resend-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resend-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verify-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "verify-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forgot-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verify-token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "verify-token"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Patient Profile Management (4 endpoints)",
+      "item": [
+        {
+          "name": "Complete Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/complete-profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "complete-profile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"blood_type\": \"O+\",\n  \"address\": \"123 Main St\",\n  \"emergency_contact\": \"+1234567890\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Edit Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/edit-profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "edit-profile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"address\": \"456 New St\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Profile by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Patient Profile by Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-patient-profile-by-email/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-patient-profile-by-email",
+                "john@example.com"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Sleep & Activity Tracking (13 endpoints)",
+      "item": [
+        {
+          "name": "Save Sleep Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/save-sleep-log",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "save-sleep-log"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"sleep_hours\": 8,\n  \"sleep_quality\": \"good\",\n  \"bedtime\": \"22:00\",\n  \"wake_time\": \"06:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Sleep Logs by Username",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-sleep-logs/john_doe",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-sleep-logs",
+                "john_doe"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sleep Logs by Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-sleep-logs-by-email/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-sleep-logs-by-email",
+                "john@example.com"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Patient Complete Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/patient-complete-profile/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "patient-complete-profile",
+                "john@example.com"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Activities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user-activities/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user-activities",
+                "john@example.com"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Session Activities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/session-activities/session123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "session-activities",
+                "session123"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Activity Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activity-summary/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "activity-summary",
+                "john@example.com"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Track Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/track-activity",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "track-activity"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"activity_type\": \"walking\",\n  \"duration\": 30,\n  \"intensity\": \"moderate\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Active Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/active-sessions/john@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "active-sessions",
+                "john@example.com"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save Kick Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/save-kick-session",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "save-kick-session"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"kick_count\": 10,\n  \"session_duration\": 30,\n  \"notes\": \"Baby was very active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Kick History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-kick-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-kick-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Food History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-food-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-food-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current Pregnancy Week",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get-current-pregnancy-week/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "get-current-pregnancy-week",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Symptoms Analysis (9 endpoints)",
+      "item": [
+        {
+          "name": "Symptoms Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Symptom Assistance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/assist",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "assist"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"symptoms\": [\n    \"nausea\",\n    \"fatigue\"\n  ],\n  \"week\": 12\n}"
+            }
+          }
+        },
+        {
+          "name": "Save Symptom Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/save-symptom-log",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "save-symptom-log"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"symptoms\": [\n    \"nausea\",\n    \"fatigue\"\n  ],\n  \"severity\": \"moderate\",\n  \"notes\": \"Feeling tired\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Save Analysis Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/save-analysis-report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "save-analysis-report"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"analysis\": \"Normal pregnancy symptoms\",\n  \"recommendations\": \"Rest more\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Symptom History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/get-symptom-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "get-symptom-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Analysis Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/get-analysis-reports/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "get-analysis-reports",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Knowledge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/knowledge/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "knowledge",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pregnancy Symptoms\",\n  \"content\": \"Common pregnancy symptoms include...\",\n  \"category\": \"pregnancy\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Add Knowledge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/knowledge/bulk",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "knowledge",
+                "bulk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"knowledge_items\": [\n    {\n      \"title\": \"Symptom 1\",\n      \"content\": \"Content 1\"\n    },\n    {\n      \"title\": \"Symptom 2\",\n      \"content\": \"Content 2\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Ingest Knowledge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/symptoms/ingest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "symptoms",
+                "ingest"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"collection_name\": \"pregnancy_symptoms\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Vital Signs (8 endpoints)",
+      "item": [
+        {
+          "name": "Record Vital Sign",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/record",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "record"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"blood_pressure\": \"120/80\",\n  \"heart_rate\": 72,\n  \"temperature\": 98.6\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Vital History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Analyze Vitals",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/analyze",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "analyze"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"vitals\": {\n    \"blood_pressure\": \"120/80\",\n    \"heart_rate\": 72\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Vital Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/stats/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "stats",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Health Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/health-summary/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "health-summary",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Vital Alert",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/alerts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "alerts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"alert_type\": \"high_blood_pressure\",\n  \"message\": \"Blood pressure is high\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Vital Alerts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/alerts/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "alerts",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Process Vital OCR",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/ocr",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "ocr"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"image_data\": \"base64_encoded_image\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Vital Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vitals/process-text",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vitals",
+                "process-text"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"text\": \"Blood Pressure: 120/80, Heart Rate: 72\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Vital Signs OCR (4 endpoints)",
+      "item": [
+        {
+          "name": "Upload Vital Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vital-ocr/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vital-ocr",
+                "upload"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"file\": \"vital_signs_document.pdf\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Base64 Vital Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vital-ocr/base64",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vital-ocr",
+                "base64"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"base64_data\": \"base64_encoded_document\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Supported Formats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vital-ocr/formats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vital-ocr",
+                "formats"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get OCR Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vital-ocr/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vital-ocr",
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Medication Management (20 endpoints)",
+      "item": [
+        {
+          "name": "Save Medication Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/save-medication-log",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "save-medication-log"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_name\": \"Prenatal Vitamins\",\n  \"dosage\": \"1 tablet\",\n  \"frequency\": \"daily\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Medication History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/get-medication-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "get-medication-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Upcoming Dosages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/get-upcoming-dosages/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "get-upcoming-dosages",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save Tablet Taken",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/save-tablet-taken",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "save-tablet-taken"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_id\": \"med123\",\n  \"taken_at\": \"2024-01-27T10:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Tablet History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/get-tablet-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "get-tablet-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/upload-prescription",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "upload-prescription"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"prescription_file\": \"prescription.pdf\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Prescription Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/get-prescription-details/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "get-prescription-details",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Prescription Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/update-prescription-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "update-prescription-status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prescription_id\": \"pres123\",\n  \"status\": \"completed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Prescription Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/process-prescription-document",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "process-prescription-document"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"document_data\": \"base64_encoded_document\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process with PaddleOCR",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/process-with-paddleocr",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "process-with-paddleocr"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"image_data\": \"base64_encoded_image\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Prescription Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/process-prescription-text",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "process-prescription-text"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"text\": \"Prescription text content\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process with Mock N8N",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/process-with-mock-n8n",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "process-with-mock-n8n"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"prescription_data\": \"prescription_data\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Test N8N Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/test-n8n-webhook",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "test-n8n-webhook"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"test_data\": \"webhook_test_data\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process with N8N Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/process-with-n8n-webhook",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "process-with-n8n-webhook"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"webhook_data\": \"webhook_data\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Save Tablet Tracking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/save-tablet-tracking",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "save-tablet-tracking"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_name\": \"Prenatal Vitamins\",\n  \"taken\": true,\n  \"timestamp\": \"2024-01-27T10:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Tablet Tracking History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/get-tablet-tracking-history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "get-tablet-tracking-history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Send Reminders",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/send-reminders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "send-reminders"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Test Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/test-reminder/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "test-reminder",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Test Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/test-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "test-status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Test File Upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medication/test-file-upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "medication",
+                "test-file-upload"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"test_file\": \"test_prescription.pdf\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Quantum & LLM Services (7 endpoints)",
+      "item": [
+        {
+          "name": "Quantum Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quantum/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "quantum",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Collections",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quantum/collections",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "quantum",
+                "collections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Collection Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quantum/collection-status/pregnancy_symptoms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "quantum",
+                "collection-status",
+                "pregnancy_symptoms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "LLM Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/llm/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "llm",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Test LLM",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/llm/test",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "llm",
+                "test"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"Test prompt for LLM\",\n  \"model\": \"gpt-4\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Knowledge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quantum/add-knowledge",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "quantum",
+                "add-knowledge"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pregnancy Knowledge\",\n  \"content\": \"Knowledge content\",\n  \"category\": \"pregnancy\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Search Knowledge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/quantum/search-knowledge",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "quantum",
+                "search-knowledge"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"pregnancy symptoms\",\n  \"limit\": 10\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Mental Health (3 endpoints)",
+      "item": [
+        {
+          "name": "Mood Check-in",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mental-health/mood-checkin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mental-health",
+                "mood-checkin"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"mood\": \"happy\",\n  \"energy_level\": 8,\n  \"notes\": \"Feeling good today\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Mental Health History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mental-health/history/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mental-health",
+                "history",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mental Health Assessment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mental-health/assessment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mental-health",
+                "assessment"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"responses\": {\n    \"question1\": \"answer1\",\n    \"question2\": \"answer2\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Nutrition (6 endpoints)",
+      "item": [
+        {
+          "name": "Nutrition Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Transcribe Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/transcribe",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "transcribe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"audio_data\": \"base64_encoded_audio\",\n  \"language\": \"en\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Analyze with GPT-4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/analyze-with-gpt4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "analyze-with-gpt4"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"food_description\": \"Grilled chicken with vegetables\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Save Food Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/save-food-entry",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "save-food-entry"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"food_name\": \"Grilled Chicken\",\n  \"calories\": 300,\n  \"meal_type\": \"lunch\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Food Entries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/get-food-entries/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "get-food-entries",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Debug Food Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nutrition/debug-food-data/{{patient_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutrition",
+                "debug-food-data",
+                "{{patient_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Pregnancy API (12 endpoints)",
+      "item": [
+        {
+          "name": "Get Pregnancy Week",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Weeks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/weeks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "weeks"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Trimester",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/trimester/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "trimester",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Baby Image",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/baby-image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "baby-image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Baby Size",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/baby-size",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "baby-size"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Week Symptoms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/symptoms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "symptoms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Week Screening",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/screening",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "screening"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Week Wellness",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/wellness",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "wellness"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Week Nutrition",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/week/12/nutrition",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "week",
+                "12",
+                "nutrition"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get OpenAI Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/openai/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "openai",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Track Pregnancy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/tracking",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "tracking"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"current_week\": 12,\n  \"notes\": \"Feeling good\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Tracking History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/tracking/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "tracking",
+                "history"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pregnancy Progress",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pregnancy/progress",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pregnancy",
+                "progress"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Hydration API (10 endpoints)",
+      "item": [
+        {
+          "name": "Record Hydration Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/intake",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "intake"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"amount\": 250,\n  \"unit\": \"ml\",\n  \"timestamp\": \"2024-01-27T10:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Hydration History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "history"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "stats"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Hydration Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/goal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "goal"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"daily_goal\": 2000,\n  \"unit\": \"ml\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Goal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/goal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "goal"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Hydration Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/reminder",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "reminder"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"reminder_time\": \"10:00\",\n  \"frequency\": \"hourly\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Reminders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/reminders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "reminders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/analysis",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "analysis"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "report"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Tips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/tips",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "tips"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hydration Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hydration/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hydration",
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Mental Health API (10 endpoints)",
+      "item": [
+        {
+          "name": "Generate Story",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/generate-story",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "generate-story"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"story_type\": \"motivational\",\n  \"mood\": \"anxious\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mental Health Assessment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/assess",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "assess"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"responses\": {\n    \"stress_level\": 7,\n    \"sleep_quality\": 6\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Generate Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/generate-audio",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "generate-audio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"text\": \"Relaxation story\",\n  \"voice_type\": \"calm\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Story Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/story-types",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "story-types"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mental Health Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Chat with AI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/chat",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "chat"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"message\": \"I'm feeling anxious\",\n  \"session_id\": \"session123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Chat History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/chat/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "chat",
+                "history"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Chat Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/chat/session",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "chat",
+                "session"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"session_type\": \"therapy\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Chat Session",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/chat/session/session123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "chat",
+                "session",
+                "session123"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Assessments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/assessments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "assessments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Debug Mental Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mental-health/debug",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mental-health",
+                "debug"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Medical Lab OCR (5 endpoints)",
+      "item": [
+        {
+          "name": "Upload Lab Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medical-lab/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-lab",
+                "upload"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"lab_file\": \"lab_results.pdf\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Base64 Lab Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medical-lab/base64",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-lab",
+                "base64"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"base64_data\": \"base64_encoded_lab_document\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Supported Formats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medical-lab/formats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-lab",
+                "formats"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Supported Languages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medical-lab/languages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-lab",
+                "languages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Medical Lab Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medical-lab/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-lab",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Voice Interaction (7 endpoints)",
+      "item": [
+        {
+          "name": "Transcribe Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/transcribe",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "transcribe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"audio_data\": \"base64_encoded_audio\",\n  \"language\": \"en\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Transcribe Base64 Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/transcribe-base64",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "transcribe-base64"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"base64_audio\": \"base64_encoded_audio\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get AI Response",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/ai-response",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "ai-response"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"transcript\": \"Hello, I need help with my symptoms\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Text to Speech",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/text-to-speech",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "text-to-speech"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"text\": \"Hello, how can I help you today?\",\n  \"voice\": \"friendly\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Voice Interaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/process",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "process"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"audio_data\": \"base64_encoded_audio\",\n  \"interaction_type\": \"symptom_check\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Service Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/service-info",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "service-info"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Voice Service Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/voice/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "voice",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

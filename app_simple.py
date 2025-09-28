@@ -12,6 +12,11 @@ from symptoms_service import symptoms_service
 from vital_signs_service import VitalSignsService
 from vital_signs_ocr_service import vital_signs_ocr_service
 from vital_ocr_service import vital_ocr_service
+from pregnancy_service import PregnancyService
+from hydration_service import HydrationService
+from mental_health_service import MentalHealthService
+from medical_lab_service import MedicalLabService
+from voice_interaction_service import voice_interaction_service
 
 # Load environment variables with error handling
 try:
@@ -1397,6 +1402,27 @@ def root():
             "GET /nutrition/debug-food-data/<user_id> - Debug food data structure"
         ]
     })
+
+@app.route('/health')
+def health():
+    """Health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'database': 'connected' if db else 'disconnected',
+        'services': {
+            'pregnancy_tracking': 'available',
+            'hydration_tracking': 'available',
+            'mental_health_assessment': 'available',
+            'symptoms_analysis': 'available',
+            'vital_signs': 'available',
+            'medication_management': 'available',
+            'mental_health': 'available',
+            'nutrition_tracking': 'available',
+            'medical_lab_ocr': 'available',
+            'voice_interaction': 'available'
+        }
+    }), 200
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -6226,7 +6252,27 @@ if PADDLE_OCR_AVAILABLE:
     print(f"🔍 Basic OCR service available: {ocr_service is not None}")
     print(f"🔍 Webhook service available: {webhook_service is not None}")
     
-    # Configure the N8N webhook
+    # Initialize pregnancy service
+    pregnancy_service = PregnancyService()
+    print("✅ Pregnancy service initialized successfully")
+    
+# Initialize hydration service
+hydration_service = HydrationService()
+print("✅ Hydration service initialized successfully")
+
+# Initialize mental health service
+mental_health_service = MentalHealthService()
+print("✅ Mental health service initialized successfully")
+
+# Initialize medical lab service
+medical_lab_service = MedicalLabService()
+print("✅ Medical lab service initialized successfully")
+
+# Initialize voice interaction service
+print("✅ Voice interaction service initialized successfully")
+
+# Configure the N8N webhook
+if WebhookConfig is not None:
     n8n_config = WebhookConfig(
         id="n8n_prescription_webhook",
         name="N8N Prescription Processor",
@@ -6237,10 +6283,25 @@ if PADDLE_OCR_AVAILABLE:
         retry_attempts=3,
         retry_delay=2,
         headers={"Content-Type": "application/json"},
-        payload_template={}  # Use default payload structure
+    payload_template={}  # Use default payload structure
     )
-    
-    # Add the N8N webhook configuration
+else:
+    # Fallback configuration when WebhookConfig is not available
+    n8n_config = {
+        "id": "n8n_prescription_webhook",
+        "name": "N8N Prescription Processor",
+        "url": "https://n8n.srv795087.hstgr.cloud/webhook/bf25c478-c4a9-44c5-8f43-08c3fcae51f9",
+        "method": "POST",
+        "enabled": True,
+        "timeout": 30,
+        "retry_attempts": 3,
+        "retry_delay": 2,
+        "headers": {"Content-Type": "application/json"},
+        "payload_template": {}
+    }
+
+# Add the N8N webhook configuration
+if webhook_config_service is not None:
     try:
         # Check if config already exists
         existing_configs = webhook_config_service.get_all_configs()
@@ -6269,6 +6330,7 @@ if PADDLE_OCR_AVAILABLE:
         print(f"⚠️ Could not configure N8N webhook: {e}")
         print(f"💡 Error details: {str(e)}")
 else:
+    print("⚠️ Webhook configuration service not available, using fallback mode")
     enhanced_ocr_service = None
     ocr_service = None
     webhook_service = None
@@ -6812,9 +6874,1119 @@ def debug_food_data(user_id):
             'message': f'Error: {str(e)}'
         }), 500
 
+# ============================================================================
+# PREGNANCY TRACKING ENDPOINTS
+# ============================================================================
+
+@app.route('/api/pregnancy/week/<int:week>', methods=['GET'])
+@token_required
+def get_pregnancy_week(week):
+    """Get pregnancy week information"""
+    try:
+        result = pregnancy_service.get_pregnancy_week_data(week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/weeks', methods=['GET'])
+@token_required
+def get_all_pregnancy_weeks():
+    """Get all pregnancy weeks data"""
+    try:
+        weeks_data = pregnancy_service.get_all_pregnancy_weeks()
+        return jsonify({
+            'success': True,
+            'data': {str(week): week_data.dict() for week, week_data in weeks_data.items()},
+            'message': f'Successfully retrieved data for {len(weeks_data)} weeks'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/trimester/<int:trimester>', methods=['GET'])
+@token_required
+def get_trimester_weeks(trimester):
+    """Get weeks for a specific trimester"""
+    try:
+        if trimester not in [1, 2, 3]:
+            return jsonify({
+                'success': False,
+                'message': 'Trimester must be 1, 2, or 3'
+            }), 400
+        
+        weeks_data = pregnancy_service.get_trimester_weeks(trimester)
+        return jsonify({
+            'success': True,
+            'trimester': trimester,
+            'weeks': {str(week): week_data.dict() for week, week_data in weeks_data.items()},
+            'message': f'Successfully retrieved weeks for trimester {trimester}'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/baby-image', methods=['GET'])
+@token_required
+def get_baby_size_image(week):
+    """Get baby size visualization image"""
+    try:
+        style = request.args.get('style', 'matplotlib')
+        result = pregnancy_service.get_baby_size_image(week, style)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/baby-size', methods=['GET'])
+@token_required
+async def get_ai_baby_size(week):
+    """Get AI-powered baby size information"""
+    try:
+        result = await pregnancy_service.get_ai_baby_size(week)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/symptoms', methods=['GET'])
+@token_required
+async def get_early_symptoms(week):
+    """Get AI-powered early symptoms information"""
+    try:
+        result = await pregnancy_service.get_early_symptoms(week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/screening', methods=['GET'])
+@token_required
+async def get_prenatal_screening(week):
+    """Get AI-powered prenatal screening information"""
+    try:
+        result = await pregnancy_service.get_prenatal_screening(week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/wellness', methods=['GET'])
+@token_required
+async def get_wellness_tips(week):
+    """Get AI-powered wellness tips"""
+    try:
+        result = await pregnancy_service.get_wellness_tips(week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/week/<int:week>/nutrition', methods=['GET'])
+@token_required
+async def get_nutrition_tips(week):
+    """Get AI-powered nutrition tips"""
+    try:
+        result = await pregnancy_service.get_nutrition_tips(week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/openai/status', methods=['GET'])
+@token_required
+def get_openai_status():
+    """Check OpenAI service status"""
+    try:
+        result = pregnancy_service.get_openai_status()
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/tracking', methods=['POST'])
+@token_required
+def save_pregnancy_tracking():
+    """Save pregnancy tracking data"""
+    try:
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        result = pregnancy_service.save_pregnancy_tracking(patient_id, data)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/tracking/history', methods=['GET'])
+@token_required
+def get_pregnancy_tracking_history():
+    """Get pregnancy tracking history"""
+    try:
+        patient_id = request.user_data['patient_id']
+        result = pregnancy_service.get_pregnancy_tracking_history(patient_id)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/pregnancy/progress', methods=['GET'])
+@token_required
+def calculate_pregnancy_progress():
+    """Calculate pregnancy progress"""
+    try:
+        patient_id = request.user_data['patient_id']
+        current_week = request.args.get('week', 1, type=int)
+        
+        result = pregnancy_service.calculate_pregnancy_progress(patient_id, current_week)
+        return jsonify({
+            'success': True,
+            'data': result.dict(),
+            'message': 'Pregnancy progress calculated successfully'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+# ============================================================================
+# HYDRATION TRACKING ENDPOINTS
+# ============================================================================
+
+@app.route('/api/hydration/intake', methods=['POST'])
+@token_required
+def save_hydration_intake():
+    """Save hydration intake record"""
+    try:
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        # Validate required fields
+        if not data or 'hydration_type' not in data or 'amount_ml' not in data:
+            return jsonify({
+                'success': False,
+                'message': 'hydration_type and amount_ml are required'
+            }), 400
+        
+        # Create intake request
+        from hydration_models import HydrationIntakeRequest
+        intake_request = HydrationIntakeRequest(
+            hydration_type=data['hydration_type'],
+            amount_ml=data['amount_ml'],
+            notes=data.get('notes'),
+            temperature=data.get('temperature'),
+            additives=data.get('additives')
+        )
+        
+        result = hydration_service.save_hydration_intake(patient_id, intake_request)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/history', methods=['GET'])
+@token_required
+def get_hydration_history():
+    """Get hydration intake history"""
+    try:
+        patient_id = request.user_data['patient_id']
+        days = request.args.get('days', 7, type=int)
+        
+        result = hydration_service.get_hydration_history(patient_id, days)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/stats', methods=['GET'])
+@token_required
+def get_daily_hydration_stats():
+    """Get daily hydration statistics"""
+    try:
+        patient_id = request.user_data['patient_id']
+        target_date = request.args.get('date')
+        
+        if target_date:
+            target_date = datetime.strptime(target_date, '%Y-%m-%d').date()
+        
+        stats = hydration_service.get_daily_hydration_stats(patient_id, target_date)
+        return jsonify({
+            'success': True,
+            'data': stats.dict(),
+            'message': 'Hydration stats retrieved successfully'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/goal', methods=['POST'])
+@token_required
+def set_hydration_goal():
+    """Set or update hydration goal"""
+    try:
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        if not data or 'daily_goal_ml' not in data:
+            return jsonify({
+                'success': False,
+                'message': 'daily_goal_ml is required'
+            }), 400
+        
+        from hydration_models import HydrationGoalRequest
+        goal_request = HydrationGoalRequest(
+            daily_goal_ml=data['daily_goal_ml'],
+            reminder_enabled=data.get('reminder_enabled', True),
+            reminder_times=data.get('reminder_times')
+        )
+        
+        result = hydration_service.set_hydration_goal(patient_id, goal_request)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/goal', methods=['GET'])
+@token_required
+def get_hydration_goal():
+    """Get current hydration goal"""
+    try:
+        patient_id = request.user_data['patient_id']
+        result = hydration_service.get_hydration_goal(patient_id)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/reminder', methods=['POST'])
+@token_required
+def create_hydration_reminder():
+    """Create hydration reminder"""
+    try:
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        if not data or 'reminder_time' not in data or 'message' not in data:
+            return jsonify({
+                'success': False,
+                'message': 'reminder_time and message are required'
+            }), 400
+        
+        from hydration_models import HydrationReminderRequest
+        reminder_request = HydrationReminderRequest(
+            reminder_time=data['reminder_time'],
+            message=data['message'],
+            days_of_week=data.get('days_of_week', [0, 1, 2, 3, 4, 5, 6])
+        )
+        
+        result = hydration_service.create_hydration_reminder(patient_id, reminder_request)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/reminders', methods=['GET'])
+@token_required
+def get_hydration_reminders():
+    """Get all hydration reminders"""
+    try:
+        patient_id = request.user_data['patient_id']
+        result = hydration_service.get_hydration_reminders(patient_id)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/analysis', methods=['GET'])
+@token_required
+async def analyze_hydration_patterns():
+    """Analyze hydration patterns using AI"""
+    try:
+        patient_id = request.user_data['patient_id']
+        days = request.args.get('days', 7, type=int)
+        
+        analysis = await hydration_service.analyze_hydration_patterns(patient_id, days)
+        return jsonify({
+            'success': True,
+            'data': analysis.dict(),
+            'message': 'Hydration analysis completed successfully'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/report', methods=['GET'])
+@token_required
+def get_weekly_hydration_report():
+    """Get weekly hydration report"""
+    try:
+        patient_id = request.user_data['patient_id']
+        week_start = request.args.get('week_start')
+        
+        if week_start:
+            week_start = datetime.strptime(week_start, '%Y-%m-%d').date()
+        
+        report = hydration_service.get_weekly_hydration_report(patient_id, week_start)
+        return jsonify({
+            'success': True,
+            'data': report.dict(),
+            'message': 'Weekly hydration report generated successfully'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/tips', methods=['GET'])
+@token_required
+def get_hydration_tips():
+    """Get personalized hydration tips"""
+    try:
+        patient_id = request.user_data['patient_id']
+        current_week = request.args.get('week', type=int)
+        
+        result = hydration_service.get_hydration_tips(patient_id, current_week)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+@app.route('/api/hydration/status', methods=['GET'])
+@token_required
+def get_hydration_status():
+    """Get current hydration status and recommendations"""
+    try:
+        patient_id = request.user_data['patient_id']
+        result = hydration_service.get_hydration_status(patient_id)
+        return jsonify(result.dict()), 200 if result.success else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+# ============================================================================
+# MENTAL HEALTH ASSESSMENT ENDPOINTS
+# ============================================================================
+
+@app.route('/api/mental-health/generate-story', methods=['POST'])
+@token_required
+def generate_mental_health_story():
+    """Generate a mental health assessment story"""
+    try:
+        data = request.get_json()
+        story_type = data.get('story_type', 'pregnancy')
+        scenario = data.get('scenario', 'pregnancy_mental_health')
+        
+        result = mental_health_service.generate_story(story_type, scenario)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error generating story: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/assess', methods=['POST'])
+@token_required
+def assess_mental_health():
+    """Assess mental health based on story responses"""
+    try:
+        data = request.get_json()
+        answers = data.get('answers', [])
+        story_id = data.get('story_id', '')
+        
+        if not answers:
+            return jsonify({
+                'success': False,
+                'error': 'Answers are required'
+            }), 400
+        
+        patient_id = request.user_data['patient_id']
+        result = mental_health_service.assess_mental_health(answers, story_id, patient_id)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error assessing mental health: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/generate-audio', methods=['POST'])
+@token_required
+def generate_mental_health_audio():
+    """Generate Tamil audio for mental health story"""
+    try:
+        data = request.get_json()
+        text = data.get('text', '')
+        
+        if not text:
+            return jsonify({
+                'success': False,
+                'error': 'Text is required for audio generation'
+            }), 400
+        
+        result = mental_health_service.generate_audio(text)
+        return jsonify(result), 200 if result['success'] else 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error generating audio: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/story-types', methods=['GET'])
+def get_mental_health_story_types():
+    """Get available mental health story types"""
+    try:
+        story_types = {
+            "pregnancy": "Stories about pregnancy-related mental health challenges",
+            "postpartum": "Stories about postpartum mental health experiences", 
+            "general": "General mental health and life challenges"
+        }
+        
+        return jsonify({
+            'success': True,
+            'story_types': story_types
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error getting story types: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/health', methods=['GET'])
+def mental_health_service_health():
+    """Check mental health service health"""
+    try:
+        return jsonify({
+            'success': True,
+            'status': 'healthy',
+            'service': 'Mental Health Assessment',
+            'features': [
+                'Story generation',
+                'Mental health assessment',
+                'Tamil audio generation',
+                'AI-powered analysis'
+            ],
+            'timestamp': datetime.now().isoformat()
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error checking service health: {str(e)}'
+        }), 500
+
+# ==================== MENTAL HEALTH CHAT ENDPOINTS ====================
+
+@app.route('/api/mental-health/chat', methods=['POST'])
+@token_required
+def mental_health_chat():
+    """Send a message to the mental health AI chat"""
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data:
+            return jsonify({
+                'success': False,
+                'message': 'Message is required'
+            }), 400
+
+        patient_id = request.user_data['patient_id']
+        message = data['message']
+        context = data.get('context')
+        mood = data.get('mood')
+        session_id = data.get('session_id')
+        user_profile = data.get('user_profile', {})
+
+        # Generate AI response using the mental health service
+        result = mental_health_service.generate_chat_response(
+            message=message,
+            patient_id=patient_id,
+            context=context,
+            mood=mood,
+            session_id=session_id,
+            user_profile=user_profile
+        )
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        print(f"❌ Mental health chat error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Chat error: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/chat/history', methods=['GET'])
+@token_required
+def get_mental_health_chat_history():
+    """Get mental health chat history for a patient"""
+    try:
+        patient_id = request.user_data['patient_id']
+        limit = request.args.get('limit', 50, type=int)
+        offset = request.args.get('offset', 0, type=int)
+
+        # Get chat sessions from database
+        if db.mental_health_collection is None:
+            return jsonify({
+                'success': False,
+                'message': 'Database not available'
+            }), 500
+
+        # Query chat sessions
+        chat_sessions = list(db.mental_health_collection.find(
+            {"patient_id": patient_id, "type": "chat_session"}
+        ).sort("created_at", -1).skip(offset).limit(limit))
+
+        # Convert ObjectId to string for JSON serialization
+        for session in chat_sessions:
+            session["_id"] = str(session["_id"])
+            if isinstance(session.get("created_at"), datetime):
+                session["created_at"] = session["created_at"].isoformat()
+            if isinstance(session.get("last_activity"), datetime):
+                session["last_activity"] = session["last_activity"].isoformat()
+
+        return jsonify({
+            'success': True,
+            'sessions': chat_sessions,
+            'count': len(chat_sessions)
+        }), 200
+
+    except Exception as e:
+        print(f"❌ Get mental health chat history error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Failed to get chat history: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/chat/session', methods=['POST'])
+@token_required
+def start_mental_health_chat_session():
+    """Start a new mental health chat session"""
+    try:
+        data = request.get_json() or {}
+        patient_id = request.user_data['patient_id']
+        initial_mood = data.get('initial_mood')
+        user_profile = data.get('user_profile', {})
+
+        session_id = str(uuid.uuid4())
+        session_data = {
+            "session_id": session_id,
+            "patient_id": patient_id,
+            "type": "chat_session",
+            "initial_mood": initial_mood,
+            "user_profile": user_profile,
+            "created_at": datetime.now(),
+            "last_activity": datetime.now(),
+            "messages": [],
+            "current_mood": initial_mood,
+            "session_data": {}
+        }
+
+        # Save session to database
+        if db.mental_health_collection is not None:
+            db.mental_health_collection.insert_one(session_data)
+
+        return jsonify({
+            'success': True,
+            'session_id': session_id,
+            'message': 'Chat session started successfully'
+        }), 200
+
+    except Exception as e:
+        print(f"❌ Start mental health chat session error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Failed to start chat session: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/chat/session/<session_id>', methods=['DELETE'])
+@token_required
+def end_mental_health_chat_session(session_id):
+    """End a mental health chat session"""
+    try:
+        patient_id = request.user_data['patient_id']
+        data = request.get_json() or {}
+        summary = data.get('summary')
+
+        # Update session in database
+        if db.mental_health_collection is not None:
+            update_data = {
+                "last_activity": datetime.now(),
+                "ended_at": datetime.now(),
+                "status": "ended"
+            }
+            if summary:
+                update_data["summary"] = summary
+
+            db.mental_health_collection.update_one(
+                {"session_id": session_id, "patient_id": patient_id, "type": "chat_session"},
+                {"$set": update_data}
+            )
+
+        return jsonify({
+            'success': True,
+            'message': 'Chat session ended successfully'
+        }), 200
+
+    except Exception as e:
+        print(f"❌ End mental health chat session error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Failed to end chat session: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/assessments', methods=['GET'])
+@token_required
+def get_mental_health_assessments():
+    """Get mental health assessments for a patient"""
+    try:
+        patient_id = request.user_data['patient_id']
+        limit = request.args.get('limit', 10, type=int)
+        offset = request.args.get('offset', 0, type=int)
+
+        # Get assessments from database using mental health service
+        if mental_health_service.mental_health_collection is not None:
+            assessments = list(mental_health_service.mental_health_collection.find(
+                {"patient_id": patient_id, "type": "mental_health_assessment"}
+            ).sort("created_at", -1).skip(offset).limit(limit))
+
+            # Convert ObjectId to string for JSON serialization
+            for assessment in assessments:
+                assessment["_id"] = str(assessment["_id"])
+                if isinstance(assessment.get("created_at"), datetime):
+                    assessment["created_at"] = assessment["created_at"].isoformat()
+
+            return jsonify({
+                'success': True,
+                'assessments': assessments,
+                'count': len(assessments)
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Database not available'
+            }), 500
+
+    except Exception as e:
+        print(f"❌ Get mental health assessments error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Failed to get assessments: {str(e)}'
+        }), 500
+
+@app.route('/api/mental-health/debug', methods=['GET'])
+@token_required
+def debug_mental_health_database():
+    """Debug endpoint to check mental health database status"""
+    try:
+        patient_id = request.user_data['patient_id']
+        
+        debug_info = {
+            'patient_id': patient_id,
+            'database_connected': mental_health_service.mental_health_collection is not None,
+            'database_name': mental_health_service.db.name if mental_health_service.db else None,
+            'collection_name': mental_health_service.mental_health_collection.name if mental_health_service.mental_health_collection else None,
+        }
+        
+        if mental_health_service.mental_health_collection is not None:
+            # Get total count
+            total_count = mental_health_service.mental_health_collection.count_documents({})
+            patient_count = mental_health_service.mental_health_collection.count_documents({"patient_id": patient_id})
+            
+            debug_info.update({
+                'total_assessments': total_count,
+                'patient_assessments': patient_count,
+                'recent_assessments': list(mental_health_service.mental_health_collection.find(
+                    {"patient_id": patient_id}
+                ).sort("created_at", -1).limit(3))
+            })
+            
+            # Convert ObjectId to string for JSON serialization
+            for assessment in debug_info.get('recent_assessments', []):
+                assessment["_id"] = str(assessment["_id"])
+                if isinstance(assessment.get("created_at"), datetime):
+                    assessment["created_at"] = assessment["created_at"].isoformat()
+        
+        return jsonify({
+            'success': True,
+            'debug_info': debug_info
+        }), 200
+
+    except Exception as e:
+        print(f"❌ Debug mental health database error: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Debug failed: {str(e)}'
+        }), 500
+
+# ============================================================================
+# MEDICAL LAB OCR ENDPOINTS
+# ============================================================================
+
+@app.route('/api/medical-lab/upload', methods=['POST'])
+@token_required
+def medical_lab_upload():
+    """Upload and process medical documents (PDF, images, text files)"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'error': 'No file provided'
+            }), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'error': 'No file selected'
+            }), 400
+        
+        # Read file content
+        file_content = file.read()
+        filename = file.filename
+        
+        # Validate file type
+        if not medical_lab_service.validate_file_type(file.content_type, filename):
+            return jsonify({
+                'success': False,
+                'error': f'Unsupported file type: {file.content_type}',
+                'supported_types': list(medical_lab_service.supported_formats.keys())
+            }), 400
+        
+        # Process file
+        result = asyncio.run(medical_lab_service.process_file(file_content, filename))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error processing file: {str(e)}'
+        }), 500
+
+@app.route('/api/medical-lab/base64', methods=['POST'])
+@token_required
+def medical_lab_base64():
+    """Process base64 encoded image"""
+    try:
+        data = request.get_json()
+        base64_image = data.get('image', '')
+        filename = data.get('filename', 'base64_image')
+        
+        if not base64_image:
+            return jsonify({
+                'success': False,
+                'error': 'Base64 image data is required'
+            }), 400
+        
+        # Process base64 image
+        result = asyncio.run(medical_lab_service.process_base64_image(base64_image, filename))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error processing base64 image: {str(e)}'
+        }), 500
+
+@app.route('/api/medical-lab/formats', methods=['GET'])
+def get_medical_lab_formats():
+    """Get supported file formats"""
+    try:
+        formats = medical_lab_service.get_supported_formats()
+        return jsonify({
+            'success': True,
+            'supported_formats': formats,
+            'description': 'File formats supported by medical lab service'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error getting supported formats: {str(e)}'
+        }), 500
+
+@app.route('/api/medical-lab/languages', methods=['GET'])
+def get_medical_lab_languages():
+    """Get supported languages"""
+    try:
+        languages = {
+            "supported_languages": ["en", "ch", "chinese_cht", "ko", "ja", "latin", "arabic", "cyrillic"],
+            "current_language": "en",
+            "supported_file_formats": ["PDF", "TXT", "DOC", "DOCX", "Images (JPEG, PNG, GIF, BMP, TIFF)"]
+        }
+        
+        return jsonify({
+            'success': True,
+            **languages
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error getting supported languages: {str(e)}'
+        }), 500
+
+@app.route('/api/medical-lab/health', methods=['GET'])
+def medical_lab_service_health():
+    """Check medical lab service health"""
+    try:
+        service_info = medical_lab_service.get_service_info()
+        return jsonify({
+            'success': True,
+            'status': 'healthy',
+            'service': 'Medical Lab OCR Service',
+            'timestamp': datetime.now().isoformat(),
+            **service_info
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error checking service health: {str(e)}'
+        }), 500
+
+# ============================================================================
+# VOICE INTERACTION ENDPOINTS
+# ============================================================================
+
+@app.route('/api/voice/transcribe', methods=['POST'])
+@token_required
+def voice_transcribe():
+    """Transcribe audio to text"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'error': 'No audio file provided'
+            }), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'error': 'No audio file selected'
+            }), 400
+        
+        # Read audio data
+        audio_data = file.read()
+        
+        # Transcribe audio
+        result = asyncio.run(voice_interaction_service.transcribe_audio(audio_data))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error transcribing audio: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/transcribe-base64', methods=['POST'])
+@token_required
+def voice_transcribe_base64():
+    """Transcribe base64 encoded audio"""
+    try:
+        data = request.get_json()
+        base64_audio = data.get('audio', '')
+        
+        if not base64_audio:
+            return jsonify({
+                'success': False,
+                'error': 'Base64 audio data is required'
+            }), 400
+        
+        # Transcribe base64 audio
+        result = asyncio.run(voice_interaction_service.transcribe_base64_audio(base64_audio))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error transcribing base64 audio: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/ai-response', methods=['POST'])
+@token_required
+def voice_ai_response():
+    """Generate AI response for text input"""
+    try:
+        data = request.get_json()
+        text = data.get('text', '').strip()
+        conversation_history = data.get('conversation_history', [])
+        
+        if not text:
+            return jsonify({
+                'success': False,
+                'error': 'Text input is required'
+            }), 400
+        
+        # Generate AI response
+        result = asyncio.run(voice_interaction_service.generate_ai_response(text, conversation_history))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error generating AI response: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/text-to-speech', methods=['POST'])
+@token_required
+def voice_text_to_speech():
+    """Convert text to speech"""
+    try:
+        data = request.get_json()
+        text = data.get('text', '').strip()
+        
+        if not text:
+            return jsonify({
+                'success': False,
+                'error': 'Text input is required'
+            }), 400
+        
+        # Convert text to speech
+        result = asyncio.run(voice_interaction_service.text_to_speech(text))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error converting text to speech: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/process', methods=['POST'])
+@token_required
+def voice_process():
+    """Complete voice interaction pipeline: STT -> AI -> TTS"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'error': 'No audio file provided'
+            }), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'error': 'No audio file selected'
+            }), 400
+        
+        # Get optional parameters
+        enable_tts = request.form.get('enable_tts', 'true').lower() == 'true'
+        
+        # Read audio data
+        audio_data = file.read()
+        
+        # Process voice interaction
+        result = asyncio.run(voice_interaction_service.process_voice_interaction(audio_data, enable_tts))
+        
+        # Add patient ID to result
+        result['patient_id'] = request.user_data['patient_id']
+        
+        return jsonify(result), 200 if result['success'] else 400
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error processing voice interaction: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/service-info', methods=['GET'])
+def voice_service_info():
+    """Get voice interaction service information"""
+    try:
+        service_info = voice_interaction_service.get_service_info()
+        return jsonify({
+            'success': True,
+            **service_info
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error getting service info: {str(e)}'
+        }), 500
+
+@app.route('/api/voice/health', methods=['GET'])
+def voice_service_health():
+    """Check voice interaction service health"""
+    try:
+        health_status = voice_interaction_service.get_health_status()
+        return jsonify({
+            'success': True,
+            **health_status
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error checking service health: {str(e)}'
+        }), 500
+
 if __name__ == '__main__':
     # Get port from environment variable or default to 5000
-    port = int(os.getenv("PORT", 5000))
+    port = int(os.getenv("PORT", 8000))
     
     print("🚀 Starting Patient Alert System Flask API...")
     print(f"📱 API will be available at: http://localhost:{port}")
@@ -6823,4 +7995,20 @@ if __name__ == '__main__':
     # Start medication reminder scheduler
     scheduler_thread = start_medication_reminder_scheduler()
     
-    app.run(host='0.0.0.0', port=port, debug=True) 
+    try:
+        app.run(host='0.0.0.0', port=port, debug=True)
+    except OSError as e:
+        if "Access is denied" in str(e) or "forbidden by its access permissions" in str(e):
+            print(f"❌ Port {port} is not available. Trying alternative port...")
+            # Try alternative ports
+            for alt_port in [5001, 5002, 8000, 8001, 3000, 3001]:
+                try:
+                    print(f"🔄 Trying port {alt_port}...")
+                    app.run(host='0.0.0.0', port=alt_port, debug=True)
+                    break
+                except OSError:
+                    continue
+            else:
+                print("❌ No available ports found. Please check your system.")
+        else:
+            raise e 

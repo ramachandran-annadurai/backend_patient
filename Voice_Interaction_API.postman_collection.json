@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "voice-interaction-api",
+		"name": "Voice Interaction API",
+		"description": "Voice interaction endpoints for speech-to-text, text-to-speech, and AI responses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login_identifier\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Voice Interaction",
+			"item": [
+				{
+					"name": "Transcribe Audio",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"body": {
+							"mode": "formdata",
+							"formdata": [{"key": "file", "type": "file", "src": []}]
+						},
+						"url": {"raw": "{{base_url}}/api/voice/transcribe", "host": ["{{base_url}}"], "path": ["api", "voice", "transcribe"]}
+					}
+				},
+				{
+					"name": "Transcribe Base64 Audio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"audio\": \"data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEA...\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/voice/transcribe-base64", "host": ["{{base_url}}"], "path": ["api", "voice", "transcribe-base64"]}
+					}
+				},
+				{
+					"name": "Generate AI Response",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"Hello, how are you feeling today?\",\n  \"conversation_history\": []\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/voice/ai-response", "host": ["{{base_url}}"], "path": ["api", "voice", "ai-response"]}
+					}
+				},
+				{
+					"name": "Text to Speech",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"Hello, this is a test of text to speech conversion.\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/voice/text-to-speech", "host": ["{{base_url}}"], "path": ["api", "voice", "text-to-speech"]}
+					}
+				},
+				{
+					"name": "Process Voice Interaction",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "file", "type": "file", "src": []},
+								{"key": "enable_tts", "value": "true", "type": "text"}
+							]
+						},
+						"url": {"raw": "{{base_url}}/api/voice/process", "host": ["{{base_url}}"], "path": ["api", "voice", "process"]}
+					}
+				},
+				{
+					"name": "Service Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {"raw": "{{base_url}}/api/voice/service-info", "host": ["{{base_url}}"], "path": ["api", "voice", "service-info"]}
+					}
+				},
+				{
+					"name": "Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {"raw": "{{base_url}}/api/voice/health", "host": ["{{base_url}}"], "path": ["api", "voice", "health"]}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "http://localhost:8000", "type": "string"},
+		{"key": "jwt_token", "value": "", "type": "string"}
+	]
+}

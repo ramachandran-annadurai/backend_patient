@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser TTS Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 15px 25px; margin: 10px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        #log { background: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px; height: 200px; overflow-y: auto; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Browser TTS Test</h1>
+    
+    <button onclick="testTamilTTS()">Test Tamil TTS</button>
+    <button onclick="testEnglishTTS()">Test English TTS</button>
+    <button onclick="testMixedTTS()">Test Mixed TTS</button>
+    <button onclick="stopTTS()">Stop TTS</button>
+    
+    <div id="log"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function testTamilTTS() {
+            log('🔄 Testing Tamil TTS...');
+            
+            const tamilText = "கர்ப்பிணி பெண் சுய நம்பிக்கை மற்றும் உடல் மாற்றங்கள் பற்றிய கதை";
+            
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+            
+            // Create utterance
+            const utterance = new SpeechSynthesisUtterance(tamilText);
+            utterance.lang = 'ta-IN'; // Tamil
+            utterance.rate = 1.0;
+            utterance.volume = 0.8;
+            
+            // Set up events
+            utterance.onstart = () => {
+                log('✅ Tamil TTS started!', 'success');
+            };
+            
+            utterance.onend = () => {
+                log('✅ Tamil TTS completed!', 'success');
+            };
+            
+            utterance.onerror = (event) => {
+                log(`❌ Tamil TTS error: ${event.error}`, 'error');
+                log('💡 Trying with English voice...', 'info');
+                
+                // Fallback to English
+                const englishUtterance = new SpeechSynthesisUtterance(tamilText);
+                englishUtterance.lang = 'en-US';
+                englishUtterance.rate = 1.0;
+                englishUtterance.volume = 0.8;
+                
+                englishUtterance.onstart = () => log('✅ English fallback started!', 'success');
+                englishUtterance.onend = () => log('✅ English fallback completed!', 'success');
+                englishUtterance.onerror = (event) => log(`❌ English fallback error: ${event.error}`, 'error');
+                
+                speechSynthesis.speak(englishUtterance);
+            };
+            
+            // Start speaking
+            speechSynthesis.speak(utterance);
+        }
+        
+        function testEnglishTTS() {
+            log('🔄 Testing English TTS...');
+            
+            const englishText = "This is a test of English text-to-speech functionality.";
+            
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(englishText);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            utterance.volume = 0.8;
+            
+            utterance.onstart = () => log('✅ English TTS started!', 'success');
+            utterance.onend = () => log('✅ English TTS completed!', 'success');
+            utterance.onerror = (event) => log(`❌ English TTS error: ${event.error}`, 'error');
+            
+            speechSynthesis.speak(utterance);
+        }
+        
+        function testMixedTTS() {
+            log('🔄 Testing Mixed TTS...');
+            
+            const mixedText = "கர்ப்பிணி பெண் pregnancy story with mixed languages";
+            
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(mixedText);
+            utterance.lang = 'ta-IN';
+            utterance.rate = 1.0;
+            utterance.volume = 0.8;
+            
+            utterance.onstart = () => log('✅ Mixed TTS started!', 'success');
+            utterance.onend = () => log('✅ Mixed TTS completed!', 'success');
+            utterance.onerror = (event) => {
+                log(`❌ Mixed TTS error: ${event.error}`, 'error');
+                log('💡 Trying with English voice...', 'info');
+                
+                const englishUtterance = new SpeechSynthesisUtterance(mixedText);
+                englishUtterance.lang = 'en-US';
+                englishUtterance.rate = 1.0;
+                englishUtterance.volume = 0.8;
+                
+                englishUtterance.onstart = () => log('✅ English fallback started!', 'success');
+                englishUtterance.onend = () => log('✅ English fallback completed!', 'success');
+                englishUtterance.onerror = (event) => log(`❌ English fallback error: ${event.error}`, 'error');
+                
+                speechSynthesis.speak(englishUtterance);
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+        
+        function stopTTS() {
+            log('🛑 Stopping TTS...');
+            speechSynthesis.cancel();
+            log('✅ TTS stopped!', 'success');
+        }
+        
+        // Auto-test on load
+        window.onload = () => {
+            log('🚀 Browser TTS Test loaded');
+            log('💡 Click buttons to test different TTS scenarios');
+        };
+    </script>
+</body>
+</html>

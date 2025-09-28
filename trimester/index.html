@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Week Development Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .input-group input {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            width: 100px;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quick-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .quick-btn:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-2px);
+        }
+
+        .quick-actions-section {
+            margin-bottom: 30px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .quick-action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .quick-action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .quick-action-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .quick-action-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .week-info {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .week-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .trimester {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .baby-size {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .baby-size h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .developments {
+            margin-bottom: 20px;
+        }
+
+        .developments h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .development-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .development-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .development-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .symptoms, .tips {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .symptoms h3, .tips h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .symptoms ul, .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .symptoms li, .tips li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        .symptoms li:last-child, .tips li:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #c62828;
+            margin-bottom: 20px;
+        }
+
+        .api-status {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .week-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤱 Pregnancy Week Development Tester</h1>
+            <p>Test the Pregnancy Week API and explore key developments</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="weekInput">Enter Pregnancy Week:</label>
+                    <input type="number" id="weekInput" min="1" max="40" value="10" placeholder="1-40">
+                    <button class="btn" onclick="getWeekData()">Get Week Data</button>
+                    <button class="btn" onclick="getWeekDataWithOpenAI()" style="background: linear-gradient(135deg, #667eea, #764ba2);">Get AI-Enhanced Data</button>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="quick-btn" onclick="quickSelect(1)">Week 1</div>
+                <div class="quick-btn" onclick="quickSelect(5)">Week 5</div>
+                <div class="quick-btn" onclick="quickSelect(10)">Week 10</div>
+                <div class="quick-btn" onclick="quickSelect(20)">Week 20</div>
+                <div class="quick-btn" onclick="getAllWeeks()">All Weeks</div>
+                <div class="quick-btn" onclick="checkHealth()">Health Check</div>
+                <div class="quick-btn" onclick="getOpenAIStatus()">OpenAI Status</div>
+                <div class="quick-btn" onclick="getAIBabySize()">AI Baby Size</div>
+                <div class="quick-btn" onclick="getBabyImage()">Baby Size Image</div>
+            </div>
+
+            <div class="quick-actions-section">
+                <h3 style="color: #333; margin-bottom: 20px; text-align: center;">Quick Actions for Trimester</h3>
+                <div class="quick-actions-grid">
+                    <div class="quick-action-card" onclick="getEarlySymptoms()" style="background: #ffebee; border-left: 4px solid #f44336;">
+                        <div class="quick-action-icon" style="background: #f44336;">😟</div>
+                        <div class="quick-action-title">Early Symptoms</div>
+                        <div class="quick-action-subtitle">AI-powered symptom guidance</div>
+                    </div>
+                    <div class="quick-action-card" onclick="getPrenatalScreening()" style="background: #e3f2fd; border-left: 4px solid #2196f3;">
+                        <div class="quick-action-icon" style="background: #2196f3;">🧪</div>
+                        <div class="quick-action-title">Prenatal Screening</div>
+                        <div class="quick-action-subtitle">Recommended tests & timing</div>
+                    </div>
+                    <div class="quick-action-card" onclick="getWellnessTips()" style="background: #e8f5e8; border-left: 4px solid #4caf50;">
+                        <div class="quick-action-icon" style="background: #4caf50;">💡</div>
+                        <div class="quick-action-title">Wellness Tips</div>
+                        <div class="quick-action-subtitle">Exercise, sleep & stress management</div>
+                    </div>
+                    <div class="quick-action-card" onclick="getNutritionTips()" style="background: #fff3e0; border-left: 4px solid #ff9800;">
+                        <div class="quick-action-icon" style="background: #ff9800;">🍎</div>
+                        <div class="quick-action-title">Nutrition Tips</div>
+                        <div class="quick-action-subtitle">Essential nutrients & meal ideas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apiStatus" class="api-status" style="display: none;">
+                ✅ API is running and healthy
+            </div>
+
+            <div id="results" class="results">
+                <div id="loading" class="loading" style="display: none;">
+                    <h3>Loading...</h3>
+                    <p>Fetching pregnancy week data...</p>
+                </div>
+                <div id="error" class="error" style="display: none;"></div>
+                <div id="weekData"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('weekData').innerHTML = '';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = message;
+            hideLoading();
+        }
+
+        function showResults() {
+            document.getElementById('results').classList.add('show');
+        }
+
+        function quickSelect(week) {
+            document.getElementById('weekInput').value = week;
+            getWeekData();
+        }
+
+        async function getWeekData() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch week data');
+                }
+
+                displayWeekData(data.data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getWeekDataWithOpenAI() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}?use_openai=true`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch week data with OpenAI');
+                }
+
+                displayWeekData(data.data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getAllWeeks() {
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/weeks`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch all weeks data');
+                }
+
+                displayAllWeeks(data.data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('apiStatus').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('apiStatus').style.display = 'none';
+                    }, 3000);
+                }
+            } catch (error) {
+                showError(`API Health Check Failed: ${error.message}`);
+            }
+        }
+
+        async function getOpenAIStatus() {
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/openai/status`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to check OpenAI status');
+                }
+
+                displayOpenAIStatus(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getAIBabySize() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}/baby-size`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch AI baby size data');
+                }
+
+                displayAIBabySize(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getEarlySymptoms() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}/symptoms`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch early symptoms data');
+                }
+
+                displayEarlySymptoms(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getPrenatalScreening() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}/screening`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch prenatal screening data');
+                }
+
+                displayPrenatalScreening(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getWellnessTips() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}/wellness`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch wellness tips data');
+                }
+
+                displayWellnessTips(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getNutritionTips() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pregnancy/week/${week}/nutrition`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch nutrition tips data');
+                }
+
+                displayNutritionTips(data);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        async function getBabyImage() {
+            const week = document.getElementById('weekInput').value;
+            if (!week || week < 1 || week > 40) {
+                showError('Please enter a valid week number (1-40)');
+                return;
+            }
+
+            showLoading();
+            showResults();
+
+            try {
+                // Get both image styles
+                const [matplotlibResponse, simpleResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/pregnancy/week/${week}/baby-image?style=matplotlib`),
+                    fetch(`${API_BASE_URL}/pregnancy/week/${week}/baby-image?style=simple`)
+                ]);
+
+                const [matplotlibData, simpleData] = await Promise.all([
+                    matplotlibResponse.json(),
+                    simpleResponse.json()
+                ]);
+
+                if (!matplotlibResponse.ok || !simpleResponse.ok) {
+                    throw new Error('Failed to fetch baby size images');
+                }
+
+                displayBabyImages(matplotlibData, simpleData);
+                hideLoading();
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        function displayWeekData(weekData) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${weekData.week}</div>
+                        <div class="trimester">Trimester ${weekData.trimester}</div>
+                    </div>
+                    
+                    <div class="baby-size">
+                        <h3>👶 Baby Size: ${weekData.baby_size.size}</h3>
+                        <p>Weight: ${weekData.baby_size.weight} | Length: ${weekData.baby_size.length}</p>
+                        <p>Days remaining: ${weekData.days_remaining}</p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🌟 Key Developments This Week</h3>
+                        ${weekData.key_developments.map(dev => `
+                            <div class="development-item">
+                                <div class="development-title">
+                                    <span>${dev.icon}</span>
+                                    ${dev.title}
+                                </div>
+                                <div class="development-description">${dev.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="symptoms">
+                        <h3>🤒 Common Symptoms</h3>
+                        <ul>
+                            ${weekData.symptoms.map(symptom => `<li>${symptom}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips">
+                        <h3>💡 Wellness Tips</h3>
+                        <ul>
+                            ${weekData.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAllWeeks(allWeeks) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <h3>📅 All Available Pregnancy Weeks</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        ${Object.entries(allWeeks).map(([week, data]) => `
+                            <div class="quick-btn" onclick="quickSelect(${week})" style="text-align: center; padding: 20px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b6b;">Week ${week}</div>
+                                <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">${data.baby_size.size}</div>
+                                <div style="font-size: 0.8rem; color: #999; margin-top: 5px;">Trimester ${data.trimester}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayOpenAIStatus(statusData) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <h3>🤖 OpenAI Service Status</h3>
+                    <div style="background: ${statusData.openai_available ? '#e8f5e8' : '#ffebee'}; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: ${statusData.openai_available ? '#2e7d32' : '#c62828'}; margin-bottom: 10px;">
+                            ${statusData.openai_available ? '✅ OpenAI Service Available' : '❌ OpenAI Service Not Available'}
+                        </div>
+                        <div style="color: #666; margin-bottom: 10px;">
+                            <strong>Model:</strong> ${statusData.model || 'Not configured'}
+                        </div>
+                        <div style="color: #666; margin-bottom: 10px;">
+                            <strong>API Key:</strong> ${statusData.api_key_configured ? '✅ Configured' : '❌ Not configured'}
+                        </div>
+                        <div style="color: #666;">
+                            <strong>Status:</strong> ${statusData.message}
+                        </div>
+                    </div>
+                    ${!statusData.openai_available ? `
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 10px; border-left: 4px solid #ff9800;">
+                            <strong>Setup Instructions:</strong>
+                            <ol style="margin: 10px 0; padding-left: 20px;">
+                                <li>Get your OpenAI API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></li>
+                                <li>Set the OPENAI_API_KEY environment variable</li>
+                                <li>Restart the FastAPI server</li>
+                            </ol>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayAIBabySize(data) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${data.week}</div>
+                        <div class="trimester">AI-Powered Baby Size</div>
+                    </div>
+                    
+                    <div class="baby-size" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <h3>🤖 AI-Generated Baby Size: ${data.baby_size.size}</h3>
+                        <p><strong>Weight:</strong> ${data.baby_size.weight} | <strong>Length:</strong> ${data.baby_size.length}</p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🌟 AI-Generated Details</h3>
+                        <div class="development-item">
+                            <div class="development-title">
+                                <span>🎯</span>
+                                Fun Fact
+                            </div>
+                            <div class="development-description">${data.detailed_info.fun_fact}</div>
+                        </div>
+                        <div class="development-item">
+                            <div class="development-title">
+                                <span>📏</span>
+                                Size Comparison
+                            </div>
+                            <div class="development-description">${data.detailed_info.comparison}</div>
+                        </div>
+                        <div class="development-item">
+                            <div class="development-title">
+                                <span>🔬</span>
+                                Development Highlight
+                            </div>
+                            <div class="development-description">${data.detailed_info.development_highlight}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>✨ This information was generated by OpenAI AI</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayEarlySymptoms(data) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${data.week}</div>
+                        <div class="trimester">Early Symptoms - Trimester ${data.trimester}</div>
+                    </div>
+                    
+                    <div class="baby-size" style="background: linear-gradient(135deg, #f44336, #d32f2f);">
+                        <h3>😟 Early Symptoms for Week ${data.week}</h3>
+                        <p>Severity Level: <strong>${data.data.severity_level}</strong></p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🤒 Common Symptoms</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                            ${data.data.common_symptoms.map(symptom => `
+                                <div class="development-item">
+                                    <div class="development-title">
+                                        <span>⚠️</span>
+                                        ${symptom}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="symptoms">
+                        <h3>💡 Relief Tips</h3>
+                        <ul>
+                            ${data.data.relief_tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips" style="background: #ffebee; border-left: 4px solid #f44336;">
+                        <h3>🚨 When to Call Your Doctor</h3>
+                        <ul>
+                            ${data.data.when_to_call_doctor.map(warning => `<li style="color: #d32f2f; font-weight: 600;">${warning}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>🤖 This information was generated by OpenAI AI</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayPrenatalScreening(data) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${data.week}</div>
+                        <div class="trimester">Prenatal Screening - Trimester ${data.trimester}</div>
+                    </div>
+                    
+                    <div class="baby-size" style="background: linear-gradient(135deg, #2196f3, #1976d2);">
+                        <h3>🧪 Prenatal Screening for Week ${data.week}</h3>
+                        <p><strong>Timing:</strong> ${data.data.timing}</p>
+                        <p><strong>Importance:</strong> ${data.data.importance}</p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🔬 Recommended Tests</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                            ${data.data.recommended_tests.map((test, index) => `
+                                <div class="development-item">
+                                    <div class="development-title">
+                                        <span>🧪</span>
+                                        ${test}
+                                    </div>
+                                    <div class="development-description">${data.data.test_descriptions[index] || 'Important for monitoring baby\'s health'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>🤖 This information was generated by OpenAI AI</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayWellnessTips(data) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${data.week}</div>
+                        <div class="trimester">Wellness Tips - Trimester ${data.trimester}</div>
+                    </div>
+                    
+                    <div class="baby-size" style="background: linear-gradient(135deg, #4caf50, #388e3c);">
+                        <h3>💡 Wellness Tips for Week ${data.week}</h3>
+                        <p>Stay healthy and comfortable during your pregnancy journey</p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🏃‍♀️ Exercise Tips</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                            ${data.data.exercise_tips.map(tip => `
+                                <div class="development-item">
+                                    <div class="development-title">
+                                        <span>🏃‍♀️</span>
+                                        ${tip}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="symptoms">
+                        <h3>😴 Sleep Advice</h3>
+                        <ul>
+                            ${data.data.sleep_advice.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips">
+                        <h3>🧘‍♀️ Stress Management</h3>
+                        <ul>
+                            ${data.data.stress_management.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips" style="background: #e8f5e8;">
+                        <h3>🌟 General Wellness</h3>
+                        <ul>
+                            ${data.data.general_wellness.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>🤖 This information was generated by OpenAI AI</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayNutritionTips(data) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${data.week}</div>
+                        <div class="trimester">Nutrition Tips - Trimester ${data.trimester}</div>
+                    </div>
+                    
+                    <div class="baby-size" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+                        <h3>🍎 Nutrition Tips for Week ${data.week}</h3>
+                        <p>Nourish yourself and your growing baby</p>
+                    </div>
+
+                    <div class="developments">
+                        <h3>🥗 Essential Nutrients</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                            ${data.data.essential_nutrients.map(nutrient => `
+                                <div class="development-item">
+                                    <div class="development-title">
+                                        <span>🥗</span>
+                                        ${nutrient}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="symptoms">
+                        <h3>🍽️ Meal Suggestions</h3>
+                        <ul>
+                            ${data.data.meal_suggestions.map(meal => `<li>${meal}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips">
+                        <h3>💧 Hydration Tips</h3>
+                        <ul>
+                            ${data.data.hydration_tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="tips" style="background: #ffebee; border-left: 4px solid #f44336;">
+                        <h3>🚫 Foods to Avoid</h3>
+                        <ul>
+                            ${data.data.foods_to_avoid.map(food => `<li style="color: #d32f2f; font-weight: 600;">${food}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>🤖 This information was generated by OpenAI AI</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayBabyImages(matplotlibData, simpleData) {
+            const weekDataDiv = document.getElementById('weekData');
+            
+            weekDataDiv.innerHTML = `
+                <div class="week-info">
+                    <div class="week-header">
+                        <div class="week-number">Week ${matplotlibData.week}</div>
+                        <div class="trimester">Fruit/Vegetable Size Visualization</div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 20px 0;">
+                        <h3 style="color: #333; margin-bottom: 20px;">🍎 Baby Size for Week ${matplotlibData.week}</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                <h4 style="color: #333; margin-bottom: 15px;">🎨 Detailed View</h4>
+                                <img src="${matplotlibData.image_data}" 
+                                     alt="Detailed baby size for week ${matplotlibData.week}" 
+                                     style="max-width: 100%; height: auto; border-radius: 10px;" />
+                                <p style="color: #666; font-size: 12px; margin-top: 10px;">
+                                    <strong>Style:</strong> ${matplotlibData.style}
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                <h4 style="color: #333; margin-bottom: 15px;">📱 Simple View</h4>
+                                <img src="${simpleData.image_data}" 
+                                     alt="Simple baby size for week ${simpleData.week}" 
+                                     style="max-width: 100%; height: auto; border-radius: 10px;" />
+                                <p style="color: #666; font-size: 12px; margin-top: 10px;">
+                                    <strong>Style:</strong> ${simpleData.style}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                            <h4 style="color: #e65100; margin-bottom: 10px;">🍓 Fruit & Vegetable Size Guide</h4>
+                            <p style="color: #666; font-size: 14px; margin: 0;">
+                                Your baby is now the size of a <strong>${matplotlibData.week <= 10 ? 'coconut' : matplotlibData.week <= 20 ? 'banana' : matplotlibData.week <= 30 ? 'cantaloupe' : 'mini watermelon'}</strong>! 
+                                Each week shows a different fruit or vegetable to help you visualize your baby's growth.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <strong>🎨 These fruit/vegetable size images were generated based on week ${matplotlibData.week} data</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Check API health on page load
+        window.onload = function() {
+            checkHealth();
+        };
+    </script>
+</body>
+</html>

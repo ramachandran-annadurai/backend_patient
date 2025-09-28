@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "hydration-tracking-api",
+		"name": "Hydration Tracking API - Integrated",
+		"description": "Complete API collection for hydration tracking functionality integrated into the main Flask app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hydration Intake Tracking",
+			"item": [
+				{
+					"name": "Save Hydration Intake - Water",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hydration_type\": \"water\",\n  \"amount_ml\": 250,\n  \"notes\": \"Morning water\",\n  \"temperature\": \"cold\",\n  \"additives\": []\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/intake", "host": ["{{base_url}}"], "path": ["api", "hydration", "intake"]}
+					}
+				},
+				{
+					"name": "Save Hydration Intake - Coffee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hydration_type\": \"coffee\",\n  \"amount_ml\": 200,\n  \"notes\": \"Morning coffee\",\n  \"temperature\": \"hot\",\n  \"additives\": [\"sugar\", \"milk\"]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/intake", "host": ["{{base_url}}"], "path": ["api", "hydration", "intake"]}
+					}
+				},
+				{
+					"name": "Save Hydration Intake - Tea",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hydration_type\": \"tea\",\n  \"amount_ml\": 300,\n  \"notes\": \"Green tea\",\n  \"temperature\": \"hot\",\n  \"additives\": [\"lemon\"]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/intake", "host": ["{{base_url}}"], "path": ["api", "hydration", "intake"]}
+					}
+				},
+				{
+					"name": "Save Hydration Intake - Juice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hydration_type\": \"juice\",\n  \"amount_ml\": 150,\n  \"notes\": \"Orange juice\",\n  \"temperature\": \"cold\",\n  \"additives\": []\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/intake", "host": ["{{base_url}}"], "path": ["api", "hydration", "intake"]}
+					}
+				},
+				{
+					"name": "Get Hydration History",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/history?days=7",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "history"],
+							"query": [{"key": "days", "value": "7", "description": "Number of days to retrieve (default: 7)"}]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hydration Statistics & Monitoring",
+			"item": [
+				{
+					"name": "Get Daily Hydration Stats",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Hydration Stats - Specific Date",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/stats?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "stats"],
+							"query": [{"key": "date", "value": "2024-01-15", "description": "Date in YYYY-MM-DD format"}]
+						}
+					}
+				},
+				{
+					"name": "Get Hydration Status",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/api/hydration/status", "host": ["{{base_url}}"], "path": ["api", "hydration", "status"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hydration Goals & Planning",
+			"item": [
+				{
+					"name": "Set Hydration Goal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"daily_goal_ml\": 2000,\n  \"reminder_enabled\": true,\n  \"reminder_times\": [\"08:00\", \"12:00\", \"16:00\", \"20:00\"]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/goal", "host": ["{{base_url}}"], "path": ["api", "hydration", "goal"]}
+					}
+				},
+				{
+					"name": "Get Hydration Goal",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/api/hydration/goal", "host": ["{{base_url}}"], "path": ["api", "hydration", "goal"]}
+					}
+				},
+				{
+					"name": "Set Hydration Goal - Pregnancy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"daily_goal_ml\": 2500,\n  \"reminder_enabled\": true,\n  \"reminder_times\": [\"07:00\", \"10:00\", \"13:00\", \"16:00\", \"19:00\", \"22:00\"]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/goal", "host": ["{{base_url}}"], "path": ["api", "hydration", "goal"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hydration Reminders",
+			"item": [
+				{
+					"name": "Create Hydration Reminder",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reminder_time\": \"08:00\",\n  \"message\": \"Time for your morning water! Stay hydrated.\",\n  \"days_of_week\": [0, 1, 2, 3, 4, 5, 6]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/reminder", "host": ["{{base_url}}"], "path": ["api", "hydration", "reminder"]}
+					}
+				},
+				{
+					"name": "Get Hydration Reminders",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/api/hydration/reminders", "host": ["{{base_url}}"], "path": ["api", "hydration", "reminders"]}
+					}
+				},
+				{
+					"name": "Create Workday Reminder",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reminder_time\": \"14:00\",\n  \"message\": \"Afternoon hydration break! Have some water.\",\n  \"days_of_week\": [0, 1, 2, 3, 4]\n}"
+						},
+						"url": {"raw": "{{base_url}}/api/hydration/reminder", "host": ["{{base_url}}"], "path": ["api", "hydration", "reminder"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "AI-Powered Analysis & Reports",
+			"item": [
+				{
+					"name": "Analyze Hydration Patterns",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/analysis?days=7",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "analysis"],
+							"query": [{"key": "days", "value": "7", "description": "Number of days to analyze (default: 7)"}]
+						}
+					}
+				},
+				{
+					"name": "Get Weekly Hydration Report",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/report",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "report"]
+						}
+					}
+				},
+				{
+					"name": "Get Weekly Report - Specific Week",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/report?week_start=2024-01-08",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "report"],
+							"query": [{"key": "week_start", "value": "2024-01-08", "description": "Week start date in YYYY-MM-DD format"}]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Personalized Tips & Recommendations",
+			"item": [
+				{
+					"name": "Get Hydration Tips",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {"raw": "{{base_url}}/api/hydration/tips", "host": ["{{base_url}}"], "path": ["api", "hydration", "tips"]}
+					}
+				},
+				{
+					"name": "Get Pregnancy Hydration Tips",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/tips?week=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "tips"],
+							"query": [{"key": "week", "value": "20", "description": "Current pregnancy week for personalized tips"}]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "API Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {"raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"]}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string",
+			"description": "JWT token obtained from login endpoint"
+		}
+	]
+}

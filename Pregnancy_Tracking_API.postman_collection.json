@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "pregnancy-tracking-api",
+		"name": "Pregnancy Tracking API - Integrated",
+		"description": "Complete API collection for pregnancy tracking functionality integrated into the main Flask app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "pregnancy-tracking"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"patient@example.com\",\n  \"password\": \"password123\",\n  \"mobile\": \"+1234567890\",\n  \"date_of_birth\": \"1990-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/signup",
+							"host": ["{{base_url}}"],
+							"path": ["signup"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pregnancy Week Data",
+			"item": [
+				{
+					"name": "Get Pregnancy Week",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12"]
+						},
+						"description": "Get detailed information for a specific pregnancy week (1-40)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Pregnancy Weeks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/weeks",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "weeks"]
+						},
+						"description": "Get all pregnancy weeks data (1-40)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trimester Weeks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "1"]
+						},
+						"description": "Get all weeks for a specific trimester (1, 2, or 3)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Baby Size & Images",
+			"item": [
+				{
+					"name": "Get Baby Size Image (Matplotlib)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/baby-image?style=matplotlib",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "baby-image"],
+							"query": [
+								{
+									"key": "style",
+									"value": "matplotlib",
+									"description": "Image style: 'matplotlib' or 'simple'"
+								}
+							]
+						},
+						"description": "Get detailed baby size visualization image"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baby Size Image (Simple)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/baby-image?style=simple",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "baby-image"],
+							"query": [
+								{
+									"key": "style",
+									"value": "simple"
+								}
+							]
+						},
+						"description": "Get simple baby size visualization image"
+					},
+					"response": []
+				},
+				{
+					"name": "Get AI Baby Size",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/baby-size",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "baby-size"]
+						},
+						"description": "Get AI-powered detailed baby size information"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AI-Powered Features",
+			"item": [
+				{
+					"name": "Get Early Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12/symptoms",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12", "symptoms"]
+						},
+						"description": "Get AI-powered early symptoms information with relief tips"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Prenatal Screening",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/screening",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "screening"]
+						},
+						"description": "Get AI-powered prenatal screening information"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wellness Tips",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/28/wellness",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "28", "wellness"]
+						},
+						"description": "Get AI-powered wellness tips for exercise, sleep, and stress management"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Nutrition Tips",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/16/nutrition",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "16", "nutrition"]
+						},
+						"description": "Get AI-powered nutrition tips with essential nutrients and meal suggestions"
+					},
+					"response": []
+				},
+				{
+					"name": "Check OpenAI Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/openai/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "openai", "status"]
+						},
+						"description": "Check if OpenAI service is available and configured"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pregnancy Tracking",
+			"item": [
+				{
+					"name": "Save Pregnancy Tracking Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"week\": 20,\n  \"trimester\": 2,\n  \"tracking_date\": \"2024-01-15T10:00:00Z\",\n  \"symptoms_logged\": [\"back pain\", \"fatigue\", \"heartburn\"],\n  \"weight\": 65.5,\n  \"notes\": \"Feeling good overall, some back pain in the evening\",\n  \"mood\": \"happy\",\n  \"energy_level\": 7,\n  \"sleep_hours\": 8.5,\n  \"exercise_minutes\": 30,\n  \"water_intake\": 2.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/tracking",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "tracking"]
+						},
+						"description": "Save daily pregnancy tracking data"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pregnancy Tracking History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/tracking/history",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "tracking", "history"]
+						},
+						"description": "Get all pregnancy tracking history for the patient"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Pregnancy Progress",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/progress?week=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "progress"],
+							"query": [
+								{
+									"key": "week",
+									"value": "20",
+									"description": "Current pregnancy week (1-40)"
+								}
+							]
+						},
+						"description": "Calculate pregnancy progress and milestones"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "API Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						},
+						"description": "Check if the API is running and healthy"
+					},
+					"response": []
+				},
+				{
+					"name": "API Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						},
+						"description": "Get API information and available endpoints"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string",
+			"description": "JWT token obtained from login endpoint"
+		}
+	]
+}

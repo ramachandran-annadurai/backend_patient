@@ -1,0 +1,304 @@
+{
+  "info": {
+    "name": "Patient Alert System - Complete 136 Endpoints",
+    "description": "Comprehensive Postman collection for all 136 endpoints in the Patient Alert System API",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "PAT123",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. System & Health (4 endpoints)",
+      "item": [
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Database Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health/database",
+              "host": ["{{base_url}}"],
+              "path": ["health", "database"]
+            }
+          }
+        },
+        {
+          "name": "Database Reconnect",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/health/database/reconnect",
+              "host": ["{{base_url}}"],
+              "path": ["health", "database", "reconnect"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication & User Management (9 endpoints)",
+      "item": [
+        {
+          "name": "User Signup",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/signup",
+              "host": ["{{base_url}}"],
+              "path": ["signup"]
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/send-otp",
+              "host": ["{{base_url}}"],
+              "path": ["send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resend-otp",
+              "host": ["{{base_url}}"],
+              "path": ["resend-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{auth_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{auth_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/verify-token",
+              "host": ["{{base_url}}"],
+              "path": ["verify-token"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Patient Profile Management (4 endpoints)",
+      "item": [
+        {
+          "name": "Complete Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{auth_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"blood_type\": \"O+\",\n  \"address\": \"123 Main St\",\n  \"emergency_contact\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/complete-profile",
+              "host": ["{{base_url}}"],
+              "path": ["complete-profile"]
+            }
+          }
+        },
+        {
+          "name": "Edit Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{auth_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"address\": \"456 New St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/edit-profile",
+              "host": ["{{base_url}}"],
+              "path": ["edit-profile"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile by ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/profile/{{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "{{patient_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Patient Profile by Email",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/get-patient-profile-by-email/john@example.com",
+              "host": ["{{base_url}}"],
+              "path": ["get-patient-profile-by-email", "john@example.com"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,516 @@
+{
+	"info": {
+		"_postman_id": "pregnancy-week-api-collection",
+		"name": "Pregnancy Week Development API",
+		"description": "Complete API collection for pregnancy week development tracking with OpenAI integration and baby size visualization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "pregnancy-api"
+	},
+	"item": [
+		{
+			"name": "Health & Status",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if the API is running and healthy"
+					},
+					"response": []
+				},
+				{
+					"name": "API Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Get API information and available endpoints"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAI Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/openai/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"openai",
+								"status"
+							]
+						},
+						"description": "Check OpenAI service availability and configuration"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pregnancy Week Data",
+			"item": [
+				{
+					"name": "Get Week Data (Basic)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}"
+							]
+						},
+						"description": "Get basic pregnancy week information without OpenAI enhancement"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Week Data (AI Enhanced)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}?use_openai=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}"
+							],
+							"query": [
+								{
+									"key": "use_openai",
+									"value": "true",
+									"description": "Use OpenAI for baby size information"
+								}
+							]
+						},
+						"description": "Get pregnancy week information with AI-enhanced baby size"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Weeks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/weeks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"weeks"
+							]
+						},
+						"description": "Get information for all available pregnancy weeks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Week Developments Only",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/developments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"developments"
+							]
+						},
+						"description": "Get only the key developments for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trimester Weeks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/trimester/{{trimester}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"trimester",
+								"{{trimester}}"
+							]
+						},
+						"description": "Get all weeks for a specific trimester (1, 2, or 3)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Baby Size & Images",
+			"item": [
+				{
+					"name": "Get AI Baby Size",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/baby-size",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"baby-size"
+							]
+						},
+						"description": "Get AI-powered baby size information for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baby Size Image (Matplotlib)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/baby-image?style=matplotlib",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"baby-image"
+							],
+							"query": [
+								{
+									"key": "style",
+									"value": "matplotlib",
+									"description": "Detailed image style with decorations"
+								}
+							]
+						},
+						"description": "Get detailed baby size visualization image with fruit/vegetable shapes"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baby Size Image (Simple)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/baby-image?style=simple",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"baby-image"
+							],
+							"query": [
+								{
+									"key": "style",
+									"value": "simple",
+									"description": "Simple image style for mobile/quick viewing"
+								}
+							]
+						},
+						"description": "Get simple baby size visualization image"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Quick Actions",
+			"item": [
+				{
+					"name": "Early Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/symptoms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"symptoms"
+							]
+						},
+						"description": "Get AI-powered early symptoms information with relief tips and when to call doctor"
+					},
+					"response": []
+				},
+				{
+					"name": "Prenatal Screening",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/screening",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"screening"
+							]
+						},
+						"description": "Get AI-powered prenatal screening information with recommended tests and timing"
+					},
+					"response": []
+				},
+				{
+					"name": "Wellness Tips",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/wellness",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"wellness"
+							]
+						},
+						"description": "Get AI-powered wellness tips including exercise, sleep, and stress management"
+					},
+					"response": []
+				},
+				{
+					"name": "Nutrition Tips",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/{{week}}/nutrition",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"{{week}}",
+								"nutrition"
+							]
+						},
+						"description": "Get AI-powered nutrition tips with essential nutrients and meal suggestions"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sample Requests",
+			"item": [
+				{
+					"name": "Week 10 - Complete Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/10?use_openai=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"10"
+							],
+							"query": [
+								{
+									"key": "use_openai",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Example request for week 10 with AI enhancement"
+					},
+					"response": []
+				},
+				{
+					"name": "Week 20 - Baby Size Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/20/baby-image?style=matplotlib",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"20",
+								"baby-image"
+							],
+							"query": [
+								{
+									"key": "style",
+									"value": "matplotlib"
+								}
+							]
+						},
+						"description": "Example request for week 20 baby size image (banana shape)"
+					},
+					"response": []
+				},
+				{
+					"name": "Week 5 - Early Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/5/symptoms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"5",
+								"symptoms"
+							]
+						},
+						"description": "Example request for week 5 early symptoms"
+					},
+					"response": []
+				},
+				{
+					"name": "Week 15 - Nutrition Tips",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/15/nutrition",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"15",
+								"nutrition"
+							]
+						},
+						"description": "Example request for week 15 nutrition tips"
+					},
+					"response": []
+				},
+				{
+					"name": "Week 30 - Wellness Tips",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pregnancy/week/30/wellness",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pregnancy",
+								"week",
+								"30",
+								"wellness"
+							]
+						},
+						"description": "Example request for week 30 wellness tips"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string",
+			"description": "Base URL for the Pregnancy Week API"
+		},
+		{
+			"key": "week",
+			"value": "10",
+			"type": "string",
+			"description": "Pregnancy week (1-40)"
+		},
+		{
+			"key": "trimester",
+			"value": "1",
+			"type": "string",
+			"description": "Trimester number (1, 2, or 3)"
+		}
+	]
+}

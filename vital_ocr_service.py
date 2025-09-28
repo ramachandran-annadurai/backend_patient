@@ -6,7 +6,6 @@ Enhanced OCR service for processing documents with PaddleOCR
 
 import logging
 import os
-import fitz  # PyMuPDF
 import PyPDF2
 from PIL import Image
 import io
@@ -15,6 +14,15 @@ import cv2
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
+
+# Optional PyMuPDF import
+try:
+    import fitz  # PyMuPDF
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    print("⚠️ PyMuPDF not available, using PyPDF2 fallback")
+    PYMUPDF_AVAILABLE = False
+    fitz = None
 
 logger = logging.getLogger(__name__)
 
@@ -140,8 +148,13 @@ class VitalOCRService:
     def _process_pdf(self, file_content: bytes, filename: str) -> Dict[str, Any]:
         """Process PDF file (both native text and scanned pages)"""
         try:
-            # Open PDF with PyMuPDF
-            pdf_document = fitz.open(stream=file_content, filetype="pdf")
+            if PYMUPDF_AVAILABLE and fitz is not None:
+                # Open PDF with PyMuPDF
+                pdf_document = fitz.open(stream=file_content, filetype="pdf")
+            else:
+                # Fallback to PyPDF2
+                pdf_document = PyPDF2.PdfReader(io.BytesIO(file_content))
+                return self._process_pdf_pypdf2(pdf_document, filename)
             
             results = []
             total_pages = len(pdf_document)
@@ -513,6 +526,45 @@ class VitalOCRService:
                 "filename": filename
             }
     
+    def _process_pdf_pypdf2(self, pdf_document, filename: str) -> Dict[str, Any]:
+        """Fallback PDF processing using PyPDF2"""
+        try:
+            results = []
+            total_pages = len(pdf_document.pages)
+            
+            for page_num in range(total_pages):
+                page = pdf_document.pages[page_num]
+                text = page.extract_text()
+                
+                if text.strip():
+                    results.append({
+                        "page": page_num + 1,
+                        "text": text,
+                        "method": "PyPDF2_text_extraction"
+                    })
+                else:
+                    results.append({
+                        "page": page_num + 1,
+                        "text": "[Scanned page - OCR not available with PyPDF2]",
+                        "method": "PyPDF2_fallback"
+                    })
+            
+            return {
+                "success": True,
+                "filename": filename,
+                "file_type": "pdf",
+                "total_pages": total_pages,
+                "results": results,
+                "method": "PyPDF2_fallback"
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"PyPDF2 processing error: {str(e)}",
+                "filename": filename
+            }
+
     def get_webhook_status(self) -> Dict[str, Any]:
         """Get webhook service status and configuration"""
         return {

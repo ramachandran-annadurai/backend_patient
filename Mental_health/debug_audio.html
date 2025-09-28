@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Debug Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        #log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Audio Debug Tool</h1>
+    
+    <button onclick="testStoryGeneration()">1. Test Story Generation</button>
+    <button onclick="testAudioGeneration()">2. Test Audio Generation</button>
+    <button onclick="testPlayback()">3. Test Audio Playback</button>
+    <button onclick="clearLog()">Clear Log</button>
+    
+    <div id="log"></div>
+    <div id="storyContent" style="display: none;">
+        <h3>Generated Story:</h3>
+        <div id="storyText"></div>
+    </div>
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+
+    <script>
+        let currentStory = null;
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testStoryGeneration() {
+            log('🔄 Testing story generation...');
+            
+            try {
+                const response = await fetch('/generate-story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        story_type: 'pregnancy',
+                        difficulty_level: 'medium',
+                        language: 'tamil'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                currentStory = await response.json();
+                log('✅ Story generated successfully!', 'success');
+                log(`Story ID: ${currentStory.story_id}`);
+                log(`Character: ${currentStory.character_name}`);
+                log(`Title: ${currentStory.title}`);
+                
+                // Show story content
+                document.getElementById('storyText').textContent = currentStory.content;
+                document.getElementById('storyContent').style.display = 'block';
+                
+            } catch (error) {
+                log(`❌ Story generation failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testAudioGeneration() {
+            if (!currentStory) {
+                log('❌ Please generate a story first!', 'error');
+                return;
+            }
+            
+            log('🔄 Testing audio generation...');
+            
+            try {
+                const response = await fetch('/generate-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: currentStory.content })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                }
+                
+                const audioBlob = await response.blob();
+                log(`✅ Audio generated successfully! Size: ${audioBlob.size} bytes`, 'success');
+                
+                // Create audio URL and set up player
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audioPlayer = document.getElementById('audioPlayer');
+                audioPlayer.src = audioUrl;
+                audioPlayer.style.display = 'block';
+                
+                // Set up audio events
+                audioPlayer.onloadstart = () => log('🔄 Audio loading started...');
+                audioPlayer.oncanplay = () => log('✅ Audio ready to play!', 'success');
+                audioPlayer.onplay = () => log('🎵 Audio playback started!', 'success');
+                audioPlayer.onended = () => log('✅ Audio playback completed!', 'success');
+                audioPlayer.onerror = (e) => log(`❌ Audio playback error: ${e.message}`, 'error');
+                
+            } catch (error) {
+                log(`❌ Audio generation failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function testPlayback() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            if (!audioPlayer.src) {
+                log('❌ Please generate audio first!', 'error');
+                return;
+            }
+            
+            log('🔄 Testing audio playback...');
+            audioPlayer.play().catch(error => {
+                log(`❌ Playback failed: ${error.message}`, 'error');
+            });
+        }
+        
+        // Auto-generate story on page load
+        window.onload = () => {
+            log('🚀 Audio Debug Tool loaded. Auto-generating story...');
+            testStoryGeneration();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Test</title>
+</head>
+<body>
+    <h1>Voice Test</h1>
+    <button onclick="testVoice()">Test Voice</button>
+    <button onclick="testTamil()">Test Tamil</button>
+    <div id="output"></div>
+
+    <script>
+        function testVoice() {
+            const utterance = new SpeechSynthesisUtterance("Hello, this is a test of voice synthesis.");
+            utterance.lang = 'en-US';
+            utterance.rate = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => {
+                document.getElementById('output').innerHTML = 'Voice started!';
+            };
+            
+            utterance.onend = () => {
+                document.getElementById('output').innerHTML = 'Voice ended!';
+            };
+            
+            utterance.onerror = (event) => {
+                document.getElementById('output').innerHTML = 'Voice error: ' + event.error;
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+        
+        function testTamil() {
+            const utterance = new SpeechSynthesisUtterance("வணக்கம், இது ஒரு சோதனை.");
+            utterance.lang = 'ta-IN';
+            utterance.rate = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => {
+                document.getElementById('output').innerHTML = 'Tamil voice started!';
+            };
+            
+            utterance.onend = () => {
+                document.getElementById('output').innerHTML = 'Tamil voice ended!';
+            };
+            
+            utterance.onerror = (event) => {
+                document.getElementById('output').innerHTML = 'Tamil voice error: ' + event.error;
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

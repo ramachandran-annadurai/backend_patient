@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Mental Health Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .story-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .story-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .story-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .slider {
+            width: 100px;
+            height: 5px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .questions-section {
+            background: #e8f4fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .question {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .results-section {
+            background: #f0f8f0;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-playing {
+            background: #4caf50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-paused {
+            background: #ff9800;
+        }
+
+        .status-stopped {
+            background: #f44336;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤱 Pregnancy Mental Health Assessment</h1>
+            <p>Share your story, get personalized support</p>
+        </div>
+
+        <div class="content">
+            <!-- Story Section -->
+            <div class="story-section" id="storySection" style="display: none;">
+                <div class="story-title" id="storyTitle"></div>
+                <div class="story-content" id="storyContent"></div>
+                
+                <div class="audio-controls">
+                    <button id="playBtn" class="btn">
+                        <span id="playIcon">▶️</span>
+                        <span id="playText">Play Story</span>
+                    </button>
+                    <button id="pauseBtn" class="btn btn-danger" style="display: none;">
+                        <span>⏸️</span>
+                        <span>Pause</span>
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger" style="display: none;">
+                        <span>⏹️</span>
+                        <span>Stop</span>
+                    </button>
+                    
+                    <div class="slider-container">
+                        <span>🔊</span>
+                        <input type="range" id="volumeSlider" class="slider" min="0" max="1" step="0.1" value="0.8">
+                        <span id="volumeValue">80%</span>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <span>⚡</span>
+                        <input type="range" id="speedSlider" class="slider" min="0.5" max="2" step="0.1" value="1">
+                        <span id="speedValue">1.0x</span>
+                    </div>
+                    
+                    <div id="audioStatus" class="status-indicator status-stopped"></div>
+                </div>
+            </div>
+
+            <!-- Questions Section -->
+            <div class="questions-section" id="questionsSection" style="display: none;">
+                <h3>📝 Assessment Questions</h3>
+                <div id="questionsList"></div>
+                <button id="submitBtn" class="btn btn-success" style="display: none;">
+                    <span>📊</span>
+                    <span>Submit Assessment</span>
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h3>📈 Your Mental Health Assessment</h3>
+                <div id="resultsContent"></div>
+            </div>
+
+            <!-- Message Container -->
+            <div id="messageContainer"></div>
+
+            <!-- Generate Story Button -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="generateBtn" class="btn" style="font-size: 1.2em; padding: 15px 30px;">
+                    <span>✨</span>
+                    <span>Generate New Story</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class PregnancyMentalHealthApp {
+            constructor() {
+                this.currentStory = null;
+                this.currentQuestions = [];
+                this.answers = {};
+                this.utterance = null;
+                this.audioElement = null;
+                this.isPlaying = false;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+            }
+
+            initializeElements() {
+                // Story elements
+                this.storySection = document.getElementById('storySection');
+                this.storyTitle = document.getElementById('storyTitle');
+                this.storyContent = document.getElementById('storyContent');
+                
+                // Audio controls
+                this.playBtn = document.getElementById('playBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.volumeSlider = document.getElementById('volumeSlider');
+                this.speedSlider = document.getElementById('speedSlider');
+                this.volumeValue = document.getElementById('volumeValue');
+                this.speedValue = document.getElementById('speedValue');
+                this.audioStatus = document.getElementById('audioStatus');
+                
+                // Questions
+                this.questionsSection = document.getElementById('questionsSection');
+                this.questionsList = document.getElementById('questionsList');
+                this.submitBtn = document.getElementById('submitBtn');
+                
+                // Results
+                this.resultsSection = document.getElementById('resultsSection');
+                this.resultsContent = document.getElementById('resultsContent');
+                
+                // Other
+                this.generateBtn = document.getElementById('generateBtn');
+                this.messageContainer = document.getElementById('messageContainer');
+            }
+
+            setupEventListeners() {
+                this.generateBtn.addEventListener('click', () => this.generateStory());
+                this.playBtn.addEventListener('click', () => this.playStory());
+                this.pauseBtn.addEventListener('click', () => this.pauseStory());
+                this.stopBtn.addEventListener('click', () => this.stopStory());
+                this.submitBtn.addEventListener('click', () => this.submitAssessment());
+                
+                this.volumeSlider.addEventListener('input', (e) => {
+                    this.volumeValue.textContent = Math.round(e.target.value * 100) + '%';
+                    if (this.utterance) {
+                        this.utterance.volume = parseFloat(e.target.value);
+                    }
+                });
+                
+                this.speedSlider.addEventListener('input', (e) => {
+                    this.speedValue.textContent = e.target.value + 'x';
+                    if (this.utterance) {
+                        this.utterance.rate = parseFloat(e.target.value);
+                    }
+                });
+            }
+
+            async generateStory() {
+                this.generateBtn.disabled = true;
+                this.generateBtn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+                this.showMessage('Creating your personalized story...', 'loading');
+                
+                try {
+                    const response = await fetch('/generate-story', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            difficulty: 'easy',
+                            scenario: 'pregnancy_mental_health'
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const storyData = await response.json();
+                    this.currentStory = storyData;
+                    this.currentQuestions = storyData.questions || [];
+                    this.answers = {};
+                    
+                    this.displayStory(storyData);
+                    this.showMessage('Story generated successfully! Click play to listen.', 'success');
+                    
+                } catch (error) {
+                    console.error('Error generating story:', error);
+                    this.showMessage('Failed to generate story. Please try again.', 'error');
+                } finally {
+                    this.generateBtn.disabled = false;
+                    this.generateBtn.innerHTML = '<span>✨</span><span>Generate New Story</span>';
+                }
+            }
+
+            displayStory(storyData) {
+                this.storyTitle.textContent = storyData.title || 'Pregnancy Story';
+                this.storyContent.textContent = storyData.content || storyData.story || 'No story content available.';
+                
+                this.storySection.style.display = 'block';
+                
+                if (this.currentQuestions.length > 0) {
+                    this.displayQuestions();
+                }
+            }
+
+            displayQuestions() {
+                this.questionsList.innerHTML = '';
+                this.questionsSection.style.display = 'block';
+                
+                this.currentQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.innerHTML = `
+                        <div class="question-text">${question.question}</div>
+                        <div class="options">
+                            ${question.options.map((option, optionIndex) => `
+                                <div class="option" data-question="${index}" data-option="${optionIndex}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    
+                    // Add click listeners to options
+                    questionDiv.querySelectorAll('.option').forEach(option => {
+                        option.addEventListener('click', () => {
+                            const questionIndex = parseInt(option.dataset.question);
+                            const optionIndex = parseInt(option.dataset.option);
+                            
+                            // Remove previous selection
+                            questionDiv.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                            
+                            // Select current option
+                            option.classList.add('selected');
+                            this.answers[questionIndex] = optionIndex;
+                            
+                            // Show submit button if all questions answered
+                            if (Object.keys(this.answers).length === this.currentQuestions.length) {
+                                this.submitBtn.style.display = 'inline-flex';
+                            }
+                        });
+                    });
+                    
+                    this.questionsList.appendChild(questionDiv);
+                });
+            }
+
+            async playStory() {
+                if (!this.currentStory) {
+                    this.showMessage('Please generate a story first.', 'error');
+                    return;
+                }
+                
+                const storyText = this.currentStory.content || this.currentStory.story;
+                if (!storyText) {
+                    this.showMessage('No story content to play.', 'error');
+                    return;
+                }
+                
+                console.log('Playing story with ElevenLabs:', storyText.substring(0, 100) + '...');
+                this.showMessage('Generating audio with ElevenLabs...', 'loading');
+                
+                try {
+                    // Call ElevenLabs API to generate audio
+                    const response = await fetch('/generate-audio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: storyText })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const contentType = response.headers.get('content-type') || '';
+                    
+                    if (contentType.includes('application/json')) {
+                        // Handle JSON response (fallback)
+                        const jsonData = await response.json();
+                        console.log('ElevenLabs fallback response:', jsonData);
+                        this.showMessage(`${jsonData.message || 'Audio generation failed'}. Using Browser TTS...`, 'error');
+                        
+                        // Fallback to Browser TTS
+                        this.useBrowserTTS(storyText);
+                        return;
+                    }
+                    
+                    // Get audio blob
+                    const audioBlob = await response.blob();
+                    
+                    // Check if blob is too small (likely an error)
+                    if (audioBlob.size < 1000) {
+                        console.log('Audio response too small, using Browser TTS fallback');
+                        this.showMessage('Audio response too small. Using Browser TTS...', 'error');
+                        this.useBrowserTTS(storyText);
+                        return;
+                    }
+                    
+                    console.log('ElevenLabs audio generated successfully, size:', audioBlob.size, 'bytes');
+                    this.showMessage('Playing ElevenLabs audio...', 'success');
+                    
+                    // Create audio URL and set up player
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    this.audioElement = new Audio(audioUrl);
+                    this.audioElement.volume = parseFloat(this.volumeSlider.value);
+                    this.audioElement.playbackRate = parseFloat(this.speedSlider.value);
+                    
+                    // Set up audio events
+                    this.audioElement.onloadstart = () => {
+                        console.log('Audio loading started');
+                        this.showMessage('Loading audio...', 'loading');
+                    };
+                    
+                    this.audioElement.oncanplay = () => {
+                        console.log('Audio ready to play');
+                        this.isPlaying = true;
+                        this.updateAudioControls();
+                        this.audioStatus.className = 'status-indicator status-playing';
+                        this.showMessage('Playing ElevenLabs audio...', 'success');
+                    };
+                    
+                    this.audioElement.onplay = () => {
+                        console.log('Audio playback started');
+                    };
+                    
+                    this.audioElement.onended = () => {
+                        console.log('Audio playback completed');
+                        this.isPlaying = false;
+                        this.updateAudioControls();
+                        this.audioStatus.className = 'status-indicator status-stopped';
+                        this.showMessage('Story playback completed!', 'success');
+                        URL.revokeObjectURL(audioUrl); // Clean up
+                    };
+                    
+                    this.audioElement.onerror = (event) => {
+                        console.error('Audio playback error:', event);
+                        this.isPlaying = false;
+                        this.updateAudioControls();
+                        this.audioStatus.className = 'status-indicator status-stopped';
+                        this.showMessage('Audio playback error. Using Browser TTS...', 'error');
+                        URL.revokeObjectURL(audioUrl); // Clean up
+                        
+                        // Fallback to Browser TTS
+                        this.useBrowserTTS(storyText);
+                    };
+                    
+                    // Start playing
+                    await this.audioElement.play();
+                    
+                } catch (error) {
+                    console.error('Error generating audio:', error);
+                    this.showMessage('Audio generation failed. Using Browser TTS...', 'error');
+                    
+                    // Fallback to Browser TTS
+                    this.useBrowserTTS(storyText);
+                }
+            }
+            
+            useBrowserTTS(storyText) {
+                console.log('Using Browser TTS fallback');
+                this.showMessage('Using Browser TTS...', 'loading');
+                
+                // Stop any current speech
+                speechSynthesis.cancel();
+                
+                // Create utterance
+                this.utterance = new SpeechSynthesisUtterance(storyText);
+                this.utterance.lang = 'ta-IN'; // Tamil language
+                this.utterance.rate = parseFloat(this.speedSlider.value);
+                this.utterance.volume = parseFloat(this.volumeSlider.value);
+                
+                // Set up events
+                this.utterance.onstart = () => {
+                    console.log('Browser TTS started');
+                    this.isPlaying = true;
+                    this.updateAudioControls();
+                    this.audioStatus.className = 'status-indicator status-playing';
+                    this.showMessage('Playing with Browser TTS...', 'success');
+                };
+                
+                this.utterance.onend = () => {
+                    console.log('Browser TTS ended');
+                    this.isPlaying = false;
+                    this.updateAudioControls();
+                    this.audioStatus.className = 'status-indicator status-stopped';
+                    this.showMessage('Story playback completed!', 'success');
+                };
+                
+                this.utterance.onerror = (event) => {
+                    console.error('Browser TTS error:', event);
+                    this.isPlaying = false;
+                    this.updateAudioControls();
+                    this.audioStatus.className = 'status-indicator status-stopped';
+                    this.showMessage(`Browser TTS error: ${event.error}`, 'error');
+                };
+                
+                // Start speaking
+                speechSynthesis.speak(this.utterance);
+            }
+
+            pauseStory() {
+                if (this.isPlaying) {
+                    // Try to pause speech synthesis first
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.pause();
+                    }
+                    
+                    // Try to pause HTML audio element if it exists
+                    if (this.audioElement) {
+                        this.audioElement.pause();
+                    }
+                    
+                    this.isPlaying = false;
+                    this.updateAudioControls();
+                    this.audioStatus.className = 'status-indicator status-paused';
+                }
+            }
+
+            stopStory() {
+                // Stop speech synthesis
+                speechSynthesis.cancel();
+                
+                // Stop HTML audio element if it exists
+                if (this.audioElement) {
+                    this.audioElement.pause();
+                    this.audioElement.currentTime = 0;
+                }
+                
+                this.isPlaying = false;
+                this.updateAudioControls();
+                this.audioStatus.className = 'status-indicator status-stopped';
+            }
+
+            updateAudioControls() {
+                if (this.isPlaying) {
+                    this.playBtn.style.display = 'none';
+                    this.pauseBtn.style.display = 'inline-flex';
+                    this.stopBtn.style.display = 'inline-flex';
+                } else {
+                    this.playBtn.style.display = 'inline-flex';
+                    this.pauseBtn.style.display = 'none';
+                    this.stopBtn.style.display = 'none';
+                }
+            }
+
+            async submitAssessment() {
+                if (Object.keys(this.answers).length !== this.currentQuestions.length) {
+                    this.showMessage('Please answer all questions before submitting.', 'error');
+                    return;
+                }
+                
+                this.submitBtn.disabled = true;
+                this.submitBtn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+                this.showMessage('Analyzing your responses...', 'loading');
+                
+                try {
+                    const response = await fetch('/assess-mental-health', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            story_id: this.currentStory.story_id,
+                            answers: Object.values(this.answers)
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const results = await response.json();
+                    this.displayResults(results);
+                    this.showMessage('Assessment completed successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error submitting assessment:', error);
+                    this.showMessage('Failed to submit assessment. Please try again.', 'error');
+                } finally {
+                    this.submitBtn.disabled = false;
+                    this.submitBtn.innerHTML = '<span>📊</span><span>Submit Assessment</span>';
+                }
+            }
+
+            displayResults(results) {
+                console.log('Displaying results:', results);
+                
+                // Build detailed analysis section
+                let detailedAnalysisHtml = '';
+                if (results.detailed_analysis) {
+                    detailedAnalysisHtml = `
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;">
+                            <h4 style="color: #333; margin-bottom: 15px;">🔍 Detailed Analysis</h4>
+                            <p style="line-height: 1.6; color: #555;">${results.detailed_analysis}</p>
+                        </div>
+                    `;
+                }
+                
+                // Build recommendations section
+                let recommendationsHtml = '';
+                if (results.recommendations && Array.isArray(results.recommendations)) {
+                    recommendationsHtml = `
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h4 style="color: #333; margin-bottom: 15px;">💡 Specific Recommendations</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                ${results.recommendations.map((rec, index) => 
+                                    `<li style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; align-items: flex-start;">
+                                        <span style="background: #007bff; color: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 12px; font-weight: bold;">${index + 1}</span>
+                                        <span style="flex: 1;">${rec}</span>
+                                    </li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Build action plan section
+                let actionPlanHtml = '';
+                if (results.action_plan) {
+                    actionPlanHtml = `
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h4 style="color: #333; margin-bottom: 15px;">📋 Action Plan</h4>
+                            <div style="display: grid; gap: 15px;">
+                                <div style="padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                    <h5 style="margin: 0 0 8px 0; color: #856404;">🚨 Immediate Actions</h5>
+                                    <p style="margin: 0; color: #856404;">${results.action_plan.immediate}</p>
+                                </div>
+                                <div style="padding: 15px; background: #d1ecf1; border-radius: 8px; border-left: 4px solid #17a2b8;">
+                                    <h5 style="margin: 0 0 8px 0; color: #0c5460;">📅 Short-term (1-2 weeks)</h5>
+                                    <p style="margin: 0; color: #0c5460;">${results.action_plan.short_term}</p>
+                                </div>
+                                <div style="padding: 15px; background: #d4edda; border-radius: 8px; border-left: 4px solid #28a745;">
+                                    <h5 style="margin: 0 0 8px 0; color: #155724;">🎯 Long-term (1+ months)</h5>
+                                    <p style="margin: 0; color: #155724;">${results.action_plan.long_term}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                this.resultsContent.innerHTML = `
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h4 style="color: #333; margin-bottom: 15px;">📊 Assessment Summary</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <h5 style="margin: 0 0 8px 0; color: #666;">Risk Level</h5>
+                                <p style="margin: 0; font-size: 18px; font-weight: bold; color: ${results.color || '#333'};">${results.risk_level}</p>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <h5 style="margin: 0 0 8px 0; color: #666;">Score</h5>
+                                <p style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">${results.total_score}/${results.max_score}</p>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <h5 style="margin: 0 0 8px 0; color: #666;">Percentage</h5>
+                                <p style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">${results.percentage}%</p>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <h5 style="margin: 0 0 8px 0; color: #666;">Confidence</h5>
+                                <p style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">${results.confidence || 'N/A'}%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${detailedAnalysisHtml}
+                    ${recommendationsHtml}
+                    ${actionPlanHtml}
+                    
+                    <div style="background: #e9ecef; padding: 15px; border-radius: 8px; text-align: center; color: #6c757d; font-size: 14px;">
+                        <p style="margin: 0;">Assessment completed on ${new Date().toLocaleDateString('ta-IN')} at ${new Date().toLocaleTimeString('ta-IN')}</p>
+                    </div>
+                `;
+                
+                this.resultsSection.style.display = 'block';
+            }
+
+            getRiskColor(riskLevel) {
+                switch (riskLevel?.toLowerCase()) {
+                    case 'low risk': return '#4caf50';
+                    case 'moderate risk': return '#ff9800';
+                    case 'high risk': return '#f44336';
+                    default: return '#666';
+                }
+            }
+
+            showMessage(text, type) {
+                this.messageContainer.innerHTML = `<div class="message ${type}">${text}</div>`;
+                if (type !== 'loading') {
+                    setTimeout(() => {
+                        this.messageContainer.innerHTML = '';
+                    }, 5000);
+                }
+            }
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PregnancyMentalHealthApp();
+        });
+    </script>
+</body>
+</html>

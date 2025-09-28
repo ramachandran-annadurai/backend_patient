@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend Audio Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 15px 25px; margin: 10px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #log { background: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px; height: 200px; overflow-y: auto; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Frontend Audio Test</h1>
+    
+    <button onclick="testStoryGeneration()">1. Generate Tamil Story</button>
+    <button onclick="testAudioGeneration()" id="audioBtn" disabled>2. Generate Audio</button>
+    <button onclick="testPlayback()" id="playBtn" disabled>3. Play Audio</button>
+    
+    <div id="log"></div>
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+
+    <script>
+        let currentStory = null;
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        async function testStoryGeneration() {
+            log('🔄 Generating Tamil story...');
+            
+            try {
+                const response = await fetch('/generate-story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        story_type: 'pregnancy',
+                        difficulty_level: 'medium',
+                        language: 'tamil'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                currentStory = await response.json();
+                log('✅ Story generated successfully!', 'success');
+                log(`Story: ${currentStory.content.substring(0, 100)}...`);
+                
+                document.getElementById('audioBtn').disabled = false;
+                
+            } catch (error) {
+                log(`❌ Story generation failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testAudioGeneration() {
+            if (!currentStory) {
+                log('❌ Please generate a story first!', 'error');
+                return;
+            }
+            
+            log('🔄 Generating ElevenLabs audio...');
+            document.getElementById('audioBtn').innerHTML = '⏳ Generating...';
+            document.getElementById('audioBtn').disabled = true;
+            
+            try {
+                const response = await fetch('/generate-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: currentStory.content })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                }
+                
+                // Check if response is JSON (error/fallback) or audio
+                const contentType = response.headers.get('content-type') || '';
+                
+                if (contentType.includes('application/json')) {
+                    // Handle JSON response (fallback)
+                    const jsonData = await response.json();
+                    log(`⚠️ ${jsonData.message || 'Audio generation failed'}`, 'error');
+                    log('💡 Using Browser TTS as fallback...', 'info');
+                    
+                    // Use browser TTS as fallback
+                    useBrowserTTS();
+                    return;
+                }
+                
+                const audioBlob = await response.blob();
+                
+                // Check if blob is too small (likely JSON error)
+                if (audioBlob.size < 1000) {
+                    log(`⚠️ Audio response too small (${audioBlob.size} bytes), likely an error`, 'error');
+                    log('💡 Using Browser TTS as fallback...', 'info');
+                    useBrowserTTS();
+                    return;
+                }
+                
+                log(`✅ Audio generated successfully! Size: ${audioBlob.size} bytes`, 'success');
+                
+                // Create audio URL and set up player
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audioPlayer = document.getElementById('audioPlayer');
+                audioPlayer.src = audioUrl;
+                audioPlayer.style.display = 'block';
+                
+                // Set up audio events
+                audioPlayer.onloadstart = () => log('🔄 Audio loading started...');
+                audioPlayer.oncanplay = () => {
+                    log('✅ Audio ready to play!', 'success');
+                    document.getElementById('playBtn').disabled = false;
+                };
+                audioPlayer.onplay = () => log('🎵 Audio playback started!', 'success');
+                audioPlayer.onended = () => log('✅ Audio playback completed!', 'success');
+                audioPlayer.onerror = (e) => log(`❌ Audio playback error: ${e.message}`, 'error');
+                
+                document.getElementById('audioBtn').innerHTML = '2. Generate Audio';
+                document.getElementById('audioBtn').disabled = false;
+                
+            } catch (error) {
+                log(`❌ Audio generation failed: ${error.message}`, 'error');
+                document.getElementById('audioBtn').innerHTML = '2. Generate Audio';
+                document.getElementById('audioBtn').disabled = false;
+            }
+        }
+        
+        function testPlayback() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            if (!audioPlayer.src) {
+                log('❌ Please generate audio first!', 'error');
+                return;
+            }
+            
+            log('🔄 Starting audio playback...');
+            audioPlayer.play().catch(error => {
+                log(`❌ Playback failed: ${error.message}`, 'error');
+            });
+        }
+        
+        // Auto-generate story on page load
+        window.onload = () => {
+            log('🚀 Frontend Audio Test loaded. Auto-generating story...');
+            testStoryGeneration();
+        };
+        }
+        
+        function useBrowserTTS() {
+            if (!currentStory) {
+                log('❌ No story available for TTS!', 'error');
+                return;
+            }
+            
+            log('🔄 Using Browser TTS...', 'info');
+            
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+            
+            // Create utterance
+            const utterance = new SpeechSynthesisUtterance(currentStory.content);
+            utterance.lang = 'en-US'; // Use English for better compatibility
+            utterance.rate = 1.0;
+            utterance.volume = 0.8;
+            
+            // Set up events
+            utterance.onstart = () => log('🎵 Browser TTS started!', 'success');
+            utterance.onend = () => log('✅ Browser TTS completed!', 'success');
+            utterance.onerror = (event) => {
+                log(`❌ Browser TTS error: ${event.error}`, 'error');
+            };
+            
+            // Start speaking
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "Authentication & User Management",
+    "description": "User authentication and management endpoints (9 endpoints)",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "User Signup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/signup",
+          "host": ["{{base_url}}"],
+          "path": ["signup"]
+        }
+      }
+    },
+    {
+      "name": "Send OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/send-otp",
+          "host": ["{{base_url}}"],
+          "path": ["send-otp"]
+        }
+      }
+    },
+    {
+      "name": "Resend OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/resend-otp",
+          "host": ["{{base_url}}"],
+          "path": ["resend-otp"]
+        }
+      }
+    },
+    {
+      "name": "Verify OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/verify-otp",
+          "host": ["{{base_url}}"],
+          "path": ["verify-otp"]
+        }
+      }
+    },
+    {
+      "name": "User Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/login",
+          "host": ["{{base_url}}"],
+          "path": ["login"]
+        }
+      }
+    },
+    {
+      "name": "User Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/logout",
+          "host": ["{{base_url}}"],
+          "path": ["logout"]
+        }
+      }
+    },
+    {
+      "name": "Forgot Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/forgot-password",
+          "host": ["{{base_url}}"],
+          "path": ["forgot-password"]
+        }
+      }
+    },
+    {
+      "name": "Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/reset-password",
+          "host": ["{{base_url}}"],
+          "path": ["reset-password"]
+        }
+      }
+    },
+    {
+      "name": "Verify Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/verify-token",
+          "host": ["{{base_url}}"],
+          "path": ["verify-token"]
+        }
+      }
+    }
+  ]
+}

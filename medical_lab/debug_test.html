@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test - Image Text Extraction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .debug-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .text-result {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Test - Image Text Extraction</h1>
+        
+        <div class="debug-section">
+            <h3>API Connection Test</h3>
+            <button onclick="testAPIConnection()">Test API Connection</button>
+            <div id="apiTestResult" class="log"></div>
+        </div>
+
+        <div class="debug-section">
+            <h3>File Upload Test</h3>
+            <input type="file" id="fileInput" accept="image/*" onchange="logFileSelection()">
+            <button onclick="testFileUpload()" id="uploadBtn" disabled>Upload & Extract Text</button>
+            <div id="fileTestResult" class="log"></div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Results</h3>
+            <div id="results"></div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Debug Log</h3>
+            <button onclick="clearLog()">Clear Log</button>
+            <div id="debugLog" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api/v1';
+        let selectedFile = null;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('debugLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('debugLog').innerHTML = '';
+        }
+
+        function logFileSelection() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            if (fileInput.files.length > 0) {
+                selectedFile = fileInput.files[0];
+                uploadBtn.disabled = false;
+                log(`File selected: ${selectedFile.name} (${selectedFile.type}, ${selectedFile.size} bytes)`, 'success');
+            } else {
+                selectedFile = null;
+                uploadBtn.disabled = true;
+                log('No file selected', 'info');
+            }
+        }
+
+        async function testAPIConnection() {
+            const resultDiv = document.getElementById('apiTestResult');
+            resultDiv.innerHTML = 'Testing API connection...\n';
+            
+            try {
+                log('Testing API connection to: ' + API_BASE_URL, 'info');
+                
+                const response = await fetch('http://localhost:8000/health');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `✅ API Connection Successful!\nStatus: ${response.status}\nResponse: ${JSON.stringify(result, null, 2)}`;
+                    log('API connection successful', 'success');
+                } else {
+                    resultDiv.innerHTML = `❌ API Connection Failed!\nStatus: ${response.status}\nResponse: ${JSON.stringify(result, null, 2)}`;
+                    log('API connection failed', 'error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ API Connection Error!\nError: ${error.message}`;
+                log('API connection error: ' + error.message, 'error');
+            }
+        }
+
+        async function testFileUpload() {
+            if (!selectedFile) {
+                log('No file selected for upload', 'error');
+                return;
+            }
+
+            const resultDiv = document.getElementById('fileTestResult');
+            const resultsDiv = document.getElementById('results');
+            
+            resultDiv.innerHTML = 'Uploading file...\n';
+            resultsDiv.innerHTML = '';
+            
+            try {
+                log(`Starting file upload: ${selectedFile.name}`, 'info');
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                
+                log('FormData created, sending request...', 'info');
+                
+                // Upload file
+                const uploadResponse = await fetch(`${API_BASE_URL}/ocr/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`Upload response status: ${uploadResponse.status}`, 'info');
+                
+                if (!uploadResponse.ok) {
+                    const errorText = await uploadResponse.text();
+                    throw new Error(`Upload failed: ${uploadResponse.status} - ${errorText}`);
+                }
+                
+                const uploadResult = await uploadResponse.json();
+                log('Upload successful, response received', 'success');
+                
+                resultDiv.innerHTML = `✅ Upload Successful!\nResponse: ${JSON.stringify(uploadResult, null, 2)}`;
+                
+                // Display results
+                if (uploadResult.success) {
+                    displayResults(uploadResult);
+                } else {
+                    resultsDiv.innerHTML = `<div class="result error">❌ Upload failed: ${uploadResult.error || 'Unknown error'}</div>`;
+                }
+                
+            } catch (error) {
+                const errorMsg = `❌ Upload Error!\nError: ${error.message}`;
+                resultDiv.innerHTML = errorMsg;
+                resultsDiv.innerHTML = `<div class="result error">${errorMsg}</div>`;
+                log('Upload error: ' + error.message, 'error');
+            }
+        }
+
+        async function displayResults(result) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <div class="result success">
+                    <h3>✅ Text Extraction Successful!</h3>
+                    <h4>Extracted Text:</h4>
+                    <div class="text-result">${result.extracted_text || 'No text extracted'}</div>
+                    <h4>Metadata:</h4>
+                    <ul>
+                        <li><strong>Document ID:</strong> ${result.document_id || 'N/A'}</li>
+                        <li><strong>Text Count:</strong> ${result.text_count || 0}</li>
+                        <li><strong>Processing Time:</strong> ${result.processing_time || 'N/A'}</li>
+                        <li><strong>Confidence Score:</strong> ${result.confidence_score || 'N/A'}</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Try to get the original image
+            if (result.document_id) {
+                try {
+                    log(`Retrieving original image for document ID: ${result.document_id}`, 'info');
+                    
+                    const imageResponse = await fetch(`${API_BASE_URL}/documents/${result.document_id}?include_base64=true`);
+                    
+                    if (imageResponse.ok) {
+                        const imageData = await imageResponse.json();
+                        log('Image data retrieved successfully', 'success');
+                        
+                        if (imageData.success && imageData.document.base64_data) {
+                            html += `
+                                <div class="result success">
+                                    <h3>🖼️ Original Image</h3>
+                                    <img src="data:${imageData.document.file_type};base64,${imageData.document.base64_data}" 
+                                         alt="Original uploaded image">
+                                    <p><strong>File:</strong> ${imageData.document.filename}</p>
+                                    <p><strong>Type:</strong> ${imageData.document.file_type}</p>
+                                    <p><strong>Size:</strong> ${imageData.document.file_size} bytes</p>
+                                </div>
+                            `;
+                        } else {
+                            html += `<div class="result error">❌ Could not retrieve original image data</div>`;
+                        }
+                    } else {
+                        html += `<div class="result error">❌ Failed to retrieve original image (Status: ${imageResponse.status})</div>`;
+                    }
+                } catch (error) {
+                    html += `<div class="result error">❌ Error retrieving original image: ${error.message}</div>`;
+                    log('Error retrieving image: ' + error.message, 'error');
+                }
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // Auto-test API connection on page load
+        window.onload = function() {
+            log('Page loaded, testing API connection...', 'info');
+            testAPIConnection();
+        };
+    </script>
+</body>
+</html>

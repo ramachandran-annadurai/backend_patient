@@ -8,11 +8,34 @@ import json
 import numpy as np
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
-from qdrant_client.http import models
-import openai
 from pymongo import MongoClient
+import openai
+# Optional imports with fallbacks
+try:
+    from sentence_transformers import SentenceTransformer
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    print("⚠️ sentence_transformers not available, using fallback mode")
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+    SentenceTransformer = None
+
+try:
+    from qdrant_client import QdrantClient
+    from qdrant_client.http import models
+    QDRANT_AVAILABLE = True
+except ImportError:
+    print("⚠️ qdrant_client not available, using fallback mode")
+    QDRANT_AVAILABLE = False
+    QdrantClient = None
+    models = None
+
+try:
+    import openai
+    OPENAI_AVAILABLE = True
+except ImportError:
+    print("⚠️ openai not available, using fallback mode")
+    OPENAI_AVAILABLE = False
+    openai = None
 
 class SymptomsService:
     def __init__(self):
@@ -28,30 +51,40 @@ class SymptomsService:
         """Initialize all required services"""
         try:
             # Initialize embedding model
-            model_name = os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2')
-            self.embedding_model = SentenceTransformer(model_name)
-            print(f"✅ Embedding model loaded: {model_name}")
+            if SENTENCE_TRANSFORMERS_AVAILABLE and SentenceTransformer is not None:
+                model_name = os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2')
+                self.embedding_model = SentenceTransformer(model_name)
+                print(f"✅ Embedding model loaded: {model_name}")
+            else:
+                print("⚠️ SentenceTransformers not available, using fallback mode")
+                self.embedding_model = None
             
             # Initialize Qdrant client
-            qdrant_url = os.getenv('QDRANT_URL')
-            qdrant_api_key = os.getenv('QDRANT_API_KEY')
-            if qdrant_url and qdrant_api_key:
-                self.qdrant_client = QdrantClient(
-                    url=qdrant_url,
-                    api_key=qdrant_api_key,
-                    timeout=60
-                )
-                print("✅ Qdrant client initialized")
+            if QDRANT_AVAILABLE and QdrantClient is not None:
+                qdrant_url = os.getenv('QDRANT_URL')
+                qdrant_api_key = os.getenv('QDRANT_API_KEY')
+                if qdrant_url and qdrant_api_key:
+                    self.qdrant_client = QdrantClient(
+                        url=qdrant_url,
+                        api_key=qdrant_api_key,
+                        timeout=60
+                    )
+                    print("✅ Qdrant client initialized")
+                else:
+                    print("⚠️ Qdrant credentials not found, using fallback mode")
             else:
-                print("⚠️ Qdrant credentials not found, using fallback mode")
+                print("⚠️ Qdrant client not available, using fallback mode")
             
             # Initialize OpenAI client
-            openai_api_key = os.getenv('OPENAI_API_KEY')
-            if openai_api_key:
-                self.openai_client = openai.OpenAI(api_key=openai_api_key)
-                print("✅ OpenAI client initialized")
+            if OPENAI_AVAILABLE and openai is not None:
+                openai_api_key = os.getenv('OPENAI_API_KEY')
+                if openai_api_key:
+                    self.openai_client = openai.OpenAI(api_key=openai_api_key)
+                    print("✅ OpenAI client initialized")
+                else:
+                    print("⚠️ OpenAI API key not found, using fallback mode")
             else:
-                print("⚠️ OpenAI API key not found, using fallback mode")
+                print("⚠️ OpenAI client not available, using fallback mode")
             
             # Initialize MongoDB client
             mongo_uri = os.getenv('MONGO_URI')
@@ -69,7 +102,7 @@ class SymptomsService:
     def get_embeddings(self, text: str) -> List[float]:
         """Generate embeddings for text"""
         try:
-            if self.embedding_model:
+            if self.embedding_model is not None:
                 return self.embedding_model.encode(text).tolist()
             else:
                 # Fallback: return random embeddings

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .error {
+            background: #f44336;
+        }
+        .success {
+            background: #4CAF50;
+        }
+        .warning {
+            background: #ff9800;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 TTS Debug Test</h1>
+        
+        <div class="status" id="status">Ready to test...</div>
+        
+        <button onclick="testElevenLabs()">Test ElevenLabs TTS</button>
+        <button onclick="testBrowserTTS()">Test Browser TTS</button>
+        <button onclick="testCompleteFlow()">Test Complete Flow</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f44336' : type === 'success' ? '#4CAF50' : type === 'warning' ? '#ff9800' : '#2196F3';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function testElevenLabs() {
+            log('🔄 Testing ElevenLabs TTS...', 'info');
+            updateStatus('Testing ElevenLabs...', 'warning');
+            
+            try {
+                const response = await fetch('/generate-audio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: 'கர்ப்பிணி பெண் சோதனை கதை' })
+                });
+                
+                log(`Response status: ${response.status}`, 'info');
+                log(`Content-Type: ${response.headers.get('content-type')}`, 'info');
+                log(`Content-Length: ${response.headers.get('content-length')}`, 'info');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const contentType = response.headers.get('content-type') || '';
+                
+                if (contentType.includes('application/json')) {
+                    const jsonData = await response.json();
+                    log(`JSON Response: ${JSON.stringify(jsonData)}`, 'warning');
+                    
+                    if (jsonData.fallback) {
+                        log('✅ ElevenLabs quota exceeded - fallback detected', 'warning');
+                        updateStatus('ElevenLabs quota exceeded - using Browser TTS', 'warning');
+                    } else {
+                        log('❌ Unexpected JSON response', 'error');
+                        updateStatus('Unexpected JSON response', 'error');
+                    }
+                } else {
+                    const audioBlob = await response.blob();
+                    log(`Audio blob size: ${audioBlob.size} bytes`, 'info');
+                    
+                    if (audioBlob.size < 1000) {
+                        log('⚠️ Audio response too small - likely an error', 'warning');
+                        updateStatus('Audio response too small', 'warning');
+                    } else {
+                        log('✅ ElevenLabs audio generated successfully!', 'success');
+                        updateStatus('ElevenLabs audio ready', 'success');
+                        
+                        // Try to play the audio
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        
+                        audio.onloadstart = () => log('Audio loading started...', 'info');
+                        audio.oncanplay = () => log('Audio ready to play', 'success');
+                        audio.onplay = () => log('Audio playback started', 'success');
+                        audio.onended = () => log('Audio playback completed', 'success');
+                        audio.onerror = (e) => log(`Audio playback error: ${e}`, 'error');
+                        
+                        try {
+                            await audio.play();
+                            log('✅ Audio playing successfully!', 'success');
+                        } catch (playError) {
+                            log(`❌ Audio play failed: ${playError}`, 'error');
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ ElevenLabs test failed: ${error.message}`, 'error');
+                updateStatus('ElevenLabs test failed', 'error');
+            }
+        }
+
+        function testBrowserTTS() {
+            log('🔄 Testing Browser TTS...', 'info');
+            updateStatus('Testing Browser TTS...', 'warning');
+            
+            if (!('speechSynthesis' in window)) {
+                log('❌ Speech synthesis not supported in this browser', 'error');
+                updateStatus('Speech synthesis not supported', 'error');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance('கர்ப்பிணி பெண் சோதனை கதை');
+            utterance.lang = 'ta-IN';
+            utterance.rate = 1.0;
+            utterance.volume = 0.8;
+            
+            utterance.onstart = () => {
+                log('✅ Browser TTS started', 'success');
+                updateStatus('Browser TTS playing...', 'success');
+            };
+            
+            utterance.onend = () => {
+                log('✅ Browser TTS completed', 'success');
+                updateStatus('Browser TTS completed', 'success');
+            };
+            
+            utterance.onerror = (event) => {
+                log(`❌ Browser TTS error: ${event.error}`, 'error');
+                updateStatus('Browser TTS error', 'error');
+            };
+            
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+            log('🔄 Browser TTS initiated...', 'info');
+        }
+
+        async function testCompleteFlow() {
+            log('🔄 Testing Complete Flow...', 'info');
+            updateStatus('Testing complete flow...', 'warning');
+            
+            // Step 1: Generate story
+            log('Step 1: Generating story...', 'info');
+            try {
+                const storyResponse = await fetch('/generate-story', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        difficulty: 'easy',
+                        scenario: 'pregnancy_mental_health'
+                    })
+                });
+                
+                if (!storyResponse.ok) {
+                    throw new Error(`Story generation failed: ${storyResponse.status}`);
+                }
+                
+                const storyData = await storyResponse.json();
+                log(`✅ Story generated: ${storyData.title}`, 'success');
+                log(`Content length: ${storyData.content.length} characters`, 'info');
+                
+                // Step 2: Test audio generation
+                log('Step 2: Testing audio generation...', 'info');
+                const audioResponse = await fetch('/generate-audio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: storyData.content })
+                });
+                
+                const contentType = audioResponse.headers.get('content-type') || '';
+                log(`Audio response type: ${contentType}`, 'info');
+                
+                if (contentType.includes('application/json')) {
+                    const audioData = await audioResponse.json();
+                    log(`JSON fallback: ${JSON.stringify(audioData)}`, 'warning');
+                    log('Step 3: Using Browser TTS fallback...', 'info');
+                    
+                    // Test Browser TTS with the story
+                    const utterance = new SpeechSynthesisUtterance(storyData.content);
+                    utterance.lang = 'ta-IN';
+                    utterance.rate = 1.0;
+                    utterance.volume = 0.8;
+                    
+                    utterance.onstart = () => log('✅ Browser TTS fallback started', 'success');
+                    utterance.onend = () => log('✅ Browser TTS fallback completed', 'success');
+                    utterance.onerror = (event) => log(`❌ Browser TTS fallback error: ${event.error}`, 'error');
+                    
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(utterance);
+                    
+                } else {
+                    const audioBlob = await audioResponse.blob();
+                    log(`ElevenLabs audio size: ${audioBlob.size} bytes`, 'info');
+                    
+                    if (audioBlob.size > 1000) {
+                        log('✅ ElevenLabs audio generated successfully!', 'success');
+                        updateStatus('Complete flow successful with ElevenLabs', 'success');
+                    } else {
+                        log('⚠️ Audio response too small', 'warning');
+                        updateStatus('Complete flow with small audio response', 'warning');
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Complete flow failed: ${error.message}`, 'error');
+                updateStatus('Complete flow failed', 'error');
+            }
+        }
+
+        // Initialize
+        log('🎵 TTS Debug Test initialized', 'info');
+        log('Click buttons to test different TTS methods', 'info');
+    </script>
+</body>
+</html>
