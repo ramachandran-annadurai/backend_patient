@@ -8399,6 +8399,458 @@ def get_appointment_history():
         print(f"❌ Error retrieving appointment history: {str(e)}")
         return jsonify({"error": f"Failed to retrieve appointment history: {str(e)}"}), 500
 
+# ============================================================================
+# DOCTOR APPOINTMENT MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.route('/doctor/appointments', methods=['GET'])
+@token_required
+def get_doctor_appointments():
+    """Get all appointments for doctor management"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        # Get query parameters for filtering
+        date = request.args.get('date')
+        status = request.args.get('status')
+        appointment_type = request.args.get('appointment_type')
+        patient_id = request.args.get('patient_id')
+        
+        print(f"🔍 Getting appointments for doctor - date: {date}, status: {status}, type: {appointment_type}, patient: {patient_id}")
+        
+        # Build query filter
+        query_filter = {}
+        if patient_id:
+            query_filter["patient_id"] = patient_id
+        
+        # Get all patients with appointments
+        patients = db.patients_collection.find(query_filter)
+        
+        all_appointments = []
+        for patient in patients:
+            appointments = patient.get('appointments', [])
+            for appointment in appointments:
+                # Filter appointments based on query parameters
+                if date and appointment.get('appointment_date') != date:
+                    continue
+                if status and appointment.get('appointment_status') != status:
+                    continue
+                if appointment_type and appointment.get('appointment_type') != appointment_type:
+                    continue
+                
+                # Add patient info to appointment
+                appointment_data = appointment.copy()
+                appointment_data['patient_id'] = patient.get('patient_id')
+                appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+                appointment_data['patient_email'] = patient.get('email', '')
+                appointment_data['patient_mobile'] = patient.get('mobile', '')
+                
+                all_appointments.append(appointment_data)
+        
+        # Sort by appointment date
+        all_appointments.sort(key=lambda x: x.get('appointment_date', ''))
+        
+        print(f"✅ Found {len(all_appointments)} appointments for doctor")
+        
+        return jsonify({
+            "appointments": all_appointments,
+            "total_count": len(all_appointments),
+            "message": "Appointments retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving doctor appointments: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointments: {str(e)}"}), 500
+
+@app.route('/doctor/appointments', methods=['POST'])
+@token_required
+def create_doctor_appointment():
+    """Create a new appointment by doctor"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json()
+        
+        print(f"🔍 Doctor creating appointment - data: {data}")
+        
+        # Validate required fields
+        required_fields = ['patient_id', 'appointment_date', 'appointment_time', 'appointment_type']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"{field} is required"}), 400
+        
+        patient_id = data['patient_id']
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        print(f"✅ Patient found: {patient.get('first_name', '')} {patient.get('last_name', '')}")
+        
+        # Generate unique appointment ID
+        appointment_id = str(ObjectId())
+        
+        # Create appointment object
+        appointment = {
+            "appointment_id": appointment_id,
+            "appointment_date": data["appointment_date"],
+            "appointment_time": data["appointment_time"],
+            "appointment_type": data["appointment_type"],
+            "appointment_status": "scheduled",  # Doctor creates as scheduled
+            "notes": data.get("notes", ""),
+            "patient_notes": data.get("patient_notes", ""),
+            "doctor_id": data.get("doctor_id", "DOC001"),
+            "doctor_notes": data.get("doctor_notes", ""),
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+            "status": "active",
+            "created_by": "doctor"
+        }
+        
+        print(f"💾 Saving appointment to patient {patient_id}: {appointment}")
+        
+        # Add appointment to patient's appointments array
+        result = db.patients_collection.update_one(
+            {"patient_id": patient_id},
+            {"$push": {"appointments": appointment}}
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment created successfully!")
+            return jsonify({
+                "appointment_id": appointment_id,
+                "message": "Appointment created successfully",
+                "status": "scheduled"
+            }), 201
+        else:
+            return jsonify({"error": "Failed to create appointment"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error creating doctor appointment: {str(e)}")
+        return jsonify({"error": f"Failed to create appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/<appointment_id>', methods=['GET'])
+@token_required
+def get_doctor_appointment(appointment_id):
+    """Get specific appointment details for doctor"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        print(f"🔍 Doctor getting appointment {appointment_id}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Find the specific appointment
+        appointments = patient.get('appointments', [])
+        appointment = None
+        for apt in appointments:
+            if apt.get('appointment_id') == appointment_id:
+                appointment = apt
+                break
+        
+        if not appointment:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Add patient info to appointment
+        appointment_data = appointment.copy()
+        appointment_data['patient_id'] = patient.get('patient_id')
+        appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+        appointment_data['patient_email'] = patient.get('email', '')
+        appointment_data['patient_mobile'] = patient.get('mobile', '')
+        
+        print(f"✅ Found appointment: {appointment_data}")
+        
+        return jsonify({
+            "appointment": appointment_data,
+            "message": "Appointment retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving doctor appointment: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/<appointment_id>', methods=['PUT'])
+@token_required
+def update_doctor_appointment(appointment_id):
+    """Update an existing appointment - doctor can update all fields"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json()
+        
+        print(f"🔍 Doctor updating appointment {appointment_id} with data: {data}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Prepare update data - doctors can update all fields
+        update_fields = {}
+        allowed_fields = [
+            'appointment_date', 'appointment_time', 'appointment_type', 
+            'appointment_status', 'notes', 'patient_notes', 'doctor_notes', 'doctor_id'
+        ]
+        
+        for field in allowed_fields:
+            if field in data:
+                update_fields[f"appointments.$.{field}"] = data[field]
+        
+        if update_fields:
+            update_fields["appointments.$.updated_at"] = datetime.now().isoformat()
+            
+            # Update the specific appointment in the array
+            result = db.patients_collection.update_one(
+                {"appointments.appointment_id": appointment_id},
+                {"$set": update_fields}
+            )
+            
+            if result.modified_count > 0:
+                print(f"✅ Appointment {appointment_id} updated successfully by doctor")
+                return jsonify({"message": "Appointment updated successfully"}), 200
+            else:
+                return jsonify({"message": "No changes made"}), 200
+        else:
+            return jsonify({"message": "No valid fields to update"}), 400
+        
+    except Exception as e:
+        print(f"❌ Error updating doctor appointment: {str(e)}")
+        return jsonify({"error": f"Failed to update appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/<appointment_id>', methods=['DELETE'])
+@token_required
+def delete_doctor_appointment(appointment_id):
+    """Delete an appointment - doctor can delete appointments"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        print(f"🔍 Doctor deleting appointment {appointment_id}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Remove the appointment from the array
+        result = db.patients_collection.update_one(
+            {"appointments.appointment_id": appointment_id},
+            {"$pull": {"appointments": {"appointment_id": appointment_id}}}
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment {appointment_id} deleted by doctor")
+            return jsonify({"message": "Appointment deleted successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to delete appointment"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error deleting doctor appointment: {str(e)}")
+        return jsonify({"error": f"Failed to delete appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/<appointment_id>/approve', methods=['POST'])
+@token_required
+def approve_appointment(appointment_id):
+    """Approve a pending appointment"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json() or {}
+        doctor_notes = data.get('doctor_notes', '')
+        
+        print(f"🔍 Doctor approving appointment {appointment_id}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Update appointment status to approved
+        result = db.patients_collection.update_one(
+            {"appointments.appointment_id": appointment_id},
+            {
+                "$set": {
+                    "appointments.$.appointment_status": "confirmed",
+                    "appointments.$.updated_at": datetime.now().isoformat(),
+                    "appointments.$.approved_by": "doctor",
+                    "appointments.$.doctor_notes": doctor_notes
+                }
+            }
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment {appointment_id} approved by doctor")
+            return jsonify({"message": "Appointment approved successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to approve appointment"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error approving appointment: {str(e)}")
+        return jsonify({"error": f"Failed to approve appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/<appointment_id>/reject', methods=['POST'])
+@token_required
+def reject_appointment(appointment_id):
+    """Reject a pending appointment"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json() or {}
+        doctor_notes = data.get('doctor_notes', '')
+        rejection_reason = data.get('rejection_reason', '')
+        
+        print(f"🔍 Doctor rejecting appointment {appointment_id}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Update appointment status to rejected
+        result = db.patients_collection.update_one(
+            {"appointments.appointment_id": appointment_id},
+            {
+                "$set": {
+                    "appointments.$.appointment_status": "rejected",
+                    "appointments.$.updated_at": datetime.now().isoformat(),
+                    "appointments.$.rejected_by": "doctor",
+                    "appointments.$.doctor_notes": doctor_notes,
+                    "appointments.$.rejection_reason": rejection_reason
+                }
+            }
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment {appointment_id} rejected by doctor")
+            return jsonify({"message": "Appointment rejected successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to reject appointment"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error rejecting appointment: {str(e)}")
+        return jsonify({"error": f"Failed to reject appointment: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/pending', methods=['GET'])
+@token_required
+def get_pending_appointments():
+    """Get all pending appointments for doctor approval"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        print(f"🔍 Getting pending appointments for doctor")
+        
+        # Get all patients with pending appointments
+        patients = db.patients_collection.find({
+            "appointments.appointment_status": "pending"
+        })
+        
+        pending_appointments = []
+        for patient in patients:
+            appointments = patient.get('appointments', [])
+            for appointment in appointments:
+                if appointment.get('appointment_status') == 'pending':
+                    # Add patient info to appointment
+                    appointment_data = appointment.copy()
+                    appointment_data['patient_id'] = patient.get('patient_id')
+                    appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+                    appointment_data['patient_email'] = patient.get('email', '')
+                    appointment_data['patient_mobile'] = patient.get('mobile', '')
+                    
+                    pending_appointments.append(appointment_data)
+        
+        # Sort by creation date (oldest first)
+        pending_appointments.sort(key=lambda x: x.get('created_at', ''))
+        
+        print(f"✅ Found {len(pending_appointments)} pending appointments")
+        
+        return jsonify({
+            "pending_appointments": pending_appointments,
+            "total_count": len(pending_appointments),
+            "message": "Pending appointments retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving pending appointments: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve pending appointments: {str(e)}"}), 500
+
+@app.route('/doctor/appointments/statistics', methods=['GET'])
+@token_required
+def get_appointment_statistics():
+    """Get appointment statistics for doctor dashboard"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        print(f"🔍 Getting appointment statistics for doctor")
+        
+        # Get all patients with appointments
+        patients = db.patients_collection.find({})
+        
+        stats = {
+            "total_appointments": 0,
+            "pending": 0,
+            "confirmed": 0,
+            "cancelled": 0,
+            "completed": 0,
+            "rejected": 0,
+            "today_appointments": 0,
+            "upcoming_appointments": 0
+        }
+        
+        today = datetime.now().date()
+        
+        for patient in patients:
+            appointments = patient.get('appointments', [])
+            for appointment in appointments:
+                stats["total_appointments"] += 1
+                
+                status = appointment.get('appointment_status', '')
+                if status in stats:
+                    stats[status] += 1
+                
+                # Check if appointment is today
+                appointment_date_str = appointment.get('appointment_date', '')
+                try:
+                    appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d').date()
+                    if appointment_date == today:
+                        stats["today_appointments"] += 1
+                    elif appointment_date > today and status in ['scheduled', 'confirmed', 'pending']:
+                        stats["upcoming_appointments"] += 1
+                except ValueError:
+                    continue
+        
+        print(f"✅ Appointment statistics calculated: {stats}")
+        
+        return jsonify({
+            "statistics": stats,
+            "message": "Appointment statistics retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving appointment statistics: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointment statistics: {str(e)}"}), 500
+
 if __name__ == '__main__':
     # Get port from environment variable or default to 5000
     port = int(os.getenv("PORT", 8000))
