@@ -1144,9 +1144,19 @@ def send_email(to_email: str, subject: str, body: str) -> bool:
         sender_email = os.getenv("SENDER_EMAIL")
         sender_password = os.getenv("SENDER_PASSWORD")
         
+        print(f"🔍 Email config check - SENDER_EMAIL: {'✅ Set' if sender_email else '❌ Missing'}")
+        print(f"🔍 Email config check - SENDER_PASSWORD: {'✅ Set' if sender_password else '❌ Missing'}")
+        
         if not sender_email or not sender_password:
-            print("Email configuration missing - using mock email")
-            return True  # Mock success for testing
+            print("❌ Email configuration missing - SENDER_EMAIL or SENDER_PASSWORD not set")
+            print("💡 Please check your .env file contains:")
+            print("   SENDER_EMAIL=your_email@gmail.com")
+            print("   SENDER_PASSWORD=your_app_password")
+            return False  # Return False instead of True for missing config
+        
+        print(f"📧 Attempting to send email to: {to_email}")
+        print(f"📧 From: {sender_email}")
+        print(f"📧 Subject: {subject}")
         
         msg = MIMEMultipart()
         msg['From'] = sender_email
@@ -1154,18 +1164,34 @@ def send_email(to_email: str, subject: str, body: str) -> bool:
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
         
+        print("🔗 Connecting to Gmail SMTP...")
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
+        
+        print("🔐 Logging in to Gmail...")
         server.login(sender_email, sender_password)
         
+        print("📤 Sending email...")
         text = msg.as_string()
         server.sendmail(sender_email, to_email, text)
         server.quit()
         
+        print("✅ Email sent successfully!")
         return True
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"❌ SMTP Authentication failed: {e}")
+        print("💡 Check your Gmail App Password - make sure 2FA is enabled")
+        return False
+    except smtplib.SMTPRecipientsRefused as e:
+        print(f"❌ Recipient email refused: {e}")
+        return False
+    except smtplib.SMTPServerDisconnected as e:
+        print(f"❌ SMTP Server disconnected: {e}")
+        return False
     except Exception as e:
-        print(f"Email sending failed: {e}")
-        return True  # Mock success for testing
+        print(f"❌ Email sending failed: {e}")
+        print(f"💡 Error type: {type(e).__name__}")
+        return False
 
 def send_otp_email(email: str, otp: str) -> bool:
     """Send OTP email"""
@@ -1182,7 +1208,14 @@ def send_otp_email(email: str, otp: str) -> bool:
     Best regards,
     Patient Alert System Team
     """
-    return send_email(email, subject, body)
+    print(f"📧 Sending OTP email to: {email}")
+    print(f"🔢 OTP: {otp}")
+    result = send_email(email, subject, body)
+    if result:
+        print("✅ OTP email sent successfully!")
+    else:
+        print("❌ Failed to send OTP email!")
+    return result
 
 def send_patient_id_email(email: str, patient_id: str, username: str) -> bool:
     """Send Patient ID to user's email"""
@@ -1483,6 +1516,7 @@ def signup():
         signup_token = jwt.encode(signup_payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
         
         # Send OTP email
+        print(f"📧 Attempting to send OTP to: {email}")
         if send_otp_email(email, otp):
             return jsonify({
                 "email": email,
@@ -1491,7 +1525,11 @@ def signup():
                 "signup_token": signup_token  # Send token to frontend
             }), 200
         else:
-            return jsonify({"error": "Failed to send OTP email"}), 500
+            print(f"❌ Failed to send OTP email to: {email}")
+            return jsonify({
+                "error": "Failed to send OTP email. Please check your email configuration.",
+                "details": "Check console logs for more information"
+            }), 500
     
     except Exception as e:
         return jsonify({"error": f"Registration failed: {str(e)}"}), 500
@@ -7983,6 +8021,383 @@ def voice_service_health():
             'success': False,
             'error': f'Error checking service health: {str(e)}'
         }), 500
+
+# ============================================================================
+# PATIENT APPOINTMENT ENDPOINTS
+# ============================================================================
+
+@app.route('/patient/appointments', methods=['GET'])
+@token_required
+def get_patient_appointments():
+    """Get all appointments for the authenticated patient"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        
+        # Get query parameters for filtering
+        date = request.args.get('date')
+        status = request.args.get('status', 'active')
+        appointment_type = request.args.get('appointment_type')
+        
+        print(f"🔍 Getting appointments for patient {patient_id} - date: {date}, status: {status}, type: {appointment_type}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        appointments = patient.get('appointments', [])
+        
+        # Filter appointments based on query parameters
+        filtered_appointments = []
+        for appointment in appointments:
+            # Filter by date if provided
+            if date and appointment.get('appointment_date') != date:
+                continue
+            
+            # Filter by status if provided
+            if status and appointment.get('appointment_status') != status:
+                continue
+            
+            # Filter by appointment type if provided
+            if appointment_type and appointment.get('appointment_type') != appointment_type:
+                continue
+            
+            # Add patient info to appointment
+            appointment_data = appointment.copy()
+            appointment_data['patient_id'] = patient_id
+            appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+            
+            filtered_appointments.append(appointment_data)
+        
+        # Sort by appointment date
+        filtered_appointments.sort(key=lambda x: x.get('appointment_date', ''))
+        
+        print(f"✅ Found {len(filtered_appointments)} appointments for patient {patient_id}")
+        
+        return jsonify({
+            "appointments": filtered_appointments,
+            "total_count": len(filtered_appointments),
+            "patient_id": patient_id,
+            "message": "Appointments retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving patient appointments: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointments: {str(e)}"}), 500
+
+@app.route('/patient/appointments', methods=['POST'])
+@token_required
+def create_patient_appointment():
+    """Create a new appointment request - patient can request appointments"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Patient {patient_id} creating appointment request - data: {data}")
+        
+        # Validate required fields
+        required_fields = ['appointment_date', 'appointment_time', 'appointment_type']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"{field} is required"}), 400
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        print(f"✅ Patient found: {patient.get('first_name', '')} {patient.get('last_name', '')}")
+        
+        # Generate unique appointment ID
+        appointment_id = str(ObjectId())
+        
+        # Create appointment object
+        appointment = {
+            "appointment_id": appointment_id,
+            "appointment_date": data["appointment_date"],
+            "appointment_time": data["appointment_time"],
+            "appointment_type": data["appointment_type"],
+            "appointment_status": "pending",  # Patient requests start as pending
+            "notes": data.get("notes", ""),
+            "patient_notes": data.get("patient_notes", ""),  # Additional field for patient notes
+            "doctor_id": data.get("doctor_id", ""),
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+            "status": "active",
+            "requested_by": "patient"
+        }
+        
+        print(f"💾 Saving appointment request to patient {patient_id}: {appointment}")
+        
+        # Add appointment to patient's appointments array
+        result = db.patients_collection.update_one(
+            {"patient_id": patient_id},
+            {"$push": {"appointments": appointment}}
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment request saved successfully!")
+            return jsonify({
+                "appointment_id": appointment_id,
+                "message": "Appointment request created successfully",
+                "status": "pending"
+            }), 201
+        else:
+            return jsonify({"error": "Failed to save appointment request"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error creating patient appointment: {str(e)}")
+        return jsonify({"error": f"Failed to create appointment: {str(e)}"}), 500
+
+@app.route('/patient/appointments/<appointment_id>', methods=['GET'])
+@token_required
+def get_patient_appointment(appointment_id):
+    """Get specific appointment details for the authenticated patient"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Getting appointment {appointment_id} for patient {patient_id}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        # Find the specific appointment
+        appointments = patient.get('appointments', [])
+        appointment = None
+        for apt in appointments:
+            if apt.get('appointment_id') == appointment_id:
+                appointment = apt
+                break
+        
+        if not appointment:
+            return jsonify({"error": "Appointment not found"}), 404
+        
+        # Add patient info to appointment
+        appointment_data = appointment.copy()
+        appointment_data['patient_id'] = patient_id
+        appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+        
+        print(f"✅ Found appointment: {appointment_data}")
+        
+        return jsonify({
+            "appointment": appointment_data,
+            "message": "Appointment retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving patient appointment: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointment: {str(e)}"}), 500
+
+@app.route('/patient/appointments/<appointment_id>', methods=['PUT'])
+@token_required
+def update_patient_appointment(appointment_id):
+    """Update an existing appointment - patient can update their own appointments"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        data = request.get_json()
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Patient {patient_id} updating appointment {appointment_id} with data: {data}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "patient_id": patient_id,
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found or access denied"}), 404
+        
+        # Prepare update data - patients can only update certain fields
+        update_fields = {}
+        allowed_fields = ['appointment_date', 'appointment_time', 'appointment_type', 'patient_notes', 'notes']
+        
+        for field in allowed_fields:
+            if field in data:
+                update_fields[f"appointments.$.{field}"] = data[field]
+        
+        if update_fields:
+            update_fields["appointments.$.updated_at"] = datetime.now().isoformat()
+            
+            # Update the specific appointment in the array
+            result = db.patients_collection.update_one(
+                {"patient_id": patient_id, "appointments.appointment_id": appointment_id},
+                {"$set": update_fields}
+            )
+            
+            if result.modified_count > 0:
+                print(f"✅ Appointment {appointment_id} updated successfully by patient")
+                return jsonify({"message": "Appointment updated successfully"}), 200
+            else:
+                return jsonify({"message": "No changes made"}), 200
+        else:
+            return jsonify({"message": "No valid fields to update"}), 400
+        
+    except Exception as e:
+        print(f"❌ Error updating patient appointment: {str(e)}")
+        return jsonify({"error": f"Failed to update appointment: {str(e)}"}), 500
+
+@app.route('/patient/appointments/<appointment_id>', methods=['DELETE'])
+@token_required
+def cancel_patient_appointment(appointment_id):
+    """Cancel an appointment - patient can cancel their own appointments"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Patient {patient_id} canceling appointment {appointment_id}")
+        
+        # Find patient with this appointment
+        patient = db.patients_collection.find_one({
+            "patient_id": patient_id,
+            "appointments.appointment_id": appointment_id
+        })
+        if not patient:
+            return jsonify({"error": "Appointment not found or access denied"}), 404
+        
+        # Update appointment status to cancelled instead of deleting
+        result = db.patients_collection.update_one(
+            {"patient_id": patient_id, "appointments.appointment_id": appointment_id},
+            {
+                "$set": {
+                    "appointments.$.appointment_status": "cancelled",
+                    "appointments.$.updated_at": datetime.now().isoformat(),
+                    "appointments.$.cancelled_by": "patient"
+                }
+            }
+        )
+        
+        if result.modified_count > 0:
+            print(f"✅ Appointment {appointment_id} cancelled by patient")
+            return jsonify({"message": "Appointment cancelled successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to cancel appointment"}), 500
+        
+    except Exception as e:
+        print(f"❌ Error cancelling patient appointment: {str(e)}")
+        return jsonify({"error": f"Failed to cancel appointment: {str(e)}"}), 500
+
+@app.route('/patient/appointments/upcoming', methods=['GET'])
+@token_required
+def get_upcoming_appointments():
+    """Get upcoming appointments for the authenticated patient"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Getting upcoming appointments for patient {patient_id}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        appointments = patient.get('appointments', [])
+        today = datetime.now().date()
+        
+        # Filter upcoming appointments (future dates and active status)
+        upcoming_appointments = []
+        for appointment in appointments:
+            appointment_date_str = appointment.get('appointment_date', '')
+            appointment_status = appointment.get('appointment_status', '')
+            
+            if appointment_status in ['scheduled', 'confirmed', 'pending']:
+                try:
+                    appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d').date()
+                    if appointment_date >= today:
+                        appointment_data = appointment.copy()
+                        appointment_data['patient_id'] = patient_id
+                        appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+                        upcoming_appointments.append(appointment_data)
+                except ValueError:
+                    # Skip appointments with invalid date format
+                    continue
+        
+        # Sort by appointment date
+        upcoming_appointments.sort(key=lambda x: x.get('appointment_date', ''))
+        
+        print(f"✅ Found {len(upcoming_appointments)} upcoming appointments for patient {patient_id}")
+        
+        return jsonify({
+            "upcoming_appointments": upcoming_appointments,
+            "total_count": len(upcoming_appointments),
+            "patient_id": patient_id,
+            "message": "Upcoming appointments retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving upcoming appointments: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve upcoming appointments: {str(e)}"}), 500
+
+@app.route('/patient/appointments/history', methods=['GET'])
+@token_required
+def get_appointment_history():
+    """Get appointment history for the authenticated patient"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        
+        print(f"🔍 Getting appointment history for patient {patient_id}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        appointments = patient.get('appointments', [])
+        today = datetime.now().date()
+        
+        # Filter past appointments
+        past_appointments = []
+        for appointment in appointments:
+            appointment_date_str = appointment.get('appointment_date', '')
+            appointment_status = appointment.get('appointment_status', '')
+            
+            if appointment_status in ['completed', 'cancelled', 'no_show']:
+                try:
+                    appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d').date()
+                    if appointment_date < today:
+                        appointment_data = appointment.copy()
+                        appointment_data['patient_id'] = patient_id
+                        appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
+                        past_appointments.append(appointment_data)
+                except ValueError:
+                    # Skip appointments with invalid date format
+                    continue
+        
+        # Sort by appointment date (most recent first)
+        past_appointments.sort(key=lambda x: x.get('appointment_date', ''), reverse=True)
+        
+        print(f"✅ Found {len(past_appointments)} past appointments for patient {patient_id}")
+        
+        return jsonify({
+            "appointment_history": past_appointments,
+            "total_count": len(past_appointments),
+            "patient_id": patient_id,
+            "message": "Appointment history retrieved successfully"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving appointment history: {str(e)}")
+        return jsonify({"error": f"Failed to retrieve appointment history: {str(e)}"}), 500
 
 if __name__ == '__main__':
     # Get port from environment variable or default to 5000
