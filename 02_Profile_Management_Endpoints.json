@@ -1,0 +1,105 @@
+{
+	"name": "👤 Profile Management",
+	"item": [
+		{
+			"name": "Complete Profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"full_name\": \"Jane Doe\",\n  \"date_of_birth\": \"1990-01-15\",\n  \"mobile\": \"+1234567890\",\n  \"address\": \"123 Main St, City, State\",\n  \"emergency_contact\": \"John Doe\",\n  \"emergency_mobile\": \"+1234567891\",\n  \"medical_history\": \"No known allergies\",\n  \"current_medications\": \"Prenatal vitamins\",\n  \"pregnancy_week\": 12,\n  \"due_date\": \"2024-08-15\",\n  \"blood_type\": \"A+\",\n  \"height\": 165,\n  \"weight\": 65,\n  \"allergies\": \"None\",\n  \"medical_conditions\": \"None\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/complete-profile",
+					"host": ["{{base_url}}"],
+					"path": ["complete-profile"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Profile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"full_name\": \"Jane Smith\",\n  \"mobile\": \"+1234567890\",\n  \"address\": \"456 Oak Ave, City, State\",\n  \"pregnancy_week\": 14,\n  \"weight\": 67\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/edit-profile",
+					"host": ["{{base_url}}"],
+					"path": ["edit-profile"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Profile by Patient ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/profile/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["profile", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Profile by Email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/get-patient-profile-by-email/{{email}}",
+					"host": ["{{base_url}}"],
+					"path": ["get-patient-profile-by-email", "{{email}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/get-patient-profile/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["get-patient-profile", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Complete Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/patient-complete-profile/{{email}}",
+					"host": ["{{base_url}}"],
+					"path": ["patient-complete-profile", "{{email}}"]
+				}
+			},
+			"response": []
+		}
+	]
+}

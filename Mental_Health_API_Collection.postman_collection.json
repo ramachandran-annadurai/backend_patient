@@ -1,0 +1,484 @@
+{
+	"info": {
+		"_postman_id": "mental-health-api-collection",
+		"name": "Mental Health API Collection",
+		"description": "Comprehensive Mental Health API collection for Pregnancy AI Backend - https://pregnancy-ai.onrender.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "mental-health-exporter"
+	},
+	"item": [
+		{
+			"name": "🔍 Health & Status",
+			"item": [
+				{
+					"name": "Mental Health Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "health"]
+						},
+						"description": "Check mental health service status and availability"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Story Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/story-types",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "story-types"]
+						},
+						"description": "Get available mental health story types and descriptions"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📖 Story Generation",
+			"item": [
+				{
+					"name": "Generate Mental Health Story",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"story_type\": \"pregnancy\",\n  \"mood\": \"anxious\",\n  \"duration\": 5,\n  \"preferences\": {\n    \"voice\": \"calm\",\n    \"setting\": \"nature\",\n    \"language\": \"en\"\n  },\n  \"scenario\": \"pregnancy_mental_health\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/generate-story",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "generate-story"]
+						},
+						"description": "Generate a personalized mental health story based on patient mood and preferences"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Audio Story",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"text\": \"Take a deep breath and imagine yourself in a peaceful garden. The gentle breeze carries the scent of flowers, and you feel completely safe and relaxed.\",\n  \"voice_type\": \"calm\",\n  \"speed\": 0.9,\n  \"language\": \"en\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/generate-audio",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "generate-audio"]
+						},
+						"description": "Generate audio narration for mental health stories"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧠 Assessment & Analysis",
+			"item": [
+				{
+					"name": "Assess Mental Health",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"answers\": [\n    {\n      \"question_id\": \"q1\",\n      \"question\": \"How are you feeling today?\",\n      \"answer\": \"I feel anxious and worried about my pregnancy\",\n      \"score\": 3\n    },\n    {\n      \"question_id\": \"q2\",\n      \"question\": \"How is your sleep quality?\",\n      \"answer\": \"I have trouble falling asleep\",\n      \"score\": 2\n    },\n    {\n      \"question_id\": \"q3\",\n      \"question\": \"How is your energy level?\",\n      \"answer\": \"I feel tired most of the time\",\n      \"score\": 2\n    }\n  ],\n  \"story_id\": \"story_123\",\n  \"assessment_type\": \"pregnancy_anxiety\",\n  \"mood\": \"anxious\",\n  \"energy_level\": \"low\",\n  \"stress_level\": \"high\",\n  \"sleep_quality\": \"poor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/assess",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "assess"]
+						},
+						"description": "Assess mental health based on story responses and mood indicators"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Mental Health Assessment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"assessment_type\": \"anxiety\",\n  \"responses\": {\n    \"q1\": 3,\n    \"q2\": 2,\n    \"q3\": 4,\n    \"q4\": 3,\n    \"q5\": 2\n  },\n  \"total_score\": 14,\n  \"mood\": \"anxious\",\n  \"energy_level\": 3,\n  \"stress_level\": 7,\n  \"sleep_hours\": 5,\n  \"anxiety_level\": \"moderate\",\n  \"depression_symptoms\": [\"sadness\", \"hopelessness\"],\n  \"additional_notes\": \"Feeling overwhelmed with pregnancy concerns\",\n  \"date\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/mental-health/assessment",
+							"host": ["{{base_url}}"],
+							"path": ["mental-health", "assessment"]
+						},
+						"description": "Submit a comprehensive mental health assessment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💬 Chat & Support",
+			"item": [
+				{
+					"name": "Mental Health Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"message\": \"I'm feeling anxious about my pregnancy and worried about the baby's health. I can't stop thinking about what could go wrong.\",\n  \"session_id\": \"session_123\",\n  \"context\": {\n    \"pregnancy_week\": 12,\n    \"previous_mood\": \"anxious\",\n    \"concerns\": [\"baby_health\", \"pregnancy_complications\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/chat",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "chat"]
+						},
+						"description": "Send a message to the mental health AI chat for support and guidance"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chat History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/chat/history?patient_id={{patient_id}}&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "chat", "history"],
+							"query": [
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"description": "Patient ID to get chat history for"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Number of messages to retrieve"
+								},
+								{
+									"key": "session_id",
+									"value": "session_123",
+									"description": "Optional: Filter by specific session"
+								}
+							]
+						},
+						"description": "Get mental health chat history for a patient"
+					},
+					"response": []
+				},
+				{
+					"name": "Start Chat Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"session_type\": \"general_support\",\n  \"initial_context\": {\n    \"pregnancy_week\": 12,\n    \"current_mood\": \"anxious\",\n    \"main_concerns\": [\"pregnancy_anxiety\", \"baby_health\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/chat/session",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "chat", "session"]
+						},
+						"description": "Start a new mental health chat session"
+					},
+					"response": []
+				},
+				{
+					"name": "End Chat Session",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/chat/session/session_123",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "chat", "session", "session_123"]
+						},
+						"description": "End a mental health chat session"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Mood Tracking",
+			"item": [
+				{
+					"name": "Submit Mood Check-in",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"mood\": \"happy\",\n  \"energy_level\": 8,\n  \"stress_level\": 3,\n  \"sleep_hours\": 8,\n  \"anxiety_level\": \"low\",\n  \"depression_symptoms\": [],\n  \"notes\": \"Feeling good today, had a nice walk in the park\",\n  \"triggers\": [\"exercise\", \"fresh_air\"],\n  \"coping_strategies\": [\"deep_breathing\", \"meditation\"],\n  \"date\": \"2024-01-15\",\n  \"time\": \"09:30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/mental-health/mood-checkin",
+							"host": ["{{base_url}}"],
+							"path": ["mental-health", "mood-checkin"]
+						},
+						"description": "Submit a daily mood check-in with detailed mental health indicators"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mental Health History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/mental-health/history/{{patient_id}}?limit=30&type=all",
+							"host": ["{{base_url}}"],
+							"path": ["mental-health", "history", "{{patient_id}}"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "30",
+									"description": "Number of entries to retrieve"
+								},
+								{
+									"key": "type",
+									"value": "all",
+									"description": "Type of entries (all, mood_checkin, mental_health_assessment)"
+								},
+								{
+									"key": "start_date",
+									"value": "2024-01-01",
+									"description": "Start date for filtering"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-01-31",
+									"description": "End date for filtering"
+								}
+							]
+						},
+						"description": "Get comprehensive mental health history for a patient"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📈 Analytics & Reports",
+			"item": [
+				{
+					"name": "Get Mental Health Assessments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/assessments?patient_id={{patient_id}}&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "assessments"],
+							"query": [
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"description": "Patient ID to get assessments for"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of assessments to retrieve"
+								},
+								{
+									"key": "assessment_type",
+									"value": "anxiety",
+									"description": "Filter by assessment type"
+								}
+							]
+						},
+						"description": "Get mental health assessment history and analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Debug Mental Health Database",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/debug?patient_id={{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "debug"],
+							"query": [
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"description": "Patient ID to debug data for"
+								}
+							]
+						},
+						"description": "Debug mental health database and data structure"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🎯 Pregnancy-Specific Mental Health",
+			"item": [
+				{
+					"name": "Pregnancy Anxiety Assessment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"pregnancy_week\": 12,\n  \"assessment_type\": \"pregnancy_anxiety\",\n  \"questions\": [\n    {\n      \"id\": \"preg_anx_1\",\n      \"question\": \"How often do you worry about your baby's health?\",\n      \"answer\": \"Every day\",\n      \"score\": 4\n    },\n    {\n      \"id\": \"preg_anx_2\",\n      \"question\": \"Do you feel anxious about labor and delivery?\",\n      \"answer\": \"Very anxious\",\n      \"score\": 5\n    },\n    {\n      \"id\": \"preg_anx_3\",\n      \"question\": \"How is your sleep affected by pregnancy worries?\",\n      \"answer\": \"I wake up frequently worrying\",\n      \"score\": 4\n    }\n  ],\n  \"total_score\": 13,\n  \"risk_level\": \"moderate\",\n  \"recommendations\": [\"Consider prenatal counseling\", \"Practice relaxation techniques\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/assess",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "assess"]
+						},
+						"description": "Assess pregnancy-specific anxiety and mental health concerns"
+					},
+					"response": []
+				},
+				{
+					"name": "Postpartum Mental Health Check",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"assessment_type\": \"postpartum_depression\",\n  \"weeks_postpartum\": 6,\n  \"questions\": [\n    {\n      \"id\": \"ppd_1\",\n      \"question\": \"How often have you felt down, depressed, or hopeless?\",\n      \"answer\": \"Nearly every day\",\n      \"score\": 3\n    },\n    {\n      \"id\": \"ppd_2\",\n      \"question\": \"How often have you had little interest or pleasure in doing things?\",\n      \"answer\": \"Several days\",\n      \"score\": 2\n    },\n    {\n      \"id\": \"ppd_3\",\n      \"question\": \"How often have you had trouble falling or staying asleep?\",\n      \"answer\": \"Nearly every day\",\n      \"score\": 3\n    }\n  ],\n  \"total_score\": 8,\n  \"risk_level\": \"moderate\",\n  \"recommendations\": [\"Consider professional help\", \"Join support group\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/assess",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "assess"]
+						},
+						"description": "Assess postpartum mental health and depression risk"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://pregnancy-ai.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "patient_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "session_123",
+			"type": "string"
+		}
+	]
+}

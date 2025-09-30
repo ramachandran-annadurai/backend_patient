@@ -18,25 +18,16 @@ class HydrationService:
         try:
             self.mongo_client = MongoClient(self.mongo_uri)
             self.db = self.mongo_client[self.db_name]
-            self.hydration_collection = self.db.hydration_logs
-            self.goals_collection = self.db.hydration_goals
-            self.reminders_collection = self.db.hydration_reminders
-            print("✅ Hydration MongoDB service initialized")
+            self.hydration_collection = self.db.Patient_test
+            self.goals_collection = self.db.Patient_test
+            self.reminders_collection = self.db.Patient_test
+            self.patient_test_collection = self.db.Patient_test  # Add this line
+            print("✅ Hydration MongoDB service initialized with Patient_test collection")
         except Exception as e:
             print(f"⚠️ Hydration MongoDB service not available: {e}")
-            self.mongo_client = None
-        
-        # Initialize OpenAI if available
-        try:
-            api_key = os.getenv('OPENAI_API_KEY')
-            if api_key:
-                self.openai_client = OpenAI(api_key=api_key)
-                print("✅ Hydration OpenAI service initialized")
-        except Exception as e:
-            print(f"⚠️ Hydration OpenAI service not available: {e}")
-    
+            self.mongo_client = None    
     def save_hydration_intake(self, patient_id: str, intake_data: HydrationIntakeRequest) -> HydrationResponse:
-        """Save hydration intake record"""
+        """Save hydration intake record in Patient_test collection"""
         try:
             # Convert to ml if needed
             amount_ml = intake_data.amount_ml
@@ -53,19 +44,35 @@ class HydrationService:
                 additives=intake_data.additives
             )
             
-            # Save to MongoDB
+            # Save to Patient_test collection
             if self.mongo_client:
-                intake_doc = intake_record.dict()
-                intake_doc["created_at"] = datetime.now()
-                result = self.hydration_collection.insert_one(intake_doc)
-                intake_doc["_id"] = str(result.inserted_id)
-                print(f"✅ Hydration intake saved to MongoDB: {result.inserted_id}")
+                # Check if patient exists in Patient_test collection
+                patient = self.patient_test_collection.find_one({"patient_id": patient_id})
+                if not patient:
+                    return HydrationResponse(
+                        success=False,
+                        message=f"Patient with ID {patient_id} not found in Patient_test collection"
+                    )
                 
-                return HydrationResponse(
-                    success=True,
-                    data=intake_doc,
-                    message="Hydration intake saved successfully to database"
+                # Add hydration record to patient's hydration_records array
+                result = self.patient_test_collection.update_one(
+                    {"patient_id": patient_id},
+                    {"$push": {"hydration_records": intake_record.dict()}}
                 )
+                
+                if result.modified_count > 0:
+                    print(f"✅ Hydration intake saved to Patient_test collection for patient {patient_id}")
+                    
+                    return HydrationResponse(
+                        success=True,
+                        data=intake_record.dict(),
+                        message="Hydration intake saved successfully to Patient_test collection"
+                    )
+                else:
+                    return HydrationResponse(
+                        success=False,
+                        message="Failed to update patient record in Patient_test collection"
+                    )
             else:
                 # Fallback if MongoDB not available
                 return HydrationResponse(
@@ -77,67 +84,48 @@ class HydrationService:
             return HydrationResponse(
                 success=False,
                 message=f"Error saving hydration intake: {str(e)}"
-            )
-    
+            )    
     def get_hydration_history(self, patient_id: str, days: int = 7) -> HydrationResponse:
-        """Get hydration intake history from MongoDB"""
+        """Get hydration intake history from Patient_test collection"""
         try:
             if self.mongo_client:
-                # Calculate date range
-                end_date = datetime.now()
-                start_date = end_date - timedelta(days=days)
+                # Find patient and get their hydration records
+                patient = self.patient_test_collection.find_one({"patient_id": patient_id})
+                if not patient:
+                    return HydrationResponse(
+                        success=False,
+                        message=f"Patient with ID {patient_id} not found in Patient_test collection"
+                    )
                 
-                # Query MongoDB
-                query = {
-                    "patient_id": patient_id,
-                    "timestamp": {
-                        "$gte": start_date,
-                        "$lte": end_date
-                    }
-                }
+                # Get hydration records from patient document
+                hydration_records = patient.get("hydration_records", [])
                 
-                # Sort by timestamp descending (newest first)
-                history_docs = list(self.hydration_collection.find(query).sort("timestamp", -1))
-                
-                # Convert ObjectId to string for JSON serialization
-                for doc in history_docs:
-                    doc["_id"] = str(doc["_id"])
-                    if isinstance(doc.get("timestamp"), datetime):
-                        doc["timestamp"] = doc["timestamp"].isoformat()
-                
-                print(f"✅ Retrieved {len(history_docs)} hydration records from MongoDB")
-                
-                return HydrationResponse(
-                    success=True,
-                    data={"history": history_docs, "days": days},
-                    message=f"Retrieved {len(history_docs)} hydration records from database"
-                )
-            else:
-                # Fallback to mock data if MongoDB not available
-                mock_history = [
-                    {
-                        "id": "1",
-                        "patient_id": patient_id,
-                        "hydration_type": "water",
-                        "amount_ml": 250,
-                        "amount_oz": 8.45,
-                        "timestamp": datetime.now().isoformat(),
-                        "notes": "Morning water"
-                    }
+                # Filter by date range
+                cutoff_date = datetime.now() - timedelta(days=days)
+                filtered_records = [
+                    record for record in hydration_records
+                    if record.get("timestamp", datetime.min) >= cutoff_date
                 ]
                 
+                # Sort by timestamp (newest first)
+                filtered_records.sort(key=lambda x: x.get("timestamp", datetime.min), reverse=True)
+                
                 return HydrationResponse(
                     success=True,
-                    data={"history": mock_history, "days": days},
-                    message=f"Retrieved {len(mock_history)} hydration records (mock data)"
+                    data=filtered_records,
+                    message=f"Retrieved {len(filtered_records)} hydration records from Patient_test collection"
+                )
+            else:
+                return HydrationResponse(
+                    success=False,
+                    message="Database connection not available"
                 )
         except Exception as e:
-            print(f"❌ Error retrieving hydration history: {str(e)}")
+            print(f"❌ Error getting hydration history: {str(e)}")
             return HydrationResponse(
                 success=False,
-                message=f"Error retrieving hydration history: {str(e)}"
-            )
-    
+                message=f"Error getting hydration history: {str(e)}"
+            )   
     def get_daily_hydration_stats(self, patient_id: str, target_date: Optional[date] = None) -> HydrationStats:
         """Get daily hydration statistics"""
         try:

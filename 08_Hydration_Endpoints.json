@@ -1,0 +1,227 @@
+{
+	"name": "💧 Hydration Tracking",
+	"item": [
+		{
+			"name": "Save Hydration Intake",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"amount\": 250,\n  \"unit\": \"ml\",\n  \"drink_type\": \"water\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"notes\": \"After workout\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hydration/intake",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "intake"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hydration History",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/history",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "history"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Daily Hydration Stats",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/stats",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "stats"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set Hydration Goal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"daily_goal\": 2000,\n  \"unit\": \"ml\",\n  \"reminder_enabled\": true,\n  \"reminder_interval\": 2\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hydration/goal",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "goal"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hydration Goal",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/goal",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "goal"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Hydration Reminder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"reminder_time\": \"09:00\",\n  \"message\": \"Time to drink some water!\",\n  \"enabled\": true\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hydration/reminder",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "reminder"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hydration Reminders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/reminders",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "reminders"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Hydration Patterns",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/analysis",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "analysis"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Weekly Hydration Report",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/report",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "report"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hydration Tips",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/tips",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "tips"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hydration Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hydration/status",
+					"host": ["{{base_url}}"],
+					"path": ["api", "hydration", "status"]
+				}
+			},
+			"response": []
+		}
+	]
+}

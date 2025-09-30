@@ -1,0 +1,176 @@
+{
+	"name": "🤒 Symptoms Analysis",
+	"item": [
+		{
+			"name": "Symptoms Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/symptoms/health",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "health"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Symptom Assistance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"symptom_text\": \"I'm experiencing morning sickness and fatigue\",\n  \"weeks_pregnant\": 12,\n  \"trimester\": 1,\n  \"severity\": \"moderate\",\n  \"duration\": \"2 weeks\",\n  \"additional_info\": \"Worse in the morning, better after eating\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/assist",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "assist"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Symptom Log",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"symptoms\": [\n    {\n      \"name\": \"nausea\",\n      \"severity\": \"moderate\",\n      \"duration\": \"2 hours\",\n      \"notes\": \"Worse in the morning\"\n    },\n    {\n      \"name\": \"fatigue\",\n      \"severity\": \"mild\",\n      \"duration\": \"all day\",\n      \"notes\": \"Feeling tired throughout the day\"\n    }\n  ],\n  \"trimester\": 1,\n  \"weeks_pregnant\": 12,\n  \"date\": \"2024-01-15\",\n  \"time\": \"09:30\",\n  \"additional_notes\": \"Feeling better after eating breakfast\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/save-symptom-log",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "save-symptom-log"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Analysis Report",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"symptom_text\": \"Morning sickness and fatigue\",\n  \"analysis_result\": {\n    \"recommendations\": [\n      \"Eat small, frequent meals\",\n      \"Stay hydrated\",\n      \"Get plenty of rest\"\n    ],\n    \"red_flags\": [],\n    \"severity\": \"moderate\",\n    \"urgency\": \"low\"\n  },\n  \"weeks_pregnant\": 12,\n  \"trimester\": 1,\n  \"date\": \"2024-01-15\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/save-analysis-report",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "save-analysis-report"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Symptom History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/symptoms/get-symptom-history/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "get-symptom-history", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Analysis Reports",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/symptoms/get-analysis-reports/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "get-analysis-reports", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Symptom Knowledge",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Morning Sickness Management\",\n  \"content\": \"Morning sickness is common in early pregnancy. Try eating small, frequent meals and avoiding triggers.\",\n  \"trimester\": 1,\n  \"symptoms\": [\"nausea\", \"vomiting\"],\n  \"recommendations\": [\"Eat crackers before getting up\", \"Stay hydrated\", \"Avoid strong smells\"]\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/knowledge/add",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "knowledge", "add"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Bulk Symptom Knowledge",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"knowledge_items\": [\n    {\n      \"title\": \"First Trimester Fatigue\",\n      \"content\": \"Fatigue is very common in the first trimester due to hormonal changes.\",\n      \"trimester\": 1,\n      \"symptoms\": [\"fatigue\", \"tiredness\"]\n    },\n    {\n      \"title\": \"Second Trimester Energy\",\n      \"content\": \"Many women experience increased energy in the second trimester.\",\n      \"trimester\": 2,\n      \"symptoms\": [\"increased energy\", \"better mood\"]\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/knowledge/bulk",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "knowledge", "bulk"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ingest Knowledge to Vector DB",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"collection_name\": \"symptoms_knowledge\",\n  \"batch_size\": 100\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/symptoms/ingest",
+					"host": ["{{base_url}}"],
+					"path": ["symptoms", "ingest"]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,1288 @@
+{
+	"info": {
+		"_postman_id": "pregnancy-ai-complete-collection",
+		"name": "Pregnancy AI - Complete API Collection",
+		"description": "Comprehensive API collection for Pregnancy AI Backend - https://pregnancy-ai.onrender.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "pregnancy-ai-exporter"
+	},
+	"item": [
+		{
+			"name": "🔧 System Health",
+			"item": [
+				{
+					"name": "API Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						},
+						"description": "Get API information and available endpoints"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Database Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health/database",
+							"host": ["{{base_url}}"],
+							"path": ["health", "database"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "User Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"password\": \"securepassword123\",\n  \"username\": \"patient_user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/signup",
+							"host": ["{{base_url}}"],
+							"path": ["signup"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/send-otp",
+							"host": ["{{base_url}}"],
+							"path": ["send-otp"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/verify-otp",
+							"host": ["{{base_url}}"],
+							"path": ["verify-otp"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"password\": \"securepassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": ["{{base_url}}"],
+							"path": ["logout"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/forgot-password",
+							"host": ["{{base_url}}"],
+							"path": ["forgot-password"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"patient@example.com\",\n  \"otp\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/reset-password",
+							"host": ["{{base_url}}"],
+							"path": ["reset-password"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👤 Profile Management",
+			"item": [
+				{
+					"name": "Complete Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"full_name\": \"Jane Doe\",\n  \"date_of_birth\": \"1990-01-15\",\n  \"mobile\": \"+1234567890\",\n  \"address\": \"123 Main St, City, State\",\n  \"emergency_contact\": \"John Doe\",\n  \"emergency_mobile\": \"+1234567891\",\n  \"medical_history\": \"No known allergies\",\n  \"current_medications\": \"Prenatal vitamins\",\n  \"pregnancy_week\": 12,\n  \"due_date\": \"2024-08-15\",\n  \"blood_type\": \"A+\",\n  \"height\": 165,\n  \"weight\": 65,\n  \"allergies\": \"None\",\n  \"medical_conditions\": \"None\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/complete-profile",
+							"host": ["{{base_url}}"],
+							"path": ["complete-profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile by Patient ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/profile/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["profile", "{{patient_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤒 Symptoms Analysis",
+			"item": [
+				{
+					"name": "Symptoms Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/symptoms/health",
+							"host": ["{{base_url}}"],
+							"path": ["symptoms", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Symptom Assistance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"symptom_text\": \"I'm experiencing morning sickness and fatigue\",\n  \"weeks_pregnant\": 12,\n  \"trimester\": 1,\n  \"severity\": \"moderate\",\n  \"duration\": \"2 weeks\",\n  \"additional_info\": \"Worse in the morning, better after eating\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/symptoms/assist",
+							"host": ["{{base_url}}"],
+							"path": ["symptoms", "assist"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Symptom Log",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"symptoms\": [\n    {\n      \"name\": \"nausea\",\n      \"severity\": \"moderate\",\n      \"duration\": \"2 hours\",\n      \"notes\": \"Worse in the morning\"\n    }\n  ],\n  \"trimester\": 1,\n  \"weeks_pregnant\": 12,\n  \"date\": \"2024-01-15\",\n  \"time\": \"09:30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/symptoms/save-symptom-log",
+							"host": ["{{base_url}}"],
+							"path": ["symptoms", "save-symptom-log"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Symptom History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/symptoms/get-symptom-history/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["symptoms", "get-symptom-history", "{{patient_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💓 Vital Signs",
+			"item": [
+				{
+					"name": "Record Vital Sign",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"blood_pressure_systolic\": 120,\n  \"blood_pressure_diastolic\": 80,\n  \"heart_rate\": 72,\n  \"temperature\": 98.6,\n  \"weight\": 65.5,\n  \"height\": 165,\n  \"oxygen_saturation\": 98,\n  \"respiratory_rate\": 16,\n  \"notes\": \"Regular checkup\",\n  \"date\": \"2024-01-15\",\n  \"time\": \"10:30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vitals/record",
+							"host": ["{{base_url}}"],
+							"path": ["vitals", "record"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vital Signs History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vitals/history/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["vitals", "history", "{{patient_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Process Vital Signs OCR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"file_content\": \"base64_encoded_image_or_pdf\",\n  \"file_type\": \"image\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vitals/ocr",
+							"host": ["{{base_url}}"],
+							"path": ["vitals", "ocr"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💊 Medication Management",
+			"item": [
+				{
+					"name": "Save Medication Log",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_name\": \"Prenatal Vitamins\",\n  \"dosage\": \"1 tablet\",\n  \"frequency\": \"daily\",\n  \"time\": \"08:00\",\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-12-31\",\n  \"special_instructions\": \"Take with food\",\n  \"prescribed_by\": \"Dr. Smith\",\n  \"pharmacy\": \"CVS Pharmacy\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/medication/save-medication-log",
+							"host": ["{{base_url}}"],
+							"path": ["medication", "save-medication-log"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Medication History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/medication/get-medication-history/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["medication", "get-medication-history", "{{patient_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Process Prescription Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"file_content\": \"base64_encoded_prescription\",\n  \"file_type\": \"pdf\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"filename\": \"prescription.pdf\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/medication/process-prescription-document",
+							"host": ["{{base_url}}"],
+							"path": ["medication", "process-prescription-document"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Medication Reminders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/medication/send-reminders",
+							"host": ["{{base_url}}"],
+							"path": ["medication", "send-reminders"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤱 Pregnancy Tracking",
+			"item": [
+				{
+					"name": "Get Pregnancy Week Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baby Size Image",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12/baby-image",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12", "baby-image"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Early Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12/symptoms",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12", "symptoms"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Pregnancy Tracking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"week\": 12,\n  \"weight\": 65.5,\n  \"symptoms\": [\"nausea\", \"fatigue\"],\n  \"notes\": \"Feeling good overall\",\n  \"date\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/tracking",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "tracking"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🍎 Nutrition & Food Tracking",
+			"item": [
+				{
+					"name": "Nutrition Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nutrition/health",
+							"host": ["{{base_url}}"],
+							"path": ["nutrition", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Food with GPT-4",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"food_description\": \"I had oatmeal with berries and a banana for breakfast\",\n  \"user_id\": \"{{patient_id}}\",\n  \"meal_type\": \"breakfast\",\n  \"date\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/nutrition/analyze-with-gpt4",
+							"host": ["{{base_url}}"],
+							"path": ["nutrition", "analyze-with-gpt4"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Food Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": \"{{patient_id}}\",\n  \"food_name\": \"Oatmeal with Berries\",\n  \"meal_type\": \"breakfast\",\n  \"quantity\": \"1 bowl\",\n  \"calories\": 250,\n  \"date\": \"2024-01-15\",\n  \"time\": \"08:30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/nutrition/save-food-entry",
+							"host": ["{{base_url}}"],
+							"path": ["nutrition", "save-food-entry"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Food Entries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nutrition/get-food-entries/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["nutrition", "get-food-entries", "{{patient_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💧 Hydration Tracking",
+			"item": [
+				{
+					"name": "Save Hydration Intake",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"amount\": 250,\n  \"unit\": \"ml\",\n  \"drink_type\": \"water\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hydration/intake",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "intake"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hydration History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/history",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "history"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Daily Hydration Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hydration/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hydration", "stats"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧘 Mental Health",
+			"item": [
+				{
+					"name": "Mental Health Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assess Mental Health",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"mood\": \"happy\",\n  \"energy_level\": \"high\",\n  \"stress_level\": \"low\",\n  \"sleep_quality\": \"good\",\n  \"anxiety_level\": \"mild\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/assess",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "assess"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mental Health Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"message\": \"I'm feeling anxious about my pregnancy\",\n  \"session_id\": \"session_123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mental-health/chat",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mental-health", "chat"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔬 Medical Lab",
+			"item": [
+				{
+					"name": "Medical Lab Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/medical-lab/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "medical-lab", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Lab Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "path/to/lab_report.pdf"
+								},
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/medical-lab/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "medical-lab", "upload"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Supported Formats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/medical-lab/formats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "medical-lab", "formats"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🎤 Voice Interaction",
+			"item": [
+				{
+					"name": "Voice Service Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/voice/service-info",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice", "service-info"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Voice Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/voice/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transcribe Audio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"audio_data\": \"base64_encoded_audio\",\n  \"language\": \"en\",\n  \"format\": \"wav\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/voice/transcribe",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice", "transcribe"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📅 Appointment Management",
+			"item": [
+				{
+					"name": "Get Patient Appointments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/patient/appointments?date=2024-01-15&status=active&appointment_type=Follow-up",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15",
+									"description": "Filter by date (YYYY-MM-DD)"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status (active, pending, completed, cancelled)"
+								},
+								{
+									"key": "appointment_type",
+									"value": "Follow-up",
+									"description": "Filter by appointment type"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Patient Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2024-02-15\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Regular checkup appointment\",\n  \"patient_notes\": \"I have some concerns about my medication\",\n  \"doctor_id\": \"DOC123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/patient/appointments",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Appointment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments", "{{appointment_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2024-02-16\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"notes\": \"Updated appointment details\",\n  \"patient_notes\": \"Updated patient concerns\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments", "{{appointment_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_status\": \"cancelled\",\n  \"cancellation_reason\": \"Schedule conflict\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/patient/appointments/{{appointment_id}}/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["patient", "appointments", "{{appointment_id}}", "cancel"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctor Appointments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments?patient_id={{patient_id}}&date=2024-01-15&status=active",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments"],
+							"query": [
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"description": "Filter by patient ID"
+								},
+								{
+									"key": "date",
+									"value": "2024-01-15",
+									"description": "Filter by date (YYYY-MM-DD)"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Doctor Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"appointment_date\": \"2024-02-15\",\n  \"appointment_time\": \"2:00 PM\",\n  \"appointment_type\": \"Follow-up\",\n  \"notes\": \"Doctor scheduled appointment\",\n  \"doctor_id\": \"DOC123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointment_date\": \"2024-02-16\",\n  \"appointment_time\": \"3:00 PM\",\n  \"appointment_type\": \"Consultation\",\n  \"appointment_status\": \"confirmed\",\n  \"notes\": \"Updated by doctor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments", "{{appointment_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Doctor Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/doctor/appointments/{{appointment_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["doctor", "appointments", "{{appointment_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointment Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/appointments/statistics?patient_id={{patient_id}}&start_date=2024-01-01&end_date=2024-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["appointments", "statistics"],
+							"query": [
+								{
+									"key": "patient_id",
+									"value": "{{patient_id}}",
+									"description": "Patient ID for statistics"
+								},
+								{
+									"key": "start_date",
+									"value": "2024-01-01",
+									"description": "Start date for statistics"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-12-31",
+									"description": "End date for statistics"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Available Time Slots",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/appointments/available-slots?date=2024-02-15&doctor_id=DOC123",
+							"host": ["{{base_url}}"],
+							"path": ["appointments", "available-slots"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-02-15",
+									"description": "Date to check available slots"
+								},
+								{
+									"key": "doctor_id",
+									"value": "DOC123",
+									"description": "Doctor ID to check availability"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧠 AI Services",
+			"item": [
+				{
+					"name": "Quantum Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/quantum/health",
+							"host": ["{{base_url}}"],
+							"path": ["quantum", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LLM Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/llm/health",
+							"host": ["{{base_url}}"],
+							"path": ["llm", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test LLM",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"test query\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/llm/test",
+							"host": ["{{base_url}}"],
+							"path": ["llm", "test"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://pregnancy-ai.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "patient_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "appointment_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

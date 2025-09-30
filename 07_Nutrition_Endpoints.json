@@ -1,0 +1,110 @@
+{
+	"name": "🍎 Nutrition & Food Tracking",
+	"item": [
+		{
+			"name": "Nutrition Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/nutrition/health",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "health"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transcribe Audio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"audio_data\": \"base64_encoded_audio\",\n  \"language\": \"en\",\n  \"format\": \"wav\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/nutrition/transcribe",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "transcribe"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Food with GPT-4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"food_description\": \"I had oatmeal with berries and a banana for breakfast\",\n  \"user_id\": \"{{patient_id}}\",\n  \"meal_type\": \"breakfast\",\n  \"date\": \"2024-01-15\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/nutrition/analyze-with-gpt4",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "analyze-with-gpt4"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Food Entry",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user_id\": \"{{patient_id}}\",\n  \"food_name\": \"Oatmeal with Berries\",\n  \"meal_type\": \"breakfast\",\n  \"quantity\": \"1 bowl\",\n  \"calories\": 250,\n  \"nutrients\": {\n    \"protein\": 8,\n    \"carbs\": 45,\n    \"fat\": 5,\n    \"fiber\": 6\n  },\n  \"date\": \"2024-01-15\",\n  \"time\": \"08:30\",\n  \"notes\": \"Added honey for sweetness\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/nutrition/save-food-entry",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "save-food-entry"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Food Entries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/nutrition/get-food-entries/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "get-food-entries", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Debug Food Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/nutrition/debug-food-data/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["nutrition", "debug-food-data", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,243 @@
+{
+	"name": "💓 Vital Signs",
+	"item": [
+		{
+			"name": "Record Vital Sign",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"blood_pressure_systolic\": 120,\n  \"blood_pressure_diastolic\": 80,\n  \"heart_rate\": 72,\n  \"temperature\": 98.6,\n  \"weight\": 65.5,\n  \"height\": 165,\n  \"oxygen_saturation\": 98,\n  \"respiratory_rate\": 16,\n  \"notes\": \"Regular checkup\",\n  \"date\": \"2024-01-15\",\n  \"time\": \"10:30\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vitals/record",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "record"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vital Signs History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vitals/history/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "history", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Vital Signs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"analysis_type\": \"comprehensive\",\n  \"date_range\": {\n    \"start\": \"2024-01-01\",\n    \"end\": \"2024-01-31\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vitals/analyze",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "analyze"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vital Signs Stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vitals/stats/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "stats", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Health Summary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vitals/health-summary/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "health-summary", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Vital Alert",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"alert_type\": \"high_blood_pressure\",\n  \"threshold_value\": 140,\n  \"current_value\": 145,\n  \"severity\": \"high\",\n  \"message\": \"Blood pressure is above normal range\",\n  \"recommendations\": [\"Consult your doctor\", \"Monitor regularly\"]\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vitals/alerts",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "alerts"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vital Alerts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vitals/alerts/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "alerts", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Vital Signs OCR",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"base64_encoded_image_or_pdf\",\n  \"file_type\": \"image\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vitals/ocr",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "ocr"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Vital Signs Text",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"Blood Pressure: 120/80 mmHg, Heart Rate: 72 bpm, Temperature: 98.6°F\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vitals/process-text",
+					"host": ["{{base_url}}"],
+					"path": ["vitals", "process-text"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Vital OCR Upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "path/to/vital_signs_document.pdf"
+						},
+						{
+							"key": "patient_id",
+							"value": "{{patient_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/vital-ocr/upload",
+					"host": ["{{base_url}}"],
+					"path": ["vital-ocr", "upload"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Vital OCR Base64",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...\",\n  \"filename\": \"vital_signs.jpg\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/vital-ocr/base64",
+					"host": ["{{base_url}}"],
+					"path": ["vital-ocr", "base64"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vital OCR Formats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vital-ocr/formats",
+					"host": ["{{base_url}}"],
+					"path": ["vital-ocr", "formats"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vital OCR Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/vital-ocr/status",
+					"host": ["{{base_url}}"],
+					"path": ["vital-ocr", "status"]
+				}
+			},
+			"response": []
+		}
+	]
+}

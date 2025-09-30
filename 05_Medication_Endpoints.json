@@ -1,0 +1,376 @@
+{
+	"name": "💊 Medication Management",
+	"item": [
+		{
+			"name": "Save Medication Log",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_name\": \"Prenatal Vitamins\",\n  \"dosage\": \"1 tablet\",\n  \"frequency\": \"daily\",\n  \"time\": \"08:00\",\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-12-31\",\n  \"special_instructions\": \"Take with food\",\n  \"prescribed_by\": \"Dr. Smith\",\n  \"pharmacy\": \"CVS Pharmacy\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/save-medication-log",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "save-medication-log"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Medication History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/get-medication-history/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "get-medication-history", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Upcoming Dosages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/get-upcoming-dosages/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "get-upcoming-dosages", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Tablet Taken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_id\": \"med_123\",\n  \"taken_time\": \"2024-01-15T08:30:00Z\",\n  \"notes\": \"Taken with breakfast\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/save-tablet-taken",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "save-tablet-taken"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tablet History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/get-tablet-history/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "get-tablet-history", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Prescription",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "path/to/prescription.pdf"
+						},
+						{
+							"key": "patient_id",
+							"value": "{{patient_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/upload-prescription",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "upload-prescription"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Prescription Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/get-prescription-details/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "get-prescription-details", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Prescription Document",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"base64_encoded_prescription\",\n  \"file_type\": \"pdf\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"filename\": \"prescription.pdf\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/process-prescription-document",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "process-prescription-document"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process with PaddleOCR",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"base64_encoded_image\",\n  \"file_type\": \"image\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"language\": \"eng\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/process-with-paddleocr",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "process-with-paddleocr"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Prescription Text",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"Rx: Prenatal Vitamins 1 tablet daily, Folic Acid 400mcg daily\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/process-prescription-text",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "process-prescription-text"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process with Mock N8N",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"base64_encoded_prescription\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/process-with-mock-n8n",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "process-with-mock-n8n"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test N8N Webhook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"test_data\": \"Sample prescription data for testing\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/test-n8n-webhook",
+					"host": ["{{base_url}}"],
+					"path": ["test-n8n-webhook"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process with N8N Webhook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_content\": \"base64_encoded_prescription\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"webhook_url\": \"https://n8n.srv795087.hstgr.cloud/webhook/bf25c478-c4a9-44c5-8f43-08c3fcae51f9\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/process-with-n8n-webhook",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "process-with-n8n-webhook"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Tablet Tracking",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"medication_name\": \"Prenatal Vitamins\",\n  \"taken_time\": \"2024-01-15T08:30:00Z\",\n  \"dosage\": \"1 tablet\",\n  \"notes\": \"Taken with breakfast\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/save-tablet-tracking",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "save-tablet-tracking"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tablet Tracking History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/get-tablet-tracking-history/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "get-tablet-tracking-history", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Medication Reminders",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/send-reminders",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "send-reminders"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Medication Reminder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/test-reminder/{{patient_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "test-reminder", "{{patient_id}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Medication Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/medication/test-status",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "test-status"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test File Upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "path/to/test_file.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/medication/test-file-upload",
+					"host": ["{{base_url}}"],
+					"path": ["medication", "test-file-upload"]
+				}
+			},
+			"response": []
+		}
+	]
+}

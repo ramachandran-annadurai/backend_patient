@@ -1,0 +1,247 @@
+{
+	"name": "🤱 Pregnancy Tracking",
+	"item": [
+		{
+			"name": "Get Pregnancy Week Info",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Pregnancy Weeks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/weeks",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "weeks"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Trimester Weeks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/trimester/1",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "trimester", "1"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Baby Size Image",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/baby-image",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "baby-image"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get AI Baby Size",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/baby-size",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "baby-size"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Early Symptoms",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/symptoms",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "symptoms"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Prenatal Screening",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/screening",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "screening"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wellness Tips",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/wellness",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "wellness"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nutrition Tips",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/week/12/nutrition",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "week", "12", "nutrition"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get OpenAI Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/openai/status",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "openai", "status"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Pregnancy Tracking",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"week\": 12,\n  \"weight\": 65.5,\n  \"symptoms\": [\"nausea\", \"fatigue\"],\n  \"notes\": \"Feeling good overall\",\n  \"date\": \"2024-01-15\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/tracking",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "tracking"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pregnancy Tracking History",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/tracking/history",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "tracking", "history"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Pregnancy Progress",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/pregnancy/progress",
+					"host": ["{{base_url}}"],
+					"path": ["api", "pregnancy", "progress"]
+				}
+			},
+			"response": []
+		}
+	]
+}
