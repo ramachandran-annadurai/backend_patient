@@ -1,0 +1,599 @@
+{
+	"info": {
+		"name": "🤰 Complete Pregnancy Tracking API Collection",
+		"description": "Complete collection for testing all pregnancy tracking endpoints with trimester-specific quick actions and AI-powered guidance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"version": "1.0.0"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "your-jwt-token-here",
+			"type": "string"
+		},
+		{
+			"key": "pregnancy_week",
+			"value": "20",
+			"type": "string"
+		},
+		{
+			"key": "patient_id",
+			"value": "PAT123456",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "🏥 Health & Status",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAI Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/openai/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "openai", "status"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🎯 Auto-Trimester Selection",
+			"item": [
+				{
+					"name": "Auto-Trimester (Week 8 - Trimester 1)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/8",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "8"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auto-Trimester (Week 20 - Trimester 2)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "20"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auto-Trimester (Week 32 - Trimester 3)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/32",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "32"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤱 Trimester 1 Quick Actions",
+			"item": [
+				{
+					"name": "Pregnancy Test Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-1/pregnancy-test",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-1", "pregnancy-test"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "First Prenatal Visit Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-1/first-prenatal-visit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-1", "first-prenatal-visit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Early Ultrasound Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-1/early-ultrasound",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-1", "early-ultrasound"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Early Symptoms Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-1/early-symptoms",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-1", "early-symptoms"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🌱 Trimester 2 Quick Actions",
+			"item": [
+				{
+					"name": "Mid-Pregnancy Scan Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-2/mid-pregnancy-scan",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-2", "mid-pregnancy-scan"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Glucose Screening Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-2/glucose-screening",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-2", "glucose-screening"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetal Movement Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-2/fetal-movement",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-2", "fetal-movement"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Birthing Classes Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-2/birthing-classes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-2", "birthing-classes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nutrition Tips Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-2/nutrition-tips",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-2", "nutrition-tips"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👶 Trimester 3 Quick Actions",
+			"item": [
+				{
+					"name": "Kick Counter Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-3/kick-counter",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-3", "kick-counter"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Contractions Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-3/contractions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-3", "contractions"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Birth Plan Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-3/birth-plan",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-3", "birth-plan"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hospital Bag Guide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester-3/hospital-bag",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester-3", "hospital-bag"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 General Trimester APIs",
+			"item": [
+				{
+					"name": "Trimester 1 Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trimester 2 Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/2",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "2"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trimester 3 Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/3",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "3"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trimester 1 Quick Actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/1/quick-actions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "1", "quick-actions"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trimester 2 Quick Actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/2/quick-actions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "2", "quick-actions"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trimester 3 Quick Actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/3/quick-actions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "3", "quick-actions"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧪 Test Scenarios",
+			"item": [
+				{
+					"name": "Test Invalid Week",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/50",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "50"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Invalid Trimester",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/5",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "5"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Without Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "20"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Invalid Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid-token"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/auto-trimester/20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "auto-trimester", "20"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-generate test data",
+					"if (!pm.environment.get('auth_token') || pm.environment.get('auth_token') === 'your-jwt-token-here') {",
+					"    pm.environment.set('auth_token', 'test-token-' + Date.now());",
+					"}",
+					"",
+					"// Set random pregnancy week for testing",
+					"const weeks = [8, 12, 20, 24, 28, 32, 36];",
+					"const randomWeek = weeks[Math.floor(Math.random() * weeks.length)];",
+					"pm.environment.set('pregnancy_week', randomWeek.toString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Basic response validation",
+					"pm.test('Response status code is 200 or 401', function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+					"});",
+					"",
+					"// Check response format",
+					"if (pm.response.code === 200) {",
+					"    pm.test('Response has success field', function () {",
+					"        const jsonData = pm.response.json();",
+					"        pm.expect(jsonData).to.have.property('success');",
+					"    });",
+					"    ",
+					"    pm.test('Response time is less than 5000ms', function () {",
+					"        pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"    });",
+					"}"
+				]
+			}
+		}
+	]
+}

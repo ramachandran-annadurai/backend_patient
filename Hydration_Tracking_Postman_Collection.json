@@ -1,0 +1,785 @@
+{
+  "info": {
+    "name": "Hydration Tracking API Collection",
+    "description": "Complete collection for hydration tracking endpoints including daily, weekly, and monthly stats",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://35.154.41.118:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjhkYTVkZmU0ZWRmMTU0MTk5ZTU0OTQ4IiwicGF0aWVudF9pZCI6IlBBVDE3NTkxNDEzNzRCNjVENjIiLCJlbWFpbCI6InJhbWFjaXZpbDJAZ21haWwuY29tIiwidXNlcm5hbWUiOiJSYW1hY2hhbmRyYW4iLCJleHAiOjE3NTk1Njk5MDYsImlhdCI6MTc1OTQ4MzUwNn0.4bSuoR4l5XPv6A2cTRuK6gU9NneilVBb3ezC95ukgm0",
+      "type": "string"
+    },
+    {
+      "key": "patientId",
+      "value": "PAT1759141374B65D62",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Hydration Intake",
+      "item": [
+        {
+          "name": "Save Hydration Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"water\",\n  \"amount_ml\": 250,\n  \"notes\": \"Morning glass of water\",\n  \"temperature\": \"room\",\n  \"additives\": [\"lemon\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/intake",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "intake"]
+            },
+            "description": "Record a hydration intake with user_id, type, amount, and optional details"
+          }
+        },
+        {
+          "name": "Save Tea Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"tea\",\n  \"amount_ml\": 200,\n  \"notes\": \"Afternoon green tea\",\n  \"temperature\": \"hot\",\n  \"additives\": [\"honey\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/intake",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "intake"]
+            },
+            "description": "Record a tea intake with specific details"
+          }
+        },
+        {
+          "name": "Save Coffee Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"coffee\",\n  \"amount_ml\": 150,\n  \"notes\": \"Morning coffee\",\n  \"temperature\": \"hot\",\n  \"additives\": [\"sugar\", \"milk\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/intake",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "intake"]
+            },
+            "description": "Record a coffee intake with additives"
+          }
+        }
+      ],
+      "description": "Endpoints for recording different types of hydration intake"
+    },
+    {
+      "name": "Daily Stats",
+      "item": [
+        {
+          "name": "Get Today's Daily Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/daily",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "daily"]
+            },
+            "description": "Get hydration statistics for today"
+          }
+        },
+        {
+          "name": "Get Daily Stats for Specific Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/daily?date=2024-01-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "daily"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-15",
+                  "description": "Date in YYYY-MM-DD format"
+                }
+              ]
+            },
+            "description": "Get hydration statistics for a specific date"
+          }
+        }
+      ],
+      "description": "Daily hydration statistics endpoints"
+    },
+    {
+      "name": "Weekly Stats",
+      "item": [
+        {
+          "name": "Get Current Week Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/weekly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "weekly"]
+            },
+            "description": "Get hydration statistics for current week"
+          }
+        },
+        {
+          "name": "Get Weekly Stats for Specific Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/weekly?date=2024-01-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "weekly"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-15",
+                  "description": "Any date within the week"
+                }
+              ]
+            },
+            "description": "Get hydration statistics for week containing specific date"
+          }
+        }
+      ],
+      "description": "Weekly hydration statistics endpoints"
+    },
+    {
+      "name": "Monthly Stats",
+      "item": [
+        {
+          "name": "Get Current Month Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/monthly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "monthly"]
+            },
+            "description": "Get hydration statistics for current month"
+          }
+        },
+        {
+          "name": "Get Monthly Stats for Specific Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/stats/monthly?date=2024-01-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "stats", "monthly"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-15",
+                  "description": "Any date within the month"
+                }
+              ]
+            },
+            "description": "Get hydration statistics for month containing specific date"
+          }
+        }
+      ],
+      "description": "Monthly hydration statistics endpoints"
+    },
+    {
+      "name": "Hydration Goals",
+      "item": [
+        {
+          "name": "Set Hydration Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"daily_goal_ml\": 2000,\n  \"goal_type\": \"daily\",\n  \"start_date\": \"2024-01-01\",\n  \"notes\": \"Daily hydration goal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/goal",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "goal"]
+            },
+            "description": "Set a daily hydration goal for the patient"
+          }
+        },
+        {
+          "name": "Get Hydration Goal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/goal",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "goal"]
+            },
+            "description": "Get current hydration goal for the patient"
+          }
+        }
+      ],
+      "description": "Hydration goal management endpoints"
+    },
+    {
+      "name": "Hydration Reminders",
+      "item": [
+        {
+          "name": "Create Hydration Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reminder_time\": \"09:00\",\n  \"message\": \"Time to hydrate!\",\n  \"frequency\": \"daily\",\n  \"enabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/reminder",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "reminder"]
+            },
+            "description": "Create a hydration reminder for the patient"
+          }
+        },
+        {
+          "name": "Get Hydration Reminders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/reminders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "reminders"]
+            },
+            "description": "Get all hydration reminders for the patient"
+          }
+        }
+      ],
+      "description": "Hydration reminder management endpoints"
+    },
+    {
+      "name": "Hydration History & Analysis",
+      "item": [
+        {
+          "name": "Get Hydration History (7 days)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/history?days=7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "history"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7",
+                  "description": "Number of days to retrieve"
+                }
+              ]
+            },
+            "description": "Get hydration history for last 7 days"
+          }
+        },
+        {
+          "name": "Get Hydration History (30 days)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/history?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "history"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30",
+                  "description": "Number of days to retrieve"
+                }
+              ]
+            },
+            "description": "Get hydration history for last 30 days"
+          }
+        },
+        {
+          "name": "Get Hydration Analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/analysis",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "analysis"]
+            },
+            "description": "Get AI-powered hydration analysis and insights"
+          }
+        },
+        {
+          "name": "Get Weekly Hydration Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/report",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "report"]
+            },
+            "description": "Get comprehensive weekly hydration report"
+          }
+        },
+        {
+          "name": "Get Hydration Tips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/tips",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "tips"]
+            },
+            "description": "Get personalized hydration tips and recommendations"
+          }
+        },
+        {
+          "name": "Get Hydration Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hydration/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hydration", "status"]
+            },
+            "description": "Get current hydration status and progress"
+          }
+        }
+      ],
+      "description": "Hydration history, analysis, and reporting endpoints"
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "Complete Daily Workflow",
+          "item": [
+            {
+              "name": "1. Set Daily Goal",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"daily_goal_ml\": 2000,\n  \"goal_type\": \"daily\",\n  \"start_date\": \"2024-01-01\",\n  \"notes\": \"Daily hydration goal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/goal",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "goal"]
+                }
+              }
+            },
+            {
+              "name": "2. Record Morning Water",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"water\",\n  \"amount_ml\": 300,\n  \"notes\": \"Morning water\",\n  \"temperature\": \"room\",\n  \"additives\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/intake",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "intake"]
+                }
+              }
+            },
+            {
+              "name": "3. Record Afternoon Tea",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"tea\",\n  \"amount_ml\": 250,\n  \"notes\": \"Afternoon tea\",\n  \"temperature\": \"hot\",\n  \"additives\": [\"honey\"]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/intake",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "intake"]
+                }
+              }
+            },
+            {
+              "name": "4. Record Evening Water",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"{{patientId}}\",\n  \"hydration_type\": \"water\",\n  \"amount_ml\": 400,\n  \"notes\": \"Evening water\",\n  \"temperature\": \"room\",\n  \"additives\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/intake",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "intake"]
+                }
+              }
+            },
+            {
+              "name": "5. Check Daily Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/stats/daily",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "stats", "daily"]
+                }
+              }
+            }
+          ],
+          "description": "Complete daily hydration workflow test"
+        },
+        {
+          "name": "Period Comparison Test",
+          "item": [
+            {
+              "name": "Daily Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/stats/daily",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "stats", "daily"]
+                }
+              }
+            },
+            {
+              "name": "Weekly Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/stats/weekly",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "stats", "weekly"]
+                }
+              }
+            },
+            {
+              "name": "Monthly Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/hydration/stats/monthly",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "hydration", "stats", "monthly"]
+                }
+              }
+            }
+          ],
+          "description": "Compare stats across different time periods"
+        }
+      ],
+      "description": "Test scenarios and workflows for hydration tracking"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-generate timestamp for requests that need it",
+          "pm.globals.set('timestamp', new Date().toISOString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Basic response validation",
+          "pm.test('Status code is 200 or 201', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has success field', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('success');",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});"
+        ]
+      }
+    }
+  ]
+}

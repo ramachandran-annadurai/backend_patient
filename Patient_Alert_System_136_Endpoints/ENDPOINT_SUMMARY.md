@@ -235,3 +235,5 @@ Patient_Alert_System_136_Endpoints/
 3. Run `/login` to get authentication token
 4. Set `auth_token` variable
 5. Start testing endpoints by category
+
+
