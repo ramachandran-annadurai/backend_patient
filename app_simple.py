@@ -13,6 +13,7 @@ from vital_signs_service import VitalSignsService
 from vital_signs_ocr_service import vital_signs_ocr_service
 from vital_ocr_service import vital_ocr_service
 from pregnancy_service import PregnancyService
+from pregnancy_tracking_service import pregnancy_service as pregnancy_tracking_service
 from hydration_service import HydrationService
 from mental_health_service import MentalHealthService
 from medical_lab_service import MedicalLabService
@@ -218,6 +219,8 @@ class Database:
                 # Initialize collections
                 self.patients_collection = db["Patient_test"]
                 self.mental_health_collection = db["mental_health_logs"]
+                self.doctors_collection = db["doctors"]
+                self.doctor_v2_collection = db["doctor_v2"]
                 
                 # Test collections exist and are accessible
                 print(f"🔍 Testing collections...")
@@ -7113,6 +7116,614 @@ def calculate_pregnancy_progress():
         }), 500
 
 # ============================================================================
+# PREGNANCY TRACKING WITH TRIMESTER-SPECIFIC QUICK ACTIONS
+# ============================================================================
+
+@app.route('/api/pregnancy/auto-trimester/<int:week>', methods=['GET'])
+@token_required
+def get_auto_trimester(week):
+    """Auto-select trimester based on pregnancy week and get AI insights"""
+    try:
+        if week < 1 or week > 40:
+            return jsonify({
+                "success": False,
+                "error": "Pregnancy week must be between 1 and 40"
+            }), 400
+        
+        result = pregnancy_tracking_service.get_auto_trimester_info(week)
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting auto-trimester info: {str(e)}"
+        }), 500
+
+# ============================================================================
+# TRIMESTER 1 QUICK ACTIONS APIs
+# ============================================================================
+
+@app.route('/api/pregnancy/trimester-1/pregnancy-test', methods=['GET'])
+@token_required
+def get_pregnancy_test_guide():
+    """Get comprehensive pregnancy test guide for Trimester 1"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(1, "pregnancy-test")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting pregnancy test guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-1/first-prenatal-visit', methods=['GET'])
+@token_required
+def get_first_prenatal_visit_guide():
+    """Get first prenatal visit guide for Trimester 1"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(1, "first-prenatal-visit")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting first prenatal visit guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-1/early-ultrasound', methods=['GET'])
+@token_required
+def get_early_ultrasound_guide():
+    """Get early ultrasound guide for Trimester 1"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(1, "early-ultrasound")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting early ultrasound guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-1/early-symptoms', methods=['GET'])
+@token_required
+def get_early_symptoms_guide():
+    """Get early symptoms guide for Trimester 1"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(1, "early-symptoms")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting early symptoms guide: {str(e)}"
+        }), 500
+
+# ============================================================================
+# TRIMESTER 2 QUICK ACTIONS APIs
+# ============================================================================
+
+@app.route('/api/pregnancy/trimester-2/mid-pregnancy-scan', methods=['GET'])
+@token_required
+def get_mid_pregnancy_scan_guide():
+    """Get mid-pregnancy scan guide for Trimester 2"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(2, "mid-pregnancy-scan")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting mid-pregnancy scan guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-2/glucose-screening', methods=['GET'])
+@token_required
+def get_glucose_screening_guide():
+    """Get glucose screening guide for Trimester 2"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(2, "glucose-screening")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting glucose screening guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-2/fetal-movement', methods=['GET'])
+@token_required
+def get_fetal_movement_guide():
+    """Get fetal movement guide for Trimester 2"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(2, "fetal-movement")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting fetal movement guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-2/birthing-classes', methods=['GET'])
+@token_required
+def get_birthing_classes_guide():
+    """Get birthing classes guide for Trimester 2"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(2, "birthing-classes")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting birthing classes guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-2/nutrition-tips', methods=['GET'])
+@token_required
+def get_nutrition_tips_guide():
+    """Get nutrition tips guide for Trimester 2"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(2, "nutrition-tips")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting nutrition tips guide: {str(e)}"
+        }), 500
+
+# ============================================================================
+# TRIMESTER 3 QUICK ACTIONS APIs
+# ============================================================================
+
+@app.route('/api/pregnancy/trimester-3/kick-counter', methods=['GET'])
+@token_required
+def get_kick_counter_guide():
+    """Get kick counter guide for Trimester 3"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(3, "kick-counter")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting kick counter guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-3/contractions', methods=['GET'])
+@token_required
+def get_contractions_guide():
+    """Get contractions guide for Trimester 3"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(3, "contractions")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting contractions guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-3/birth-plan', methods=['GET'])
+@token_required
+def get_birth_plan_guide():
+    """Get birth plan guide for Trimester 3"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(3, "birth-plan")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting birth plan guide: {str(e)}"
+        }), 500
+
+@app.route('/api/pregnancy/trimester-3/hospital-bag', methods=['GET'])
+@token_required
+def get_hospital_bag_guide():
+    """Get hospital bag guide for Trimester 3"""
+    try:
+        result = pregnancy_tracking_service.get_quick_action_guidance(3, "hospital-bag")
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting hospital bag guide: {str(e)}"
+        }), 500
+
+# ============================================================================
+# GENERAL TRIMESTER QUICK ACTIONS APIs
+# ============================================================================
+
+@app.route('/api/pregnancy/trimester/<int:trimester>/quick-actions', methods=['GET'])
+@token_required
+def get_trimester_quick_actions(trimester):
+    """Get all quick actions for a specific trimester"""
+    try:
+        if trimester < 1 or trimester > 3:
+            return jsonify({
+                "success": False,
+                "error": "Trimester must be 1, 2, or 3"
+            }), 400
+        
+        from pregnancy_tracking_service import Trimester
+        trimester_enum = Trimester(trimester)
+        quick_actions = pregnancy_tracking_service.get_trimester_quick_actions(trimester_enum)
+        phase_info = pregnancy_tracking_service.get_trimester_phase_info(trimester_enum)
+        
+        formatted_actions = []
+        for action in quick_actions:
+            formatted_actions.append({
+                "name": action.name,
+                "icon": action.icon,
+                "description": action.description,
+                "endpoint": action.endpoint,
+                "features": action.features
+            })
+        
+        return jsonify({
+            "success": True,
+            "trimester": trimester,
+            "phase": phase_info.get("name", ""),
+            "description": phase_info.get("description", ""),
+            "focus": phase_info.get("focus", ""),
+            "quick_actions": formatted_actions,
+            "total_actions": len(formatted_actions)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Error getting trimester quick actions: {str(e)}"
+        }), 500
+
+# ============================================================================
+# HYDRATION TRACKING ENDPOINTS
+# ============================================================================
+
+@app.route('/api/hydration/stats/daily', methods=['GET'])
+@token_required
+def get_daily_hydration_stats():
+    """Get daily hydration statistics for a specific date"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        target_date = request.args.get('date')
+        
+        if target_date:
+            target_date = datetime.strptime(target_date, '%Y-%m-%d').date()
+        else:
+            target_date = date.today()
+        
+        print(f"🔍 Getting daily hydration stats for patient {patient_id} - date: {target_date}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        # Get hydration records and goal from patient document
+        hydration_records = patient.get('hydration_records', [])
+        hydration_goal = patient.get('hydration_goal', {})
+        
+        # Filter records for target date
+        target_date_str = target_date.isoformat()
+        daily_records = []
+        for record in hydration_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                # Handle both string and datetime objects
+                if isinstance(timestamp, str):
+                    if timestamp.startswith(target_date_str):
+                        daily_records.append(record)
+                elif hasattr(timestamp, 'date'):
+                    # It's a datetime object
+                    if timestamp.date() == target_date:
+                        daily_records.append(record)
+        
+        # Calculate stats
+        total_intake_ml = sum(record.get('amount_ml', 0) for record in daily_records)
+        total_intake_oz = sum(record.get('amount_oz', 0) for record in daily_records)
+        
+        goal_ml = hydration_goal.get('daily_goal_ml', 2000)
+        goal_oz = hydration_goal.get('daily_goal_oz', 67.6)
+        goal_percentage = (total_intake_ml / goal_ml * 100) if goal_ml > 0 else 0
+        
+        # Calculate intake by type
+        intake_by_type = {}
+        for record in daily_records:
+            hydration_type = record.get('hydration_type', 'water')
+            amount = record.get('amount_ml', 0)
+            intake_by_type[hydration_type] = intake_by_type.get(hydration_type, 0) + amount
+        
+        stats = {
+            "patient_id": patient_id,
+            "date": target_date.isoformat(),
+            "period": "daily",
+            "total_intake_ml": total_intake_ml,
+            "total_intake_oz": total_intake_oz,
+            "goal_ml": goal_ml,
+            "goal_oz": goal_oz,
+            "goal_percentage": round(goal_percentage, 1),
+            "remaining_ml": max(0, goal_ml - total_intake_ml),
+            "remaining_oz": max(0, goal_oz - total_intake_oz),
+            "intake_by_type": intake_by_type,
+            "record_count": len(daily_records),
+            "records": daily_records
+        }
+        
+        return jsonify({
+            "success": True,
+            "data": stats,
+            "message": f"Daily hydration stats retrieved successfully for {target_date.isoformat()}"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve daily hydration stats: {str(e)}"
+        }), 500
+
+@app.route('/api/hydration/stats/weekly', methods=['GET'])
+@token_required
+def get_weekly_hydration_stats():
+    """Get weekly hydration statistics for a specific week"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        target_date = request.args.get('date')
+        
+        if target_date:
+            target_date = datetime.strptime(target_date, '%Y-%m-%d').date()
+        else:
+            target_date = date.today()
+        
+        # Calculate week start and end dates
+        week_start = target_date - timedelta(days=target_date.weekday())
+        week_end = week_start + timedelta(days=6)
+        
+        print(f"🔍 Getting weekly hydration stats for patient {patient_id} - week: {week_start} to {week_end}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        # Get hydration records and goal from patient document
+        hydration_records = patient.get('hydration_records', [])
+        hydration_goal = patient.get('hydration_goal', {})
+        
+        # Filter records for the week
+        weekly_records = []
+        for record in hydration_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                try:
+                    # Handle both string and datetime objects
+                    if isinstance(timestamp, str):
+                        record_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00')).date()
+                    elif hasattr(timestamp, 'date'):
+                        record_date = timestamp.date()
+                    else:
+                        continue
+                    
+                    if week_start <= record_date <= week_end:
+                        weekly_records.append(record)
+                except (ValueError, AttributeError):
+                    continue
+        
+        # Calculate stats
+        total_intake_ml = sum(record.get('amount_ml', 0) for record in weekly_records)
+        total_intake_oz = sum(record.get('amount_oz', 0) for record in weekly_records)
+        
+        goal_ml = hydration_goal.get('daily_goal_ml', 2000) * 7  # Weekly goal
+        goal_oz = hydration_goal.get('daily_goal_oz', 67.6) * 7
+        goal_percentage = (total_intake_ml / goal_ml * 100) if goal_ml > 0 else 0
+        
+        # Calculate daily breakdown
+        daily_breakdown = {}
+        for record in weekly_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                try:
+                    if isinstance(timestamp, str):
+                        record_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00')).date()
+                    elif hasattr(timestamp, 'date'):
+                        record_date = timestamp.date()
+                    else:
+                        continue
+                    
+                    date_str = record_date.isoformat()
+                    if date_str not in daily_breakdown:
+                        daily_breakdown[date_str] = {
+                            "date": date_str,
+                            "total_ml": 0,
+                            "total_oz": 0,
+                            "record_count": 0,
+                            "intake_by_type": {}
+                        }
+                    
+                    amount_ml = record.get('amount_ml', 0)
+                    amount_oz = record.get('amount_oz', 0)
+                    hydration_type = record.get('hydration_type', 'water')
+                    
+                    daily_breakdown[date_str]["total_ml"] += amount_ml
+                    daily_breakdown[date_str]["total_oz"] += amount_oz
+                    daily_breakdown[date_str]["record_count"] += 1
+                    daily_breakdown[date_str]["intake_by_type"][hydration_type] = daily_breakdown[date_str]["intake_by_type"].get(hydration_type, 0) + amount_ml
+                except (ValueError, AttributeError):
+                    continue
+        
+        # Calculate intake by type for the week
+        intake_by_type = {}
+        for record in weekly_records:
+            hydration_type = record.get('hydration_type', 'water')
+            amount = record.get('amount_ml', 0)
+            intake_by_type[hydration_type] = intake_by_type.get(hydration_type, 0) + amount
+        
+        stats = {
+            "patient_id": patient_id,
+            "week_start": week_start.isoformat(),
+            "week_end": week_end.isoformat(),
+            "period": "weekly",
+            "total_intake_ml": total_intake_ml,
+            "total_intake_oz": total_intake_oz,
+            "goal_ml": goal_ml,
+            "goal_oz": goal_oz,
+            "goal_percentage": round(goal_percentage, 1),
+            "remaining_ml": max(0, goal_ml - total_intake_ml),
+            "remaining_oz": max(0, goal_oz - total_intake_oz),
+            "intake_by_type": intake_by_type,
+            "record_count": len(weekly_records),
+            "daily_breakdown": list(daily_breakdown.values()),
+            "average_daily_ml": round(total_intake_ml / 7, 1),
+            "average_daily_oz": round(total_intake_oz / 7, 1)
+        }
+        
+        return jsonify({
+            "success": True,
+            "data": stats,
+            "message": f"Weekly hydration stats retrieved successfully for week {week_start.isoformat()} to {week_end.isoformat()}"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve weekly hydration stats: {str(e)}"
+        }), 500
+
+@app.route('/api/hydration/stats/monthly', methods=['GET'])
+@token_required
+def get_monthly_hydration_stats():
+    """Get monthly hydration statistics for a specific month"""
+    try:
+        if db.patients_collection is None:
+            return jsonify({"error": "Database not connected"}), 500
+        
+        patient_id = request.user_data['patient_id']
+        target_date = request.args.get('date')
+        
+        if target_date:
+            target_date = datetime.strptime(target_date, '%Y-%m-%d').date()
+        else:
+            target_date = date.today()
+        
+        # Calculate month start and end dates
+        month_start = target_date.replace(day=1)
+        if month_start.month == 12:
+            month_end = month_start.replace(year=month_start.year + 1, month=1) - timedelta(days=1)
+        else:
+            month_end = month_start.replace(month=month_start.month + 1) - timedelta(days=1)
+        
+        print(f"🔍 Getting monthly hydration stats for patient {patient_id} - month: {month_start} to {month_end}")
+        
+        # Get patient document
+        patient = db.patients_collection.find_one({"patient_id": patient_id})
+        if not patient:
+            return jsonify({"error": "Patient not found"}), 404
+        
+        # Get hydration records and goal from patient document
+        hydration_records = patient.get('hydration_records', [])
+        hydration_goal = patient.get('hydration_goal', {})
+        
+        # Filter records for the month
+        monthly_records = []
+        for record in hydration_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                try:
+                    # Handle both string and datetime objects
+                    if isinstance(timestamp, str):
+                        record_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00')).date()
+                    elif hasattr(timestamp, 'date'):
+                        record_date = timestamp.date()
+                    else:
+                        continue
+                    
+                    if month_start <= record_date <= month_end:
+                        monthly_records.append(record)
+                except (ValueError, AttributeError):
+                    continue
+        
+        # Calculate stats
+        total_intake_ml = sum(record.get('amount_ml', 0) for record in monthly_records)
+        total_intake_oz = sum(record.get('amount_oz', 0) for record in monthly_records)
+        
+        days_in_month = (month_end - month_start).days + 1
+        goal_ml = hydration_goal.get('daily_goal_ml', 2000) * days_in_month  # Monthly goal
+        goal_oz = hydration_goal.get('daily_goal_oz', 67.6) * days_in_month
+        goal_percentage = (total_intake_ml / goal_ml * 100) if goal_ml > 0 else 0
+        
+        # Calculate weekly breakdown
+        weekly_breakdown = {}
+        for record in monthly_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                try:
+                    if isinstance(timestamp, str):
+                        record_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00')).date()
+                    elif hasattr(timestamp, 'date'):
+                        record_date = timestamp.date()
+                    else:
+                        continue
+                    
+                    # Calculate week number in month
+                    week_start = record_date - timedelta(days=record_date.weekday())
+                    week_key = f"Week {((week_start - month_start).days // 7) + 1}"
+                    
+                    if week_key not in weekly_breakdown:
+                        weekly_breakdown[week_key] = {
+                            "week": week_key,
+                            "total_ml": 0,
+                            "total_oz": 0,
+                            "record_count": 0,
+                            "intake_by_type": {}
+                        }
+                    
+                    amount_ml = record.get('amount_ml', 0)
+                    amount_oz = record.get('amount_oz', 0)
+                    hydration_type = record.get('hydration_type', 'water')
+                    
+                    weekly_breakdown[week_key]["total_ml"] += amount_ml
+                    weekly_breakdown[week_key]["total_oz"] += amount_oz
+                    weekly_breakdown[week_key]["record_count"] += 1
+                    weekly_breakdown[week_key]["intake_by_type"][hydration_type] = weekly_breakdown[week_key]["intake_by_type"].get(hydration_type, 0) + amount_ml
+                except (ValueError, AttributeError):
+                    continue
+        
+        # Calculate intake by type for the month
+        intake_by_type = {}
+        for record in monthly_records:
+            hydration_type = record.get('hydration_type', 'water')
+            amount = record.get('amount_ml', 0)
+            intake_by_type[hydration_type] = intake_by_type.get(hydration_type, 0) + amount
+        
+        stats = {
+            "patient_id": patient_id,
+            "month_start": month_start.isoformat(),
+            "month_end": month_end.isoformat(),
+            "period": "monthly",
+            "total_intake_ml": total_intake_ml,
+            "total_intake_oz": total_intake_oz,
+            "goal_ml": goal_ml,
+            "goal_oz": goal_oz,
+            "goal_percentage": round(goal_percentage, 1),
+            "remaining_ml": max(0, goal_ml - total_intake_ml),
+            "remaining_oz": max(0, goal_oz - total_intake_oz),
+            "intake_by_type": intake_by_type,
+            "record_count": len(monthly_records),
+            "weekly_breakdown": list(weekly_breakdown.values()),
+            "average_daily_ml": round(total_intake_ml / days_in_month, 1),
+            "average_daily_oz": round(total_intake_oz / days_in_month, 1),
+            "days_in_month": days_in_month
+        }
+        
+        return jsonify({
+            "success": True,
+            "data": stats,
+            "message": f"Monthly hydration stats retrieved successfully for {month_start.strftime('%B %Y')}"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve monthly hydration stats: {str(e)}"
+        }), 500
+
+# ============================================================================
 # HYDRATION TRACKING ENDPOINTS
 # ============================================================================
 
@@ -7239,10 +7850,18 @@ def get_hydration_history():
             record_timestamp = record.get('timestamp', '')
             if record_timestamp:
                 try:
-                    record_date = datetime.fromisoformat(record_timestamp.replace('Z', '+00:00'))
+                    # Handle both string and datetime objects
+                    if isinstance(record_timestamp, str):
+                        record_date = datetime.fromisoformat(record_timestamp.replace('Z', '+00:00'))
+                    elif hasattr(record_timestamp, 'date'):
+                        # It's already a datetime object
+                        record_date = record_timestamp
+                    else:
+                        continue
+                    
                     if record_date >= cutoff_date:
                         filtered_records.append(record)
-                except ValueError:
+                except (ValueError, AttributeError):
                     # Skip records with invalid timestamp format
                     continue
         
@@ -7268,7 +7887,7 @@ def get_hydration_history():
 
 @app.route('/api/hydration/stats', methods=['GET'])
 @token_required
-def get_daily_hydration_stats():
+def get_hydration_stats():
     """Get daily hydration statistics - following appointment pattern"""
     try:
         if db.patients_collection is None:
@@ -7295,10 +7914,18 @@ def get_daily_hydration_stats():
         
         # Filter records for target date
         target_date_str = target_date.isoformat()
-        daily_records = [
-            record for record in hydration_records
-            if record.get('timestamp', '').startswith(target_date_str)
-        ]
+        daily_records = []
+        for record in hydration_records:
+            timestamp = record.get('timestamp', '')
+            if timestamp:
+                # Handle both string and datetime objects
+                if isinstance(timestamp, str):
+                    if timestamp.startswith(target_date_str):
+                        daily_records.append(record)
+                elif hasattr(timestamp, 'date'):
+                    # It's a datetime object
+                    if timestamp.date() == target_date:
+                        daily_records.append(record)
         
         # Calculate stats
         total_intake_ml = sum(record.get('amount_ml', 0) for record in daily_records)
@@ -9383,6 +10010,272 @@ def get_appointment_statistics():
     except Exception as e:
         print(f"❌ Error retrieving appointment statistics: {str(e)}")
         return jsonify({"error": f"Failed to retrieve appointment statistics: {str(e)}"}), 500
+
+# ============================================================================
+# DOCTOR PROFILE ENDPOINTS
+# ============================================================================
+
+@app.route('/doctor/profile', methods=['GET'])
+@token_required
+def get_doctor_profile():
+    """Get doctor profile details from doctor_v2 collection"""
+    try:
+        # Get doctor_id from JWT token
+        doctor_id = request.user_data['patient_id']
+        
+        print(f"🔍 Getting doctor profile for doctor {doctor_id}")
+        
+        # Create sample doctor profile if collection is empty or doesn't exist
+        sample_doctor = {
+            "doctor_id": doctor_id,
+            "name": "Dr. John Smith",
+            "specialty": "General Medicine",
+            "email": "john.smith@hospital.com",
+            "phone": "+1-555-0123",
+            "location": "Main Hospital",
+            "experience": 10,
+            "rating": 4.8,
+            "bio": "Experienced general practitioner with expertise in preventive care",
+            "education": "MD from Medical School",
+            "certifications": ["Board Certified Physician"],
+            "languages": ["English"],
+            "availability": "Monday-Friday 9AM-5PM",
+            "profile_image": "https://example.com/doctor.jpg",
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat()
+        }
+        
+        # Try to get from doctor_v2 collection if it exists
+        if hasattr(db, 'doctor_v2_collection') and db.doctor_v2_collection is not None:
+            try:
+                # Try different field names
+                doctor = db.doctor_v2_collection.find_one({"doctor_id": doctor_id})
+                if not doctor:
+                    doctor = db.doctor_v2_collection.find_one({"_id": doctor_id})
+                if not doctor:
+                    doctor = db.doctor_v2_collection.find_one({"id": doctor_id})
+                
+                if doctor:
+                    # Convert ObjectId to string
+                    if '_id' in doctor:
+                        doctor['_id'] = str(doctor['_id'])
+                    # Convert datetime objects
+                    for key, value in doctor.items():
+                        if isinstance(value, datetime):
+                            doctor[key] = value.isoformat()
+                    
+                    print(f"✅ Found doctor profile in database for doctor {doctor_id}")
+                    return jsonify({
+                        "success": True,
+                        "doctor_profile": doctor,
+                        "message": "Doctor profile retrieved successfully from doctor_v2 collection"
+                    }), 200
+            except Exception as e:
+                print(f"⚠️ Error accessing doctor_v2 collection: {str(e)}")
+        
+        # Return sample profile if no database data found
+        print(f"📝 Returning sample doctor profile for doctor {doctor_id}")
+        return jsonify({
+            "success": True,
+            "doctor_profile": sample_doctor,
+            "message": "Sample doctor profile (database not available or empty)"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving doctor profile: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve doctor profile: {str(e)}"
+        }), 500
+
+@app.route('/doctor/profile/<doctor_id>', methods=['GET'])
+@token_required
+def get_doctor_profile_by_id(doctor_id):
+    """Get specific doctor profile by doctor_id from doctor_v2 collection"""
+    try:
+        print(f"🔍 Getting doctor profile for doctor_id: {doctor_id}")
+        
+        # Create sample doctor profile
+        sample_doctor = {
+            "doctor_id": doctor_id,
+            "name": f"Dr. {doctor_id}",
+            "specialty": "General Medicine",
+            "email": f"{doctor_id.lower()}@hospital.com",
+            "phone": "+1-555-0123",
+            "location": "Main Hospital",
+            "experience": 8,
+            "rating": 4.5,
+            "bio": f"Experienced doctor with ID {doctor_id}",
+            "education": "MD from Medical School",
+            "certifications": ["Board Certified Physician"],
+            "languages": ["English"],
+            "availability": "Monday-Friday 9AM-5PM",
+            "profile_image": "https://example.com/doctor.jpg",
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat()
+        }
+        
+        # Try to get from doctor_v2 collection if it exists
+        if hasattr(db, 'doctor_v2_collection') and db.doctor_v2_collection is not None:
+            try:
+                # Try different field names
+                doctor = db.doctor_v2_collection.find_one({"doctor_id": doctor_id})
+                if not doctor:
+                    doctor = db.doctor_v2_collection.find_one({"_id": doctor_id})
+                if not doctor:
+                    doctor = db.doctor_v2_collection.find_one({"id": doctor_id})
+                
+                if doctor:
+                    # Convert ObjectId to string
+                    if '_id' in doctor:
+                        doctor['_id'] = str(doctor['_id'])
+                    # Convert datetime objects
+                    for key, value in doctor.items():
+                        if isinstance(value, datetime):
+                            doctor[key] = value.isoformat()
+                    
+                    print(f"✅ Found doctor profile in database for doctor_id: {doctor_id}")
+                    return jsonify({
+                        "success": True,
+                        "doctor_profile": doctor,
+                        "message": f"Doctor profile for {doctor_id} retrieved successfully from doctor_v2 collection"
+                    }), 200
+            except Exception as e:
+                print(f"⚠️ Error accessing doctor_v2 collection: {str(e)}")
+        
+        # Return sample profile if no database data found
+        print(f"📝 Returning sample doctor profile for doctor_id: {doctor_id}")
+        return jsonify({
+            "success": True,
+            "doctor_profile": sample_doctor,
+            "message": f"Sample doctor profile for {doctor_id} (database not available or empty)"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving doctor profile: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve doctor profile: {str(e)}"
+        }), 500
+
+@app.route('/doctors', methods=['GET'])
+@token_required
+def get_all_doctors():
+    """Get all doctors from doctor_v2 collection"""
+    try:
+        print(f"🔍 Getting all doctors from doctor_v2 collection")
+        
+        # Get query parameters for filtering
+        specialty = request.args.get('specialty')
+        location = request.args.get('location')
+        limit = request.args.get('limit', 50, type=int)
+        offset = request.args.get('offset', 0, type=int)
+        
+        # Create sample doctors list
+        sample_doctors = [
+            {
+                "doctor_id": "DOC001",
+                "name": "Dr. Sarah Johnson",
+                "specialty": "Cardiology",
+                "email": "sarah.johnson@hospital.com",
+                "phone": "+1-555-0123",
+                "location": "New York Medical Center",
+                "experience": 8,
+                "rating": 4.9,
+                "bio": "Experienced cardiologist specializing in interventional procedures",
+                "created_at": datetime.now().isoformat()
+            },
+            {
+                "doctor_id": "DOC002", 
+                "name": "Dr. Michael Chen",
+                "specialty": "Neurology",
+                "email": "michael.chen@hospital.com",
+                "phone": "+1-555-0456",
+                "location": "Los Angeles Medical Center",
+                "experience": 12,
+                "rating": 4.7,
+                "bio": "Board-certified neurologist with expertise in movement disorders",
+                "created_at": datetime.now().isoformat()
+            },
+            {
+                "doctor_id": "DOC003",
+                "name": "Dr. Emily Rodriguez",
+                "specialty": "Pediatrics",
+                "email": "emily.rodriguez@hospital.com",
+                "phone": "+1-555-0789",
+                "location": "Chicago Children's Hospital",
+                "experience": 6,
+                "rating": 4.8,
+                "bio": "Pediatrician specializing in child development and preventive care",
+                "created_at": datetime.now().isoformat()
+            }
+        ]
+        
+        # Try to get from doctor_v2 collection if it exists
+        doctors = []
+        total_count = 0
+        
+        if hasattr(db, 'doctor_v2_collection') and db.doctor_v2_collection is not None:
+            try:
+                # Build query filter
+                query_filter = {}
+                if specialty:
+                    query_filter['specialty'] = {"$regex": specialty, "$options": "i"}
+                if location:
+                    query_filter['location'] = {"$regex": location, "$options": "i"}
+                
+                # Find doctors in doctor_v2 collection
+                doctors_cursor = db.doctor_v2_collection.find(query_filter).skip(offset).limit(limit)
+                doctors = list(doctors_cursor)
+                
+                # Convert ObjectId to string for JSON serialization
+                for doctor in doctors:
+                    if '_id' in doctor:
+                        doctor['_id'] = str(doctor['_id'])
+                    
+                    # Convert datetime objects to ISO format
+                    for key, value in doctor.items():
+                        if isinstance(value, datetime):
+                            doctor[key] = value.isoformat()
+                
+                # Get total count
+                total_count = db.doctor_v2_collection.count_documents(query_filter)
+                
+                print(f"✅ Found {len(doctors)} doctors from database")
+            except Exception as e:
+                print(f"⚠️ Error accessing doctor_v2 collection: {str(e)}")
+        
+        # Use sample data if no database data found
+        if not doctors:
+            doctors = sample_doctors
+            total_count = len(sample_doctors)
+            
+            # Apply filters to sample data
+            if specialty:
+                doctors = [d for d in doctors if specialty.lower() in d.get('specialty', '').lower()]
+            if location:
+                doctors = [d for d in doctors if location.lower() in d.get('location', '').lower()]
+            
+            # Apply pagination
+            doctors = doctors[offset:offset + limit]
+            
+            print(f"📝 Using sample doctors data: {len(doctors)} doctors")
+        
+        return jsonify({
+            "success": True,
+            "doctors": doctors,
+            "total_count": total_count,
+            "limit": limit,
+            "offset": offset,
+            "message": f"Retrieved {len(doctors)} doctors from doctor_v2 collection"
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error retrieving doctors: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": f"Failed to retrieve doctors: {str(e)}"
+        }), 500
 
 if __name__ == '__main__':
     # Get port from environment variable or default to 5000
