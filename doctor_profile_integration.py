@@ -547,3 +547,7 @@ if __name__ == "__main__":
     print("\n✅ Doctor Profile Integration setup complete!")
     print("You can now use these endpoints in your main application.")
 
+
+
+
+

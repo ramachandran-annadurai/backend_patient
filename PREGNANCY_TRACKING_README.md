@@ -260,3 +260,7 @@ The system automatically detects the user's trimester and shows the exact quick 
 ---
 
 **Ready to use!** 🚀
+
+
+
+

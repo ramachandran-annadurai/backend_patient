@@ -76,7 +76,7 @@ def test_hydration_endpoints():
             "url": f"{BASE_URL}/api/hydration/intake",
             "name": "Save Hydration Intake",
             "data": {
-                "user_id": "68da5dfe4edf154199e54948",
+                "user_id": "PAT1759141374B65D62",
                 "hydration_type": "water",
                 "amount_ml": 250,
                 "notes": "Test hydration intake",
