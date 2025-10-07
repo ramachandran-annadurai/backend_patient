@@ -1,0 +1,370 @@
+{
+  "info": {
+    "name": "Patient Appointment Module - Complete API",
+    "_postman_id": "appointment-module-2024",
+    "description": "Complete Patient Appointment API with separate Type and Appointment Type fields",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "appointment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Get All Appointments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"]
+        },
+        "description": "Get all appointments for the authenticated patient"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Filter by Consultation Type",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments?type=Follow-up",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"],
+          "query": [
+            {
+              "key": "type",
+              "value": "Follow-up",
+              "description": "Options: Follow-up, Consultation, Check-up, Emergency"
+            }
+          ]
+        },
+        "description": "Filter appointments by consultation type (Follow-up, Consultation, Check-up, Emergency)"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Filter by Appointment Type (Mode)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments?appointment_type=Video Call",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"],
+          "query": [
+            {
+              "key": "appointment_type",
+              "value": "Video Call",
+              "description": "Options: Video Call, In-person"
+            }
+          ]
+        },
+        "description": "Filter appointments by appointment type/mode (Video Call, In-person)"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Filter by Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments?status=pending",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"],
+          "query": [
+            {
+              "key": "status",
+              "value": "pending",
+              "description": "Options: pending, approved, rejected, cancelled, completed"
+            }
+          ]
+        },
+        "description": "Filter appointments by status"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Combined Filters",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments?type=Consultation&appointment_type=In-person&status=approved",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"],
+          "query": [
+            {
+              "key": "type",
+              "value": "Consultation"
+            },
+            {
+              "key": "appointment_type",
+              "value": "In-person"
+            },
+            {
+              "key": "status",
+              "value": "approved"
+            }
+          ]
+        },
+        "description": "Combine multiple filters"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Get Specific Appointment by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments", "{{appointment_id}}"]
+        },
+        "description": "Get details of a specific appointment by its ID. Returns full appointment information including patient details."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Create Appointment - Video Call",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"appointment_id\", jsonData.appointment_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointment_date\": \"2024-01-20\",\n  \"appointment_time\": \"10:00 AM\",\n  \"type\": \"Follow-up\",\n  \"appointment_type\": \"Video Call\",\n  \"doctor_id\": \"DOC123\",\n  \"notes\": \"Regular checkup\",\n  \"patient_notes\": \"Feeling better than last week\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/patient/appointments",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"]
+        },
+        "description": "Create a new video call appointment"
+      },
+      "response": []
+    },
+    {
+      "name": "8. Create Appointment - In-person",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointment_date\": \"2024-01-25\",\n  \"appointment_time\": \"2:30 PM\",\n  \"type\": \"Consultation\",\n  \"appointment_type\": \"In-person\",\n  \"doctor_id\": \"DOC456\",\n  \"notes\": \"Initial consultation\",\n  \"patient_notes\": \"Need prescription refill\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/patient/appointments",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"]
+        },
+        "description": "Create a new in-person appointment"
+      },
+      "response": []
+    },
+    {
+      "name": "9. Create Emergency Appointment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointment_date\": \"2024-01-16\",\n  \"appointment_time\": \"11:00 AM\",\n  \"type\": \"Emergency\",\n  \"appointment_type\": \"Video Call\",\n  \"doctor_id\": \"DOC789\",\n  \"notes\": \"Urgent consultation needed\",\n  \"patient_notes\": \"Experiencing severe symptoms\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/patient/appointments",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments"]
+        },
+        "description": "Create an emergency appointment"
+      },
+      "response": []
+    },
+    {
+      "name": "10. Update Pending Appointment",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointment_date\": \"2024-01-22\",\n  \"appointment_time\": \"3:00 PM\",\n  \"type\": \"Consultation\",\n  \"appointment_type\": \"In-person\",\n  \"patient_notes\": \"Changed time due to work schedule\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments", "{{appointment_id}}"]
+        },
+        "description": "Update a pending appointment (only works for pending status)"
+      },
+      "response": []
+    },
+    {
+      "name": "11. Try Update Approved Appointment (Will Fail)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointment_time\": \"4:00 PM\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments", "{{appointment_id}}"]
+        },
+        "description": "Attempt to update an approved appointment - will return 403 Forbidden"
+      },
+      "response": []
+    },
+    {
+      "name": "12. Cancel Appointment",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/patient/appointments/{{appointment_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["patient", "appointments", "{{appointment_id}}"]
+        },
+        "description": "Cancel/delete an appointment (works for both pending and approved)"
+      },
+      "response": []
+    }
+  ]
+}
+
