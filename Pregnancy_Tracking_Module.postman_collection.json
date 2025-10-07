@@ -1,0 +1,385 @@
+{
+	"info": {
+		"_postman_id": "pregnancy-tracking-module-2025",
+		"name": "Pregnancy Tracking Module",
+		"description": "Complete API collection for pregnancy tracking, including week information, AI-powered insights, tracking history, and progress monitoring.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "your_jwt_token_here",
+			"type": "string"
+		},
+		{
+			"key": "patient_id",
+			"value": "PAT123456789",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Pregnancy Week Information",
+			"item": [
+				{
+					"name": "Get Specific Pregnancy Week",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12"]
+						},
+						"description": "Get detailed information for a specific pregnancy week (1-40)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Pregnancy Weeks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/weeks",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "weeks"]
+						},
+						"description": "Get information for all pregnancy weeks (1-40)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trimester Weeks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/trimester/2",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "trimester", "2"]
+						},
+						"description": "Get all weeks for a specific trimester (1, 2, or 3)\n- Trimester 1: Weeks 1-13\n- Trimester 2: Weeks 14-27\n- Trimester 3: Weeks 28-40"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Pregnancy Week",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/get-current-pregnancy-week/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["get-current-pregnancy-week", "{{patient_id}}"]
+						},
+						"description": "Get the current pregnancy week for a specific patient. Auto-calculates based on last period date if available."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AI-Powered Insights",
+			"item": [
+				{
+					"name": "Get Baby Size (AI)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/baby-size",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "baby-size"]
+						},
+						"description": "Get AI-powered baby size information for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Baby Size Image",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/20/baby-image?style=matplotlib",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "20", "baby-image"],
+							"query": [
+								{
+									"key": "style",
+									"value": "matplotlib",
+									"description": "Image style (matplotlib or other supported styles)"
+								}
+							]
+						},
+						"description": "Get baby size visualization image for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Early Symptoms (AI)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/8/symptoms",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "8", "symptoms"]
+						},
+						"description": "Get AI-powered early symptoms information for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Prenatal Screening (AI)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/12/screening",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "12", "screening"]
+						},
+						"description": "Get AI-powered prenatal screening information for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wellness Tips (AI)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/15/wellness",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "15", "wellness"]
+						},
+						"description": "Get AI-powered wellness tips for a specific week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Nutrition Tips (AI)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/week/18/nutrition",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "week", "18", "nutrition"]
+						},
+						"description": "Get AI-powered nutrition tips for a specific week"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pregnancy Tracking & History",
+			"item": [
+				{
+					"name": "Save Pregnancy Tracking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"week\": 20,\n    \"weight\": 65.5,\n    \"blood_pressure\": \"120/80\",\n    \"symptoms\": [\"back pain\", \"fatigue\"],\n    \"notes\": \"Feeling better this week\",\n    \"mood\": \"happy\",\n    \"energy_level\": \"medium\",\n    \"baby_movements\": true,\n    \"baby_kicks_count\": 15,\n    \"date\": \"2025-10-07\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/tracking",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "tracking"]
+						},
+						"description": "Save pregnancy tracking data including weight, symptoms, mood, and baby movements"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pregnancy Tracking History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/tracking/history",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "tracking", "history"]
+						},
+						"description": "Get complete pregnancy tracking history for the authenticated patient"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Pregnancy Progress",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/progress?week=25",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "progress"],
+							"query": [
+								{
+									"key": "week",
+									"value": "25",
+									"description": "Current pregnancy week (optional, defaults to 1)"
+								}
+							]
+						},
+						"description": "Calculate pregnancy progress including trimester, days remaining, percentage complete, etc."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pregnancy Week Management",
+			"item": [
+				{
+					"name": "Update Pregnancy Week",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/update-week/{{patient_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "update-week", "{{patient_id}}"]
+						},
+						"description": "Manually update pregnancy week for a specific patient. Auto-calculates based on last period date. Requires patient to be marked as pregnant and have last_period_date set."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Status",
+			"item": [
+				{
+					"name": "Check OpenAI Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/pregnancy/openai/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pregnancy", "openai", "status"]
+						},
+						"description": "Check if OpenAI service is available for AI-powered features"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
+

@@ -2190,7 +2190,6 @@ def verify_token():
     except Exception as e:
         return jsonify({"error": f"Token verification failed: {str(e)}"}), 500
 
-@app.route('/profile/<patient_id>', methods=['GET'])
 def calculate_current_pregnancy_week(last_period_date_str):
     """
     Calculate current pregnancy week based on last period date
@@ -2251,12 +2250,12 @@ def get_profile(patient_id):
     try:
         if db.patients_collection is None:
             return jsonify({"error": "Database not connected"}), 500
-
+        
         # Get patient from database
         patient = db.patients_collection.find_one({"patient_id": patient_id})
         if not patient:
             return jsonify({"error": "Patient not found"}), 404
-
+        
         # Auto-calculate pregnancy week if patient is pregnant and has last_period_date
         if (patient.get('is_pregnant', False) and
             patient.get('last_period_date')):
@@ -2310,7 +2309,7 @@ def get_profile(patient_id):
             "patient": response_data,
             "message": "Profile retrieved with auto-calculated pregnancy week"
         }), 200
-
+    
     except Exception as e:
         print(f"❌ Error in get_profile: {e}")
         return jsonify({"error": f"Failed to get profile: {str(e)}"}), 500
@@ -9082,14 +9081,20 @@ def get_upcoming_appointments():
 @app.route('/patient/appointments/history', methods=['GET'])
 @token_required
 def get_appointment_history():
-    """Get appointment history for the authenticated patient"""
+    """Get appointment history for the authenticated patient with filtering support"""
     try:
         if db.patients_collection is None:
             return jsonify({"error": "Database not connected"}), 500
         
         patient_id = request.user_data['patient_id']
         
-        print(f"🔍 Getting appointment history for patient {patient_id}")
+        # Get query parameters for filtering
+        status = request.args.get('status')  # "pending", "approved", "completed", "cancelled"
+        consultation_type = request.args.get('type')  # "Follow-up", "Consultation", "Check-up", "Emergency"
+        appointment_type = request.args.get('appointment_type')  # "Video Call", "In-person"
+        date = request.args.get('date')  # Specific date filter
+        
+        print(f"🔍 Getting appointment history for patient {patient_id} - status: {status}, type: {consultation_type}, appointment_type: {appointment_type}, date: {date}")
         
         # Get patient document
         patient = db.patients_collection.find_one({"patient_id": patient_id})
@@ -9099,24 +9104,47 @@ def get_appointment_history():
         appointments = patient.get('appointments', [])
         print(f"📋 Found {len(appointments)} total appointments for patient {patient_id}")
         
-        # Get ALL appointments (complete history)
-        all_appointments = []
+        # Filter appointments based on query parameters
+        filtered_appointments = []
         for appointment in appointments:
+            # Filter by status if provided
+            if status and appointment.get('appointment_status') != status:
+                continue
+            
+            # Filter by consultation type if provided (Follow-up, Consultation, etc.)
+            if consultation_type and appointment.get('type') != consultation_type:
+                continue
+            
+            # Filter by appointment type (Video Call, In-person) if provided
+            if appointment_type and appointment.get('appointment_type') != appointment_type:
+                continue
+            
+            # Filter by date if provided
+            if date and appointment.get('appointment_date') != date:
+                continue
+            
+            # Add patient info to appointment
             appointment_data = appointment.copy()
             appointment_data['patient_id'] = patient_id
             appointment_data['patient_name'] = f"{patient.get('first_name', '')} {patient.get('last_name', '')}".strip() or patient.get('username', 'Unknown')
-            all_appointments.append(appointment_data)
+            filtered_appointments.append(appointment_data)
         
         # Sort by appointment date (most recent first)
-        all_appointments.sort(key=lambda x: x.get('appointment_date', ''), reverse=True)
+        filtered_appointments.sort(key=lambda x: x.get('appointment_date', ''), reverse=True)
         
-        print(f"✅ Found {len(all_appointments)} appointments in complete history for patient {patient_id}")
+        print(f"✅ Found {len(filtered_appointments)} appointments in filtered history for patient {patient_id}")
         
         return jsonify({
-            "appointment_history": all_appointments,
-            "total_count": len(all_appointments),
+            "appointment_history": filtered_appointments,
+            "total_count": len(filtered_appointments),
             "patient_id": patient_id,
-            "message": "Complete appointment history retrieved successfully"
+            "filters_applied": {
+                "status": status,
+                "type": consultation_type,
+                "appointment_type": appointment_type,
+                "date": date
+            },
+            "message": "Appointment history retrieved successfully"
         }), 200
         
     except Exception as e:
